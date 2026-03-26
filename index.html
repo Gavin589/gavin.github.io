@@ -34,7 +34,35 @@
   .nav-links { display: flex; gap: 2rem; list-style: none; }
   .nav-links a { font-family: 'DM Mono',monospace; font-size: 0.68rem; letter-spacing: 0.12em; color: var(--mist); text-decoration: none; text-transform: uppercase; transition: color 0.3s; }
   .nav-links a:hover { color: var(--warm); }
-  @media(max-width:600px){ .nav-links { display:none; } }
+
+  /* Hamburger */
+  .nav-hamburger { display:none; flex-direction:column; justify-content:center; gap:5px; width:36px; height:36px; background:none; border:1px solid rgba(201,169,110,0.3); border-radius:4px; cursor:pointer; padding:8px; z-index:200; }
+  .nav-hamburger span { display:block; width:100%; height:1.5px; background:var(--warm); border-radius:2px; transition:transform 0.35s cubic-bezier(0.4,0,0.2,1),opacity 0.3s; transform-origin:center; }
+  .nav-hamburger.open span:nth-child(1){ transform:translateY(6.5px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2){ opacity:0; transform:scaleX(0); }
+  .nav-hamburger.open span:nth-child(3){ transform:translateY(-6.5px) rotate(-45deg); }
+
+  /* Mobile drawer */
+  .mobile-menu { position:fixed; inset:0; z-index:150; pointer-events:none; }
+  .mobile-menu-backdrop { position:absolute; inset:0; background:rgba(26,20,16,0.6); opacity:0; transition:opacity 0.4s; backdrop-filter:blur(4px); }
+  .mobile-menu-drawer { position:absolute; top:0; right:0; width:min(80vw,300px); height:100%; background:var(--deep); border-left:1px solid rgba(201,169,110,0.2); display:flex; flex-direction:column; padding:5rem 2.5rem 3rem; transform:translateX(100%); transition:transform 0.45s cubic-bezier(0.4,0,0.2,1); }
+  .mobile-menu.open { pointer-events:all; }
+  .mobile-menu.open .mobile-menu-backdrop { opacity:1; }
+  .mobile-menu.open .mobile-menu-drawer { transform:translateX(0); }
+
+  .mobile-menu-label { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.35em; color:rgba(201,169,110,0.5); text-transform:uppercase; margin-bottom:2rem; }
+  .mobile-menu-links { list-style:none; display:flex; flex-direction:column; }
+  .mobile-menu-links li { border-bottom:1px solid rgba(201,169,110,0.1); }
+  .mobile-menu-links li:first-child { border-top:1px solid rgba(201,169,110,0.1); }
+  .mobile-menu-links a { display:flex; align-items:center; justify-content:space-between; padding:1.1rem 0; font-family:'Noto Serif TC',serif; font-weight:600; font-size:1.1rem; color:var(--paper); text-decoration:none; transition:color 0.3s, padding-left 0.3s; }
+  .mobile-menu-links a:hover { color:var(--warm); padding-left:0.4rem; }
+  .mobile-menu-links .link-arrow { font-size:0.8rem; color:var(--warm); opacity:0.5; transition:opacity 0.3s; }
+  .mobile-menu-links a:hover .link-arrow { opacity:1; }
+  .mobile-menu-links .link-sub { font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:0.12em; color:rgba(201,169,110,0.5); text-transform:uppercase; display:block; margin-top:0.1rem; }
+  .mobile-menu-footer { margin-top:auto; font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(213,208,200,0.3); letter-spacing:0.1em; line-height:1.8; }
+  .mobile-menu-footer strong { display:block; color:var(--warm); margin-bottom:0.3rem; font-weight:400; }
+
+  @media(max-width:600px){ .nav-links{display:none;} .nav-hamburger{display:flex;} }
 
   /* HERO */
   .hero { min-height: 100vh; display: grid; grid-template-rows: 1fr auto; position: relative; overflow: hidden; background: var(--deep); }
@@ -184,14 +212,36 @@
     <li><a href="#route">路線</a></li>
     <li><a href="#tips">提示</a></li>
   </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="開啟選單">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- Mobile drawer menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-backdrop" id="menuBackdrop"></div>
+  <div class="mobile-menu-drawer">
+    <div class="mobile-menu-label">目錄 · Contents</div>
+    <ul class="mobile-menu-links">
+      <li><a href="#timeline" class="menu-link"><span><span class="link-sub">01</span>行程規劃</span><span class="link-arrow">→</span></a></li>
+      <li><a href="#parking" class="menu-link"><span><span class="link-sub">02</span>停車場</span><span class="link-arrow">→</span></a></li>
+      <li><a href="#route" class="menu-link"><span><span class="link-sub">03</span>開車路線</span><span class="link-arrow">→</span></a></li>
+      <li><a href="#tips" class="menu-link"><span><span class="link-sub">04</span>行前提示</span><span class="link-arrow">→</span></a></li>
+    </ul>
+    <div class="mobile-menu-footer">
+      <strong>板橋一日遊</strong>
+      自駕 · 5 景點 · 6 停車場<br>
+      BANQIAO · NEW TAIPEI
+    </div>
+  </div>
+</div>
 
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="particles" id="particles"></div>
   <div class="hero-deco">5</div>
   <div class="hero-content">
-    <div class="hero-eyebrow">新北市 · 板橋區 · 一日遊行程</div>
+    <div class="hero-eyebrow">新北市 · 板橋區 · 自駕一日遊行程</div>
     <h1 class="hero-title">
       板橋一日遊
       <span>古今交織 · 美拍與美食</span>
@@ -413,6 +463,32 @@
   document.querySelectorAll('a,button,.timeline-card,.tip-card,.stat-card,.parking-card').forEach(el=>{
     el.addEventListener('mouseenter',()=>ring.classList.add('hover'));
     el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
+  });
+
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuBackdrop = document.getElementById('menuBackdrop');
+
+  function openMenu() {
+    hamburger.classList.add('open');
+    mobileMenu.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  hamburger.addEventListener('click', () => mobileMenu.classList.contains('open') ? closeMenu() : openMenu());
+  menuBackdrop.addEventListener('click', closeMenu);
+  document.querySelectorAll('.menu-link').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      closeMenu();
+      setTimeout(() => { if(target) target.scrollIntoView({behavior:'smooth',block:'start'}); }, 350);
+    });
   });
 
   const pc=document.getElementById('particles');
