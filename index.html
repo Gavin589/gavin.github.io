@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>板橋質感一日遊</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1410;
+    --paper: #f5f0e8;
+    --warm: #c9a96e;
+    --rust: #b85c38;
+    --sage: #7a8c6e;
+    --mist: #d4cfc8;
+    --deep: #2c1f14;
+    --accent: #e8c547;
+    --glow: rgba(201,169,110,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Serif TC', serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--rust);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--warm);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94), width 0.3s, height 0.3s;
+  }
+  .cursor-ring.hover {
+    width: 56px; height: 56px;
+    border-color: var(--rust);
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9990;
+    opacity: 0.5;
+  }
+
+  /* ── HERO ────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    position: relative;
+    overflow: hidden;
+    background: var(--deep);
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 40%, rgba(201,169,110,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 80% at 20% 80%, rgba(184,92,56,0.1) 0%, transparent 60%),
+      linear-gradient(160deg, #1a0f06 0%, #2c1f14 50%, #1a150e 100%);
+  }
+
+  /* Floating particles */
+  .particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: var(--warm);
+    border-radius: 50%;
+    opacity: 0;
+    animation: float-up var(--dur, 8s) var(--delay, 0s) infinite ease-in-out;
+  }
+  @keyframes float-up {
+    0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.2; }
+    100% { transform: translateY(-10vh) translateX(var(--drift, 30px)); opacity: 0; }
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: clamp(2rem, 8vw, 7rem) clamp(1.5rem, 6vw, 6rem);
+    position: relative;
+    z-index: 2;
+    padding-top: clamp(6rem, 15vh, 12rem);
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(0.65rem, 1.2vw, 0.8rem);
+    color: var(--warm);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    margin-bottom: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    animation: fade-up 0.8s 0.3s forwards;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--warm);
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 900;
+    font-size: clamp(2.8rem, 8vw, 7rem);
+    line-height: 1.0;
+    color: var(--paper);
+    margin-bottom: 0.4rem;
+    opacity: 0;
+    animation: fade-up 0.9s 0.5s forwards;
+  }
+  .hero-title span {
+    display: block;
+    color: var(--warm);
+    font-style: italic;
+    font-size: 0.55em;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--mist);
+    margin: 1.5rem 0 2.5rem;
+    max-width: 480px;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fade-up 0.9s 0.7s forwards;
+  }
+
+  .hero-tags {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fade-up 0.9s 0.9s forwards;
+  }
+  .tag {
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(201,169,110,0.4);
+    color: var(--warm);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    border-radius: 2px;
+    backdrop-filter: blur(4px);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 2;
+    opacity: 0;
+    animation: fade-up 1s 1.4s forwards;
+  }
+  .hero-scroll span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--warm);
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--warm), transparent);
+    animation: scroll-pulse 2s ease-in-out infinite;
+  }
+  @keyframes scroll-pulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  /* Decorative number */
+  .hero-deco {
+    position: absolute;
+    right: clamp(1rem, 5vw, 4rem);
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(8rem, 20vw, 18rem);
+    font-weight: 300;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(201,169,110,0.12);
+    line-height: 1;
+    user-select: none;
+    opacity: 0;
+    animation: fade-up 1.2s 1s forwards;
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── DIVIDER ─────────────────────────────── */
+  .divider {
+    height: 80px;
+    background: var(--deep);
+    position: relative;
+    overflow: hidden;
+  }
+  .divider::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 80px;
+    background: var(--paper);
+    clip-path: ellipse(60% 100% at 50% 100%);
+  }
+
+  /* ── INTRO STRIP ─────────────────────────── */
+  .intro-strip {
+    background: var(--paper);
+    padding: clamp(3rem, 8vh, 6rem) clamp(1.5rem, 6vw, 6rem);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  @media (max-width: 768px) {
+    .intro-strip { grid-template-columns: 1fr; gap: 2rem; }
+  }
+
+  .intro-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--rust);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .intro-heading {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 900;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    line-height: 1.25;
+    color: var(--deep);
+  }
+  .intro-heading em {
+    font-style: italic;
+    color: var(--rust);
+    font-weight: 300;
+  }
+  .intro-text {
+    font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+    line-height: 1.9;
+    color: #4a3f35;
+    font-weight: 300;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .stat-card {
+    background: var(--deep);
+    color: var(--paper);
+    padding: 1.5rem;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  .stat-card:hover { transform: translateY(-4px); }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--warm);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .stat-card:hover::before { transform: scaleX(1); }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 300;
+    color: var(--warm);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    color: var(--mist);
+    margin-top: 0.3rem;
+  }
+
+  /* ── TIMELINE ────────────────────────────── */
+  .timeline-section {
+    background: linear-gradient(180deg, var(--paper) 0%, #ede8df 100%);
+    padding: clamp(3rem, 8vh, 7rem) clamp(1.5rem, 6vw, 6rem);
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: clamp(3rem, 6vh, 5rem);
+  }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--warm);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 900;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    color: var(--deep);
+  }
+
+  .timeline {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: clamp(1.5rem, 4vw, 3rem);
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--warm), transparent);
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: clamp(3rem, 8vw, 6rem) 1fr;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    margin-bottom: clamp(2rem, 5vh, 3.5rem);
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .timeline-time {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0.2rem;
+  }
+  .time-dot {
+    width: 14px; height: 14px;
+    background: var(--paper);
+    border: 2.5px solid var(--warm);
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .timeline-item:hover .time-dot {
+    background: var(--warm);
+    transform: scale(1.3);
+  }
+  .time-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--warm);
+    letter-spacing: 0.05em;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    margin-top: 0.5rem;
+    opacity: 0.7;
+  }
+
+  .timeline-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(44,31,20,0.08);
+    transition: transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.35s;
+    cursor: pointer;
+  }
+  .timeline-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(44,31,20,0.15);
+  }
+
+  .card-header {
+    padding: 1.4rem 1.6rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--mist);
+  }
+  .card-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+  }
+  .card-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+  }
+  .badge-free { background: rgba(122,140,110,0.15); color: var(--sage); }
+  .badge-paid { background: rgba(201,169,110,0.15); color: #8a6c30; }
+  .badge-food { background: rgba(184,92,56,0.12); color: var(--rust); }
+
+  .card-body { padding: 1.4rem 1.6rem; }
+  .card-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: var(--deep);
+    margin-bottom: 0.3rem;
+  }
+  .card-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--warm);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .card-desc {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: #5a4d42;
+    font-weight: 300;
+  }
+
+  .card-tips {
+    margin-top: 1rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--paper);
+    border-left: 3px solid var(--warm);
+    border-radius: 0 4px 4px 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.4s ease;
+    opacity: 0;
+  }
+  .timeline-card.expanded .card-tips {
+    max-height: 200px;
+    opacity: 1;
+  }
+  .card-tips p {
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: #6a5a50;
+    font-style: italic;
+  }
+
+  .card-footer {
+    padding: 0.8rem 1.6rem;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-expand-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--warm);
+    background: none;
+    border: 1px solid var(--mist);
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .card-expand-btn:hover {
+    background: var(--warm);
+    color: #fff;
+    border-color: var(--warm);
+  }
+  .card-duration {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--mist);
+  }
+
+  /* ── MAP SECTION ─────────────────────────── */
+  .map-section {
+    background: var(--deep);
+    padding: clamp(3rem, 8vh, 7rem) clamp(1.5rem, 6vw, 6rem);
+    position: relative;
+    overflow: hidden;
+  }
+  .map-section .section-label { color: var(--warm); }
+  .map-section .section-title { color: var(--paper); }
+
+  .map-bg-text {
+    position: absolute;
+    right: -2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(6rem, 15vw, 14rem);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(201,169,110,0.08);
+    user-select: none;
+    line-height: 1;
+  }
+
+  .route-visual {
+    max-width: 700px;
+    margin: 3rem auto 0;
+    position: relative;
+    z-index: 1;
+  }
+  .route-stop {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.2rem 1.5rem;
+    border-radius: 6px;
+    transition: background 0.3s;
+    cursor: default;
+  }
+  .route-stop:hover { background: rgba(201,169,110,0.08); }
+  .route-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--warm);
+    width: 2rem;
+    text-align: center;
+    flex-shrink: 0;
+    opacity: 0.5;
+  }
+  .route-info { flex: 1; }
+  .route-name {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--paper);
+  }
+  .route-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--warm);
+    margin-top: 0.2rem;
+    opacity: 0.8;
+  }
+  .route-arrow {
+    color: rgba(201,169,110,0.3);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .route-connector {
+    height: 1.5rem;
+    margin-left: calc(1.5rem + 1rem);
+    border-left: 1px dashed rgba(201,169,110,0.25);
+    display: flex;
+    align-items: center;
+    padding-left: 2rem;
+  }
+  .connector-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(201,169,110,0.4);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── TIPS SECTION ────────────────────────── */
+  .tips-section {
+    background: var(--paper);
+    padding: clamp(3rem, 8vh, 7rem) clamp(1.5rem, 6vw, 6rem);
+  }
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 3rem auto 0;
+  }
+  .tip-card {
+    padding: 1.8rem;
+    border: 1px solid var(--mist);
+    border-radius: 6px;
+    transition: transform 0.3s, border-color 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .tip-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,169,110,0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .tip-card:hover { transform: translateY(-4px); border-color: var(--warm); }
+  .tip-card:hover::before { opacity: 1; }
+  .tip-icon { font-size: 1.6rem; margin-bottom: 1rem; }
+  .tip-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--deep);
+    margin-bottom: 0.6rem;
+  }
+  .tip-text {
+    font-size: 0.83rem;
+    line-height: 1.8;
+    color: #6a5a50;
+    font-weight: 300;
+  }
+
+  /* ── FOOTER ──────────────────────────────── */
+  footer {
+    background: var(--deep);
+    padding: clamp(2.5rem, 5vh, 4rem) clamp(1.5rem, 6vw, 6rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .footer-brand {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--paper);
+  }
+  .footer-brand span { color: var(--warm); }
+  .footer-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(213,208,200,0.4);
+    letter-spacing: 0.1em;
+  }
+  .footer-line {
+    width: 40px;
+    height: 1px;
+    background: var(--warm);
+    opacity: 0.4;
+  }
+
+  /* ── NAV ─────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem clamp(1.5rem, 4vw, 3rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.4s, backdrop-filter 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(26,20,16,0.92);
+    backdrop-filter: blur(20px);
+  }
+  .nav-logo {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--paper);
+    letter-spacing: 0.05em;
+  }
+  .nav-logo span { color: var(--warm); }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: var(--mist);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--warm); }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+  }
+
+  /* ── SCROLL REVEAL ───────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger delays */
+  .reveal:nth-child(2) { transition-delay: 0.1s; }
+  .reveal:nth-child(3) { transition-delay: 0.2s; }
+  .reveal:nth-child(4) { transition-delay: 0.3s; }
+  .reveal:nth-child(5) { transition-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Navigation -->
+<nav id="nav">
+  <div class="nav-logo">板橋<span>一日遊</span></div>
+  <ul class="nav-links">
+    <li><a href="#timeline">行程</a></li>
+    <li><a href="#route">路線</a></li>
+    <li><a href="#tips">提示</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="particles" id="particles"></div>
+  <div class="hero-deco">5</div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">新北市 · 板橋區 · 一日遊行程</div>
+    <h1 class="hero-title">
+      板橋質感<br>一日遊
+      <span>古今交織 · 美拍與美食</span>
+    </h1>
+    <p class="hero-subtitle">
+      從清代園林到現代藝文，從傍晚光影到夜市喧囂，<br>
+      一天走遍板橋最美的五個面貌。
+    </p>
+    <div class="hero-tags">
+      <span class="tag">20 歲年輕族群</span>
+      <span class="tag">5 個景點</span>
+      <span class="tag">10:30 — 21:00</span>
+      <span class="tag">捷運可達</span>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Intro -->
+<section class="intro-strip">
+  <div class="reveal">
+    <div class="intro-label">關於這趟旅程</div>
+    <h2 class="intro-heading">
+      三鐵共構，<br>
+      <em>輕鬆到達</em><br>
+      的城市探索
+    </h2>
+  </div>
+  <div>
+    <p class="intro-text reveal">
+      板橋擁有高鐵、台鐵、捷運三鐵共構的優越交通，無論從台北或外縣市前來都極為便利。本行程以步行為主，各景點間距離適中，讓你用最輕鬆的方式感受板橋的多元面貌。
+    </p>
+    <div class="stats-grid" style="margin-top:2rem;">
+      <div class="stat-card reveal">
+        <div class="stat-num">5</div>
+        <div class="stat-label">精選景點</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-num">40</div>
+        <div class="stat-label">最低門票 NT$</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-num">10h</div>
+        <div class="stat-label">完整行程時長</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">打卡美照機會</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Timeline -->
+<section class="timeline-section" id="timeline">
+  <div class="section-header">
+    <div class="section-label">行程規劃</div>
+    <h2 class="section-title">今日精彩 · 五站探索</h2>
+  </div>
+
+  <div class="timeline">
+
+    <div class="timeline-item" data-delay="0">
+      <div class="timeline-time">
+        <div class="time-dot"></div>
+        <div class="time-text">10:30</div>
+      </div>
+      <div class="timeline-card" onclick="toggleCard(this)">
+        <div class="card-header">
+          <div class="card-icon">🏯</div>
+          <span class="card-badge badge-paid">NT$40</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">林本源園邸（板橋林家花園）</div>
+          <div class="card-subtitle">西門街 9 號 · 09:00–17:00</div>
+          <p class="card-desc">台灣保存最完整的清代園林建築，漏窗、迴廊與庭院造景精緻無比。旗袍或古裝攝影的絕佳聖地，也是極具質感的網美打卡點。建議參加中文導覽，更能深入了解林家歷史。</p>
+          <div class="card-tips">
+            <p>💡 小提示：門票僅 NT$40，部分區域可能因維修關閉，建議出發前確認。想拍古裝記得自備換裝行頭，漏窗前是最佳拍照位置！</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="card-expand-btn">展開小提示 ▾</button>
+          <span class="card-duration">停留約 2 小時</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item" data-delay="100">
+      <div class="timeline-time">
+        <div class="time-dot"></div>
+        <div class="time-text">12:30</div>
+      </div>
+      <div class="timeline-card" onclick="toggleCard(this)">
+        <div class="card-header">
+          <div class="card-icon">🍜</div>
+          <span class="card-badge badge-food">午餐</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">府中商圈 · 板橋車站美食</div>
+          <div class="card-subtitle">府中站 / 板橋車站 · 各店家時間不同</div>
+          <p class="card-desc">府中站附近有許多在地美食：油庫口麵線、肉圓等庶民小吃。若想升級用餐體驗，板橋車站二樓的環球購物中心與大遠百 Mega City 提供豐富異國料理選擇。</p>
+          <div class="card-tips">
+            <p>💡 小提示：油庫口麵線正午常大排長龍，建議 12:00 前搶先抵達。或直接前往百貨餐廳省去等待時間。</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="card-expand-btn">展開小提示 ▾</button>
+          <span class="card-duration">停留約 1.5 小時</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item" data-delay="200">
+      <div class="timeline-time">
+        <div class="time-dot"></div>
+        <div class="time-text">14:30</div>
+      </div>
+      <div class="timeline-card" onclick="toggleCard(this)">
+        <div class="card-header">
+          <div class="card-icon">🎨</div>
+          <span class="card-badge badge-free">免費</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">板橋 435 藝文特區</div>
+          <div class="card-subtitle">中正路 435 號 · 09:00–17:00（週末至 18:00）</div>
+          <p class="card-desc">歐式新古典主義風格建築搭配大片草地，牆面上繽紛彩繪壁畫吸引無數打卡人潮。園區內「台灣玩具博物館」充滿童趣，悠閒散步同時創造大量質感照片。</p>
+          <div class="card-tips">
+            <p>💡 小提示：平日 17:00 關閉，週末延至 18:00。建議先查當週特展活動。彩繪區部分牆面可能更換，保持期待感！</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="card-expand-btn">展開小提示 ▾</button>
+          <span class="card-duration">停留約 1.5 小時</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item" data-delay="300">
+      <div class="timeline-time">
+        <div class="time-dot"></div>
+        <div class="time-text">16:30</div>
+      </div>
+      <div class="timeline-card" onclick="toggleCard(this)">
+        <div class="card-header">
+          <div class="card-icon">🌉</div>
+          <span class="card-badge badge-free">免費 · 24H</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">新月橋</div>
+          <div class="card-subtitle">環河道路 · 全天開放</div>
+          <p class="card-desc">從 435 藝文特區步行即可抵達。專供行人與單車使用的景觀橋，設有透明「天空步道」可俯瞰大漢溪。傍晚時分，橋身七彩光雕秀點燈，浪漫指數破表！</p>
+          <div class="card-tips">
+            <p>💡 小提示：傍晚 17:00 前後夕陽光線絕美，天黑後七彩燈光更加壯觀。建議在橋上多待一會兒，等待魔幻時刻。</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="card-expand-btn">展開小提示 ▾</button>
+          <span class="card-duration">停留約 1.5 小時</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item" data-delay="400">
+      <div class="timeline-time">
+        <div class="time-dot"></div>
+        <div class="time-text">18:30</div>
+      </div>
+      <div class="timeline-card" onclick="toggleCard(this)">
+        <div class="card-header">
+          <div class="card-icon">🌃</div>
+          <span class="card-badge badge-food">晚餐</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">湳雅夜市</div>
+          <div class="card-subtitle">南雅東路 · 17:00 開始擺攤</div>
+          <p class="card-desc">板橋最具規模的夜市，道地庶民美食魅力無法擋。必嘗排骨酥、蚵仔餃與煉乳地瓜球，在人聲鼎沸的氛圍中為完美一日畫下最美的句點。</p>
+          <div class="card-tips">
+            <p>💡 小提示：17:00 才開始擺攤，18:30 後才最熱鬧。時間剛好與新月橋行程完美銜接，不用擔心太早到攤位還沒開！</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="card-expand-btn">展開小提示 ▾</button>
+          <span class="card-duration">停留約 2 小時</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Route Section -->
+<section class="map-section" id="route">
+  <div class="map-bg-text">路線</div>
+  <div class="section-header">
+    <div class="section-label">移動路線</div>
+    <h2 class="section-title" style="color:var(--paper)">步行串聯 · 輕鬆暢遊</h2>
+  </div>
+
+  <div class="route-visual reveal">
+    <div class="route-stop">
+      <div class="route-num">1</div>
+      <div class="route-info">
+        <div class="route-name">林本源園邸</div>
+        <div class="route-time">10:30 抵達 · 府中站步行 5 分鐘</div>
+      </div>
+      <div class="route-arrow">↓</div>
+    </div>
+    <div class="route-connector"><span class="connector-label">步行 10 分 · 府中商圈方向</span></div>
+    <div class="route-stop">
+      <div class="route-num">2</div>
+      <div class="route-info">
+        <div class="route-name">府中商圈 / 板橋車站</div>
+        <div class="route-time">12:30 午餐 · 府中站或板橋站</div>
+      </div>
+      <div class="route-arrow">↓</div>
+    </div>
+    <div class="route-connector"><span class="connector-label">步行 15 分 · 或搭乘捷運一站</span></div>
+    <div class="route-stop">
+      <div class="route-num">3</div>
+      <div class="route-info">
+        <div class="route-name">板橋 435 藝文特區</div>
+        <div class="route-time">14:30 抵達 · 新埔站步行 5 分鐘</div>
+      </div>
+      <div class="route-arrow">↓</div>
+    </div>
+    <div class="route-connector"><span class="connector-label">步行 10 分 · 沿大漢溪畔</span></div>
+    <div class="route-stop">
+      <div class="route-num">4</div>
+      <div class="route-info">
+        <div class="route-name">新月橋</div>
+        <div class="route-time">16:30 抵達 · 435 特區步行可達</div>
+      </div>
+      <div class="route-arrow">↓</div>
+    </div>
+    <div class="route-connector"><span class="connector-label">搭乘捷運 · 回板橋/府中方向</span></div>
+    <div class="route-stop">
+      <div class="route-num">5</div>
+      <div class="route-info">
+        <div class="route-name">湳雅夜市</div>
+        <div class="route-time">18:30 抵達 · 完美收尾</div>
+      </div>
+      <div class="route-arrow">✦</div>
+    </div>
+  </div>
+</section>
+
+<!-- Tips -->
+<section class="tips-section" id="tips">
+  <div class="section-header">
+    <div class="section-label">行前備忘</div>
+    <h2 class="section-title">出發前的必讀提示</h2>
+  </div>
+  <div class="tips-grid">
+    <div class="tip-card reveal">
+      <div class="tip-icon">🚇</div>
+      <div class="tip-title">交通建議</div>
+      <p class="tip-text">建議購買悠遊卡，捷運板橋線直達各景點。板橋車站有高鐵、台鐵、捷運，外縣市朋友也能輕鬆前來。</p>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon">👗</div>
+      <div class="tip-title">穿搭建議</div>
+      <p class="tip-text">林家花園適合穿著古典風或旗袍，435 藝文特區適合文青穿搭。選擇舒適好走的鞋子，全程以步行為主。</p>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon">📱</div>
+      <div class="tip-title">拍照熱點</div>
+      <p class="tip-text">林家花園漏窗前、435 彩繪壁畫旁、新月橋天空步道上，都是超高人氣打卡點，建議避開假日正午人潮。</p>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon">☀️</div>
+      <div class="tip-title">天氣與季節</div>
+      <p class="tip-text">夏季建議帶防曬用品，新月橋上風大涼爽。雨天時，林家花園和 435 室內展區仍可遊覽，影響有限。</p>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon">💰</div>
+      <div class="tip-title">預算參考</div>
+      <p class="tip-text">林家花園門票 NT$40，其餘景點免費入場。午晚餐各約 NT$100–250，全程預算約 NT$500–800 即可暢遊。</p>
+    </div>
+    <div class="tip-card reveal">
+      <div class="tip-icon">🌙</div>
+      <div class="tip-title">最佳時節</div>
+      <p class="tip-text">秋冬天色較早，新月橋燈光可提前欣賞；春夏黃昏美麗，適合在橋上等夕陽。全年皆宜，各有風情。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-brand">板橋<span>·</span>質感一日遊</div>
+  <div class="footer-line"></div>
+  <div class="footer-note">FOR 20s · BANQIAO · NEW TAIPEI CITY</div>
+</footer>
+
+<script>
+  // ── Cursor ────────────────────────────────
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx - 5 + 'px';
+    cursor.style.top = my - 5 + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx - 18 + 'px';
+    ring.style.top = ry - 18 + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  document.querySelectorAll('a, button, .timeline-card, .tip-card, .stat-card').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+  });
+
+  // ── Particles ─────────────────────────────
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 35; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      --dur: ${6 + Math.random() * 8}s;
+      --delay: ${-Math.random() * 10}s;
+      --drift: ${(Math.random() - 0.5) * 80}px;
+      width: ${1 + Math.random() * 3}px;
+      height: ${1 + Math.random() * 3}px;
+    `;
+    container.appendChild(p);
+  }
+
+  // ── Nav scroll ────────────────────────────
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 80);
+  });
+
+  // ── Scroll reveal ─────────────────────────
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // ── Timeline reveal ───────────────────────
+  const timelineItems = document.querySelectorAll('.timeline-item');
+  const tlObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const delay = parseInt(e.target.dataset.delay) || 0;
+        setTimeout(() => e.target.classList.add('visible'), delay);
+        tlObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  timelineItems.forEach(el => tlObserver.observe(el));
+
+  // ── Card expand ───────────────────────────
+  function toggleCard(card) {
+    const isExp = card.classList.contains('expanded');
+    document.querySelectorAll('.timeline-card.expanded').forEach(c => {
+      c.classList.remove('expanded');
+      c.querySelector('.card-expand-btn').textContent = '展開小提示 ▾';
+    });
+    if (!isExp) {
+      card.classList.add('expanded');
+      card.querySelector('.card-expand-btn').textContent = '收起小提示 ▴';
+    }
+  }
+
+  // ── Smooth scroll ─────────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>
