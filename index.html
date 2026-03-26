@@ -197,6 +197,57 @@
   .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.8s, transform 0.8s; }
   .reveal.visible { opacity:1; transform:translateY(0); }
   .reveal:nth-child(2){transition-delay:0.1s} .reveal:nth-child(3){transition-delay:0.2s} .reveal:nth-child(4){transition-delay:0.3s}
+
+  /* ── PC: 所有文字不小於 16px ─────────────── */
+  @media(min-width:601px){
+    /* Nav */
+    .nav-logo { font-size: 1.1rem; }
+    .nav-links a { font-size: 1rem; letter-spacing: 0.08em; }
+
+    /* Hero labels & tags */
+    .hero-eyebrow { font-size: clamp(1rem, 1.2vw, 1.05rem); }
+    .tag { font-size: 1rem; }
+    .hero-scroll span { font-size: 1rem; }
+
+    /* Section labels */
+    .section-label { font-size: 1rem; }
+    .intro-label { font-size: 1rem; }
+
+    /* Body text */
+    .intro-text { font-size: clamp(1rem, 1.5vw, 1.1rem); }
+    .stat-label { font-size: 1rem; }
+
+    /* Timeline card */
+    .time-text { font-size: 1rem; writing-mode: vertical-rl; }
+    .card-badge { font-size: 1rem; }
+    .card-subtitle { font-size: 1rem; }
+    .card-desc { font-size: 1rem; }
+    .parking-text { font-size: 1rem; }
+    .card-tips p { font-size: 1rem; }
+    .card-expand-btn { font-size: 1rem; }
+    .card-duration { font-size: 1rem; }
+
+    /* Parking cards */
+    .pc-stop { font-size: 1rem; }
+    .pc-name { font-size: 1.05rem; }
+    .pc-addr { font-size: 1rem; }
+    .pc-tag { font-size: 1rem; }
+    .pc-link { font-size: 1rem; }
+
+    /* Route */
+    .route-name { font-size: 1.05rem; }
+    .route-time { font-size: 1rem; }
+    .route-parking-pill { font-size: 1rem; }
+    .connector-label { font-size: 1rem; }
+
+    /* Tips */
+    .tip-title { font-size: 1.05rem; }
+    .tip-text { font-size: 1rem; }
+
+    /* Footer */
+    .footer-brand { font-size: 1.2rem; }
+    .footer-note { font-size: 1rem; }
+  }
 </style>
 </head>
 <body>
