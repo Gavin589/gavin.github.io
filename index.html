@@ -1,571 +1,397 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>板橋一日遊</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
 <style>
-  :root {
-    --ink: #1a1410;
-    --paper: #f5f0e8;
-    --warm: #c9a96e;
-    --rust: #b85c38;
-    --sage: #7a8c6e;
-    --mist: #d4cfc8;
-    --deep: #2c1f14;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { background: var(--paper); color: var(--ink); font-family: 'Noto Serif TC', serif; overflow-x: hidden; cursor: none; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .game-wrap { padding: 1.5rem 0; max-width: 720px; margin: 0 auto; }
+  .screen { display: none; }
+  .screen.active { display: block; }
 
-  .cursor { position: fixed; width: 10px; height: 10px; background: var(--rust); border-radius: 50%; pointer-events: none; z-index: 9999; mix-blend-mode: multiply; }
-  .cursor-ring { position: fixed; width: 36px; height: 36px; border: 1.5px solid var(--warm); border-radius: 50%; pointer-events: none; z-index: 9998; transition: width 0.3s, height 0.3s, border-color 0.3s; }
-  .cursor-ring.hover { width: 56px; height: 56px; border-color: var(--rust); }
+  .home-header { text-align: center; padding: 2rem 0 1.5rem; }
+  .home-title { font-size: 28px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 8px; }
+  .home-sub { font-size: 15px; color: var(--color-text-secondary); line-height: 1.6; }
+  .home-img { font-size: 52px; margin-bottom: 1rem; display: block; }
 
-  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9990; opacity: 0.5; }
+  .topic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 1.5rem 0; }
+  .topic-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem 1rem; cursor: pointer; transition: border-color 0.15s, background 0.15s; text-align: center; }
+  .topic-card:hover { border-color: var(--color-border-secondary); background: var(--color-background-secondary); }
+  .topic-card.selected { border: 2px solid #1D9E75; }
+  .topic-icon { font-size: 24px; margin-bottom: 8px; display: block; }
+  .topic-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .topic-loc { font-size: 12px; color: var(--color-text-secondary); }
 
-  /* NAV */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem clamp(1.5rem,4vw,3rem); display: flex; justify-content: space-between; align-items: center; transition: background 0.4s; }
-  nav.scrolled { background: rgba(26,20,16,0.92); backdrop-filter: blur(20px); }
-  .nav-logo { font-family: 'Noto Serif TC',serif; font-size: 1rem; font-weight: 600; color: var(--paper); letter-spacing: 0.05em; }
-  .nav-logo span { color: var(--warm); }
-  .nav-links { display: flex; gap: 2rem; list-style: none; }
-  .nav-links a { font-family: 'DM Mono',monospace; font-size: 0.68rem; letter-spacing: 0.12em; color: var(--mist); text-decoration: none; text-transform: uppercase; transition: color 0.3s; }
-  .nav-links a:hover { color: var(--warm); }
+  .start-btn { display: block; width: 100%; padding: 14px; background: #1D9E75; color: #04342C; border: none; border-radius: var(--border-radius-md); font-size: 16px; font-weight: 500; cursor: pointer; margin-top: 1rem; transition: opacity 0.15s; }
+  .start-btn:hover { opacity: 0.88; }
+  .start-btn:disabled { opacity: 0.4; cursor: default; }
 
-  /* Hamburger */
-  .nav-hamburger { display:none; flex-direction:column; justify-content:center; gap:5px; width:36px; height:36px; background:none; border:1px solid rgba(201,169,110,0.3); border-radius:4px; cursor:pointer; padding:8px; z-index:200; }
-  .nav-hamburger span { display:block; width:100%; height:1.5px; background:var(--warm); border-radius:2px; transition:transform 0.35s cubic-bezier(0.4,0,0.2,1),opacity 0.3s; transform-origin:center; }
-  .nav-hamburger.open span:nth-child(1){ transform:translateY(6.5px) rotate(45deg); }
-  .nav-hamburger.open span:nth-child(2){ opacity:0; transform:scaleX(0); }
-  .nav-hamburger.open span:nth-child(3){ transform:translateY(-6.5px) rotate(-45deg); }
+  .quiz-top { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
+  .back-btn { background: none; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 6px 12px; font-size: 13px; color: var(--color-text-secondary); cursor: pointer; }
+  .back-btn:hover { background: var(--color-background-secondary); }
+  .progress-bar { flex: 1; height: 6px; background: var(--color-background-secondary); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #1D9E75; border-radius: 3px; transition: width 0.3s; }
+  .q-counter { font-size: 13px; color: var(--color-text-secondary); white-space: nowrap; }
+  .score-badge { font-size: 13px; font-weight: 500; color: #0F6E56; background: #E1F5EE; padding: 4px 10px; border-radius: var(--border-radius-md); white-space: nowrap; }
 
-  /* Mobile drawer */
-  .mobile-menu { position:fixed; inset:0; z-index:150; pointer-events:none; }
-  .mobile-menu-backdrop { position:absolute; inset:0; background:rgba(26,20,16,0.6); opacity:0; transition:opacity 0.4s; backdrop-filter:blur(4px); }
-  .mobile-menu-drawer { position:absolute; top:0; right:0; width:min(80vw,300px); height:100%; background:var(--deep); border-left:1px solid rgba(201,169,110,0.2); display:flex; flex-direction:column; padding:5rem 2.5rem 3rem; transform:translateX(100%); transition:transform 0.45s cubic-bezier(0.4,0,0.2,1); }
-  .mobile-menu.open { pointer-events:all; }
-  .mobile-menu.open .mobile-menu-backdrop { opacity:1; }
-  .mobile-menu.open .mobile-menu-drawer { transform:translateX(0); }
+  .guju-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; margin-bottom: 1.25rem; }
+  .guju-name { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .guju-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); background: #E1F5EE; color: #0F6E56; margin-bottom: 0.75rem; }
+  .guju-desc { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; }
 
-  .mobile-menu-label { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.35em; color:rgba(201,169,110,0.5); text-transform:uppercase; margin-bottom:2rem; }
-  .mobile-menu-links { list-style:none; display:flex; flex-direction:column; }
-  .mobile-menu-links li { border-bottom:1px solid rgba(201,169,110,0.1); }
-  .mobile-menu-links li:first-child { border-top:1px solid rgba(201,169,110,0.1); }
-  .mobile-menu-links a { display:flex; align-items:center; justify-content:space-between; padding:1.1rem 0; font-family:'Noto Serif TC',serif; font-weight:600; font-size:1.1rem; color:var(--paper); text-decoration:none; transition:color 0.3s, padding-left 0.3s; }
-  .mobile-menu-links a:hover { color:var(--warm); padding-left:0.4rem; }
-  .mobile-menu-links .link-arrow { font-size:0.8rem; color:var(--warm); opacity:0.5; transition:opacity 0.3s; }
-  .mobile-menu-links a:hover .link-arrow { opacity:1; }
-  .mobile-menu-links .link-sub { font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:0.12em; color:rgba(201,169,110,0.5); text-transform:uppercase; display:block; margin-top:0.1rem; }
-  .mobile-menu-footer { margin-top:auto; font-family:'DM Mono',monospace; font-size:0.62rem; color:rgba(213,208,200,0.3); letter-spacing:0.1em; line-height:1.8; }
-  .mobile-menu-footer strong { display:block; color:var(--warm); margin-bottom:0.3rem; font-weight:400; }
+  .question-text { font-size: 17px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 1.25rem; line-height: 1.6; }
+  .options-grid { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn { background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 14px 16px; text-align: left; font-size: 15px; color: var(--color-text-primary); cursor: pointer; transition: all 0.15s; line-height: 1.5; }
+  .opt-btn:hover:not(:disabled) { border-color: #1D9E75; background: #E1F5EE; color: #085041; }
+  .opt-btn.correct { background: #E1F5EE; border-color: #1D9E75; color: #085041; font-weight: 500; }
+  .opt-btn.wrong { background: #FCEBEB; border-color: #E24B4A; color: #501313; }
+  .opt-btn:disabled { cursor: default; }
 
-  @media(max-width:600px){ .nav-links{display:none;} .nav-hamburger{display:flex;} }
+  .explain-box { background: var(--color-background-secondary); border-left: 3px solid #1D9E75; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 1rem 1.25rem; margin-top: 1rem; font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; }
+  .explain-title { font-size: 13px; font-weight: 500; color: #0F6E56; margin-bottom: 6px; }
 
-  /* HERO */
-  .hero { min-height: 100vh; display: grid; grid-template-rows: 1fr auto; position: relative; overflow: hidden; background: var(--deep); }
-  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(201,169,110,0.12) 0%, transparent 70%), radial-gradient(ellipse 50% 80% at 20% 80%, rgba(184,92,56,0.1) 0%, transparent 60%), linear-gradient(160deg,#1a0f06 0%,#2c1f14 50%,#1a150e 100%); }
-  .particles { position: absolute; inset: 0; overflow: hidden; }
-  .particle { position: absolute; background: var(--warm); border-radius: 50%; opacity: 0; animation: float-up var(--dur,8s) var(--delay,0s) infinite ease-in-out; }
-  @keyframes float-up { 0%{transform:translateY(100vh) translateX(0);opacity:0} 10%{opacity:0.6} 90%{opacity:0.2} 100%{transform:translateY(-10vh) translateX(var(--drift,30px));opacity:0} }
-  .hero-content { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: clamp(2rem,8vw,7rem) clamp(1.5rem,6vw,6rem); padding-top: clamp(6rem,15vh,12rem); position: relative; z-index: 2; }
-  .hero-eyebrow { font-family: 'DM Mono',monospace; font-size: clamp(0.65rem,1.2vw,0.8rem); color: var(--warm); letter-spacing: 0.35em; text-transform: uppercase; margin-bottom: 1.8rem; display: flex; align-items: center; gap: 1rem; opacity: 0; animation: fade-up 0.8s 0.3s forwards; }
-  .hero-eyebrow::before { content:''; display:block; width:40px; height:1px; background:var(--warm); }
-  .hero-title { font-family: 'Noto Serif TC',serif; font-weight: 600; font-size: clamp(2.8rem,8vw,7rem); line-height: 1.0; color: var(--paper); margin-bottom: 0.4rem; opacity: 0; animation: fade-up 0.9s 0.5s forwards; }
-  .hero-title span { display:block; color:var(--warm); font-style:italic; font-size:0.55em; font-weight:300; letter-spacing:0.12em; }
-  .hero-subtitle { font-family: 'Cormorant Garamond',serif; font-weight: 300; font-style: italic; font-size: clamp(1.1rem,2.5vw,1.5rem); color: var(--mist); margin: 1.5rem 0 2.5rem; max-width: 480px; line-height: 1.7; opacity: 0; animation: fade-up 0.9s 0.7s forwards; }
-  .hero-tags { display: flex; gap: 0.75rem; flex-wrap: wrap; opacity: 0; animation: fade-up 0.9s 0.9s forwards; }
-  .tag { padding: 0.4rem 1rem; border: 1px solid rgba(201,169,110,0.4); color: var(--warm); font-family: 'DM Mono',monospace; font-size: 0.72rem; letter-spacing: 0.1em; border-radius: 2px; }
-  .hero-scroll { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; z-index: 2; opacity: 0; animation: fade-up 1s 1.4s forwards; }
-  .hero-scroll span { font-family: 'DM Mono',monospace; font-size: 0.65rem; letter-spacing: 0.25em; color: var(--warm); text-transform: uppercase; }
-  .scroll-line { width: 1px; height: 50px; background: linear-gradient(to bottom,var(--warm),transparent); animation: scroll-pulse 2s ease-in-out infinite; }
-  @keyframes scroll-pulse { 0%,100%{opacity:0.4;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.2)} }
-  .hero-deco { position: absolute; right: clamp(1rem,5vw,4rem); top: 50%; transform: translateY(-50%); font-family: 'Cormorant Garamond',serif; font-size: clamp(8rem,20vw,18rem); font-weight: 300; color: transparent; -webkit-text-stroke: 1px rgba(201,169,110,0.12); line-height: 1; user-select: none; opacity: 0; animation: fade-up 1.2s 1s forwards; }
-  @keyframes fade-up { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  .next-btn { display: block; width: 100%; padding: 12px; background: none; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 15px; font-weight: 500; color: var(--color-text-primary); cursor: pointer; margin-top: 1rem; transition: background 0.15s; }
+  .next-btn:hover { background: var(--color-background-secondary); }
 
-  .divider { height: 80px; background: var(--deep); position: relative; overflow: hidden; }
-  .divider::after { content:''; position:absolute; bottom:0; left:0; right:0; height:80px; background:var(--paper); clip-path:ellipse(60% 100% at 50% 100%); }
-
-  /* INTRO */
-  .intro-strip { background: var(--paper); padding: clamp(3rem,8vh,6rem) clamp(1.5rem,6vw,6rem); display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-  @media(max-width:768px){ .intro-strip{grid-template-columns:1fr;gap:2rem} }
-  .intro-label { font-family: 'DM Mono',monospace; font-size: 0.7rem; letter-spacing: 0.3em; color: var(--rust); text-transform: uppercase; margin-bottom: 1rem; }
-  .intro-heading { font-family: 'Noto Serif TC',serif; font-weight: 600; font-size: clamp(1.8rem,4vw,3rem); line-height: 1.25; color: var(--deep); }
-  .intro-heading em { font-style: italic; color: var(--rust); font-weight: 300; }
-  .intro-text { font-size: clamp(0.9rem,1.5vw,1.05rem); line-height: 1.9; color: #4a3f35; font-weight: 300; }
-  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-  .stat-card { background: var(--deep); color: var(--paper); padding: 1.5rem; border-radius: 4px; position: relative; overflow: hidden; transition: transform 0.3s; }
-  .stat-card:hover { transform: translateY(-4px); }
-  .stat-card::before { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:var(--warm); transform:scaleX(0); transform-origin:left; transition:transform 0.4s; }
-  .stat-card:hover::before { transform:scaleX(1); }
-  .stat-num { font-family: 'Cormorant Garamond',serif; font-size: 2.8rem; font-weight: 400; color: var(--warm); line-height: 1; }
-  .stat-label { font-family: 'DM Mono',monospace; font-size: 0.68rem; letter-spacing: 0.15em; color: var(--mist); margin-top: 0.3rem; }
-
-  /* SECTION HEADER */
-  .section-header { text-align: center; margin-bottom: clamp(3rem,6vh,5rem); }
-  .section-label { font-family: 'DM Mono',monospace; font-size: 0.7rem; letter-spacing: 0.4em; color: var(--warm); text-transform: uppercase; margin-bottom: 0.8rem; }
-  .section-title { font-family: 'Noto Serif TC',serif; font-weight: 600; font-size: clamp(1.8rem,4vw,3rem); color: var(--deep); }
-
-  /* TIMELINE */
-  .timeline-section { background: linear-gradient(180deg,var(--paper) 0%,#ede8df 100%); padding: clamp(3rem,8vh,7rem) clamp(1.5rem,6vw,6rem); }
-  .timeline { position: relative; max-width: 900px; margin: 0 auto; }
-  .timeline::before { content:''; position:absolute; left:clamp(1.5rem,4vw,3rem); top:0; bottom:0; width:1px; background:linear-gradient(to bottom,var(--warm),transparent); }
-  .timeline-item { display: grid; grid-template-columns: clamp(3rem,8vw,6rem) 1fr; gap: clamp(1rem,3vw,2.5rem); margin-bottom: clamp(2rem,5vh,3.5rem); opacity: 0; transform: translateX(-20px); transition: opacity 0.7s, transform 0.7s; }
-  .timeline-item.visible { opacity:1; transform:translateX(0); }
-  .timeline-time { display: flex; flex-direction: column; align-items: center; padding-top: 0.2rem; }
-  .time-dot { width: 14px; height: 14px; background: var(--paper); border: 2.5px solid var(--warm); border-radius: 50%; position: relative; z-index: 1; flex-shrink: 0; transition: background 0.3s, transform 0.3s; }
-  .timeline-item:hover .time-dot { background:var(--warm); transform:scale(1.3); }
-  .time-text { font-family: 'DM Mono',monospace; font-size: 0.62rem; color: var(--warm); letter-spacing: 0.05em; writing-mode: vertical-rl; margin-top: 0.5rem; opacity: 0.7; }
-  .timeline-card { background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 20px rgba(44,31,20,0.08); transition: transform 0.35s, box-shadow 0.35s; cursor: pointer; }
-  .timeline-card:hover { transform:translateY(-6px); box-shadow:0 16px 40px rgba(44,31,20,0.15); }
-  .card-header { padding: 1.4rem 1.6rem 1rem; display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--mist); }
-  .card-icon { font-size: 1.8rem; line-height: 1; }
-  .card-badge { font-family: 'DM Mono',monospace; font-size: 0.62rem; padding: 0.25rem 0.7rem; border-radius: 2px; letter-spacing: 0.1em; }
-  .badge-free { background:rgba(122,140,110,0.15); color:var(--sage); }
-  .badge-paid { background:rgba(201,169,110,0.15); color:#8a6c30; }
-  .badge-food { background:rgba(184,92,56,0.12); color:var(--rust); }
-  .card-body { padding: 1.4rem 1.6rem; }
-  .card-title { font-family: 'Noto Serif TC',serif; font-weight: 600; font-size: clamp(1rem,2.5vw,1.2rem); color: var(--deep); margin-bottom: 0.3rem; }
-  .card-subtitle { font-family: 'DM Mono',monospace; font-size: 0.68rem; color: var(--warm); letter-spacing: 0.1em; margin-bottom: 1rem; }
-  .card-desc { font-size: 0.9rem; line-height: 1.8; color: #5a4d42; font-weight: 300; }
-  .card-parking { display:flex; align-items:center; gap:0.5rem; margin-top:1rem; padding:0.7rem 1rem; background:#f9f5ee; border-radius:4px; border-left:3px solid var(--warm); }
-  .parking-icon { font-size:1rem; flex-shrink:0; }
-  .parking-text { font-family:'DM Mono',monospace; font-size:0.7rem; color:#6a5a50; line-height:1.5; }
-  .parking-text strong { color:var(--deep); font-weight:400; }
-  .card-tips { margin-top:1rem; padding:0.9rem 1.1rem; background:var(--paper); border-left:3px solid var(--warm); border-radius:0 4px 4px 0; max-height:0; overflow:hidden; transition:max-height 0.5s, opacity 0.4s; opacity:0; }
-  .timeline-card.expanded .card-tips { max-height:200px; opacity:1; }
-  .card-tips p { font-size:0.82rem; line-height:1.7; color:#6a5a50; font-style:italic; }
-  .card-footer { padding:0.8rem 1.6rem; background:var(--paper); display:flex; align-items:center; justify-content:space-between; }
-  .card-expand-btn { font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.1em; color:var(--warm); background:none; border:1px solid var(--mist); padding:0.3rem 0.8rem; border-radius:2px; cursor:pointer; transition:all 0.3s; }
-  .card-expand-btn:hover { background:var(--warm); color:#fff; border-color:var(--warm); }
-  .card-duration { font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--mist); }
-
-  /* PARKING SECTION */
-  .parking-section { background:var(--deep); padding:clamp(3rem,8vh,7rem) clamp(1.5rem,6vw,6rem); position:relative; overflow:hidden; }
-  .parking-section .section-label { color:var(--warm); }
-  .parking-section .section-title { color:var(--paper); }
-  .parking-bg-text { position:absolute; right:-2rem; top:50%; transform:translateY(-50%); font-family:'Cormorant Garamond',serif; font-size:clamp(6rem,15vw,14rem); font-weight:300; color:transparent; -webkit-text-stroke:1px rgba(201,169,110,0.07); user-select:none; line-height:1; }
-  .parking-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.2rem; max-width:1100px; margin:3rem auto 0; position:relative; z-index:1; }
-  .parking-card { background:rgba(255,255,255,0.04); border:1px solid rgba(201,169,110,0.2); border-radius:8px; padding:1.5rem; transition:transform 0.3s, background 0.3s, border-color 0.3s; }
-  .parking-card:hover { transform:translateY(-4px); background:rgba(201,169,110,0.07); border-color:var(--warm); }
-  .pc-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:1rem; }
-  .pc-stop { font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.15em; color:var(--warm); text-transform:uppercase; padding:0.2rem 0.6rem; border:1px solid rgba(201,169,110,0.35); border-radius:2px; }
-  .pc-num { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:300; color:rgba(201,169,110,0.25); line-height:1; }
-  .pc-name { font-family:'Noto Serif TC',serif; font-weight:600; font-size:0.95rem; color:var(--paper); margin-bottom:0.4rem; }
-  .pc-addr { font-family:'DM Mono',monospace; font-size:0.65rem; color:rgba(213,208,200,0.5); margin-bottom:1rem; line-height:1.5; }
-  .pc-tags { display:flex; flex-wrap:wrap; gap:0.4rem; }
-  .pc-tag { font-family:'DM Mono',monospace; font-size:0.62rem; padding:0.2rem 0.55rem; border-radius:2px; letter-spacing:0.05em; }
-  .pc-tag.price { background:rgba(201,169,110,0.15); color:var(--warm); }
-  .pc-tag.open { background:rgba(122,140,110,0.2); color:#9eb890; }
-  .pc-tag.note { background:rgba(255,255,255,0.06); color:rgba(213,208,200,0.6); }
-  .pc-link { display:inline-flex; align-items:center; gap:0.4rem; margin-top:1rem; font-family:'DM Mono',monospace; font-size:0.62rem; color:var(--warm); text-decoration:none; letter-spacing:0.08em; opacity:0.7; transition:opacity 0.3s; }
-  .pc-link:hover { opacity:1; }
-
-  /* ROUTE SECTION */
-  .route-section { background:#ede8df; padding:clamp(3rem,8vh,7rem) clamp(1.5rem,6vw,6rem); }
-  .route-visual { max-width:700px; margin:3rem auto 0; }
-  .route-stop { display:flex; align-items:center; gap:1.5rem; padding:1.2rem 1.5rem; border-radius:6px; transition:background 0.3s; }
-  .route-stop:hover { background:rgba(201,169,110,0.1); }
-  .route-num { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; color:var(--warm); width:2rem; text-align:center; flex-shrink:0; opacity:0.5; }
-  .route-info { flex:1; }
-  .route-name { font-family:'Noto Serif TC',serif; font-weight:600; font-size:1rem; color:var(--deep); }
-  .route-time { font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--warm); margin-top:0.2rem; }
-  .route-parking-pill { font-family:'DM Mono',monospace; font-size:0.6rem; padding:0.25rem 0.6rem; background:rgba(201,169,110,0.15); color:#8a6c30; border-radius:2px; flex-shrink:0; letter-spacing:0.05em; white-space:nowrap; }
-  .route-connector { height:1.5rem; margin-left:calc(1.5rem + 1rem); border-left:1px dashed rgba(184,92,56,0.3); display:flex; align-items:center; padding-left:2rem; }
-  .connector-label { font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--rust); letter-spacing:0.1em; opacity:0.7; }
-
-  /* TIPS */
-  .tips-section { background:var(--paper); padding:clamp(3rem,8vh,7rem) clamp(1.5rem,6vw,6rem); }
-  .tips-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.5rem; max-width:1000px; margin:3rem auto 0; }
-  .tip-card { padding:1.8rem; border:1px solid var(--mist); border-radius:6px; transition:transform 0.3s, border-color 0.3s; position:relative; overflow:hidden; }
-  .tip-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(201,169,110,0.05),transparent); opacity:0; transition:opacity 0.3s; }
-  .tip-card:hover { transform:translateY(-4px); border-color:var(--warm); }
-  .tip-card:hover::before { opacity:1; }
-  .tip-icon { font-size:1.6rem; margin-bottom:1rem; }
-  .tip-title { font-family:'Noto Serif TC',serif; font-weight:600; font-size:0.95rem; color:var(--deep); margin-bottom:0.6rem; }
-  .tip-text { font-size:0.83rem; line-height:1.8; color:#6a5a50; font-weight:300; }
-
-  /* FOOTER */
-  footer { background:var(--deep); padding:clamp(2.5rem,5vh,4rem) clamp(1.5rem,6vw,6rem); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.5rem; }
-  .footer-brand { font-family:'Noto Serif TC',serif; font-size:1.2rem; font-weight:600; color:var(--paper); }
-  .footer-brand span { color:var(--warm); }
-  .footer-note { font-family:'DM Mono',monospace; font-size:0.65rem; color:rgba(213,208,200,0.4); letter-spacing:0.1em; }
-  .footer-line { width:40px; height:1px; background:var(--warm); opacity:0.4; }
-
-  .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.8s, transform 0.8s; }
-  .reveal.visible { opacity:1; transform:translateY(0); }
-  .reveal:nth-child(2){transition-delay:0.1s} .reveal:nth-child(3){transition-delay:0.2s} .reveal:nth-child(4){transition-delay:0.3s}
-
-  /* ── PC: 所有文字不小於 16px ─────────────── */
-  @media(min-width:601px){
-    /* Nav */
-    .nav-logo { font-size: 1.1rem; }
-    .nav-links a { font-size: 1rem; letter-spacing: 0.08em; }
-
-    /* Hero labels & tags */
-    .hero-eyebrow { font-size: clamp(1rem, 1.2vw, 1.05rem); }
-    .tag { font-size: 1rem; }
-    .hero-scroll span { font-size: 1rem; }
-
-    /* Section labels */
-    .section-label { font-size: 1rem; }
-    .intro-label { font-size: 1rem; }
-
-    /* Body text */
-    .intro-text { font-size: clamp(1rem, 1.5vw, 1.1rem); }
-    .stat-label { font-size: 1rem; }
-
-    /* Timeline card */
-    .time-text { font-size: 1rem; writing-mode: vertical-rl; }
-    .card-badge { font-size: 1rem; }
-    .card-subtitle { font-size: 1rem; }
-    .card-desc { font-size: 1rem; }
-    .parking-text { font-size: 1rem; }
-    .card-tips p { font-size: 1rem; }
-    .card-expand-btn { font-size: 1rem; }
-    .card-duration { font-size: 1rem; }
-
-    /* Parking cards */
-    .pc-stop { font-size: 1rem; }
-    .pc-name { font-size: 1.05rem; }
-    .pc-addr { font-size: 1rem; }
-    .pc-tag { font-size: 1rem; }
-    .pc-link { font-size: 1rem; }
-
-    /* Route */
-    .route-name { font-size: 1.05rem; }
-    .route-time { font-size: 1rem; }
-    .route-parking-pill { font-size: 1rem; }
-    .connector-label { font-size: 1rem; }
-
-    /* Tips */
-    .tip-title { font-size: 1.05rem; }
-    .tip-text { font-size: 1rem; }
-
-    /* Footer */
-    .footer-brand { font-size: 1.2rem; }
-    .footer-note { font-size: 1rem; }
-  }
+  .result-wrap { text-align: center; padding: 2rem 0; }
+  .result-icon { font-size: 48px; margin-bottom: 1rem; display: block; }
+  .result-score { font-size: 40px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+  .result-label { font-size: 16px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+  .result-msg { font-size: 15px; color: var(--color-text-primary); line-height: 1.7; margin-bottom: 1.5rem; padding: 1rem 1.25rem; background: var(--color-background-secondary); border-radius: var(--border-radius-lg); text-align: left; }
+  .medals { display: flex; gap: 10px; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .medal { font-size: 13px; padding: 4px 12px; border-radius: var(--border-radius-md); }
+  .medal.gold { background: #FAEEDA; color: #633806; }
+  .medal.silver { background: #D3D1C7; color: #2C2C2A; }
+  .medal.bronze { background: #FAECE7; color: #4A1B0C; }
+  .result-actions { display: flex; gap: 10px; }
+  .result-actions button { flex: 1; padding: 12px; border-radius: var(--border-radius-md); font-size: 15px; font-weight: 500; cursor: pointer; }
+  .btn-retry { background: none; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-primary); }
+  .btn-retry:hover { background: var(--color-background-secondary); }
+  .btn-explore { background: #1D9E75; border: none; color: #04342C; }
+  .btn-explore:hover { opacity: 0.88; }
 </style>
-</head>
-<body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<div class="game-wrap">
 
-<nav id="nav">
-  <div class="nav-logo">板橋<span>一日遊</span></div>
-  <ul class="nav-links">
-    <li><a href="#timeline">行程</a></li>
-    <li><a href="#parking">停車</a></li>
-    <li><a href="#route">路線</a></li>
-    <li><a href="#tips">提示</a></li>
-  </ul>
-  <button class="nav-hamburger" id="hamburger" aria-label="開啟選單">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-
-<!-- Mobile drawer menu -->
-<div class="mobile-menu" id="mobileMenu">
-  <div class="mobile-menu-backdrop" id="menuBackdrop"></div>
-  <div class="mobile-menu-drawer">
-    <div class="mobile-menu-label">目錄 · Contents</div>
-    <ul class="mobile-menu-links">
-      <li><a href="#timeline" class="menu-link"><span><span class="link-sub">01</span>行程規劃</span><span class="link-arrow">→</span></a></li>
-      <li><a href="#parking" class="menu-link"><span><span class="link-sub">02</span>停車場</span><span class="link-arrow">→</span></a></li>
-      <li><a href="#route" class="menu-link"><span><span class="link-sub">03</span>開車路線</span><span class="link-arrow">→</span></a></li>
-      <li><a href="#tips" class="menu-link"><span><span class="link-sub">04</span>行前提示</span><span class="link-arrow">→</span></a></li>
-    </ul>
-    <div class="mobile-menu-footer">
-      <strong>板橋一日遊</strong>
-      自駕 · 5 景點 · 6 停車場<br>
-      BANQIAO · NEW TAIPEI
+  <div id="screen-home" class="screen active">
+    <div class="home-header">
+      <span class="home-img">🏯</span>
+      <div class="home-title">台灣古厝探索</div>
+      <div class="home-sub">從建築走進歷史，探索先人留下的文化軌跡<br>選擇一座古厝，開始你的知識之旅</div>
     </div>
+    <div class="topic-grid" id="topic-grid"></div>
+    <button class="start-btn" id="start-btn" disabled onclick="startQuiz()">選擇古厝開始遊戲 →</button>
   </div>
+
+  <div id="screen-quiz" class="screen">
+    <div class="quiz-top">
+      <button class="back-btn" onclick="goHome()">← 返回</button>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <span class="q-counter" id="q-counter"></span>
+      <span class="score-badge" id="score-badge">得分 0</span>
+    </div>
+    <div class="guju-card" id="guju-card"></div>
+    <div class="question-text" id="question-text"></div>
+    <div class="options-grid" id="options-grid"></div>
+    <div class="explain-box" id="explain-box" style="display:none"></div>
+    <button class="next-btn" id="next-btn" style="display:none" onclick="nextQuestion()">下一題 →</button>
+  </div>
+
+  <div id="screen-result" class="screen">
+    <div class="result-wrap" id="result-wrap"></div>
+  </div>
+
 </div>
 
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="particles" id="particles"></div>
-  <div class="hero-deco">5</div>
-  <div class="hero-content">
-    <div class="hero-eyebrow">新北市 · 板橋區 · 自駕一日遊行程</div>
-    <h1 class="hero-title">
-      板橋一日遊
-      <span>古今交織 · 美拍與美食</span>
-    </h1>
-    <p class="hero-subtitle">從清代園林到現代藝文，從傍晚光影到夜市喧囂，<br>開車一天走遍板橋最美的五個面貌。</p>
-    <div class="hero-tags">
-      <span class="tag">🚗 自駕行程</span>
-      <span class="tag">5 個景點</span>
-      <span class="tag">6 個停車場</span>
-      <span class="tag">10:30 — 21:00</span>
-    </div>
-  </div>
-  <div class="hero-scroll"><span>Scroll</span><div class="scroll-line"></div></div>
-</section>
-
-<div class="divider"></div>
-
-<section class="intro-strip">
-  <div class="reveal">
-    <div class="intro-label">關於這趟旅程</div>
-    <h2 class="intro-heading">開車遊板橋，<br><em>每站都有</em><br>停車場可用</h2>
-  </div>
-  <div>
-    <p class="intro-text reveal">本行程以開車為主要交通方式規劃，每個景點皆標示鄰近停車場位置與收費資訊，讓你省去找車位的煩惱。板橋道路寬敞、各景點停車場充足，是相當適合自駕探索的城市。</p>
-    <div class="stats-grid" style="margin-top:2rem;">
-      <div class="stat-card reveal"><div class="stat-num">5</div><div class="stat-label">精選景點</div></div>
-      <div class="stat-card reveal"><div class="stat-num">6</div><div class="stat-label">停車場資訊</div></div>
-      <div class="stat-card reveal"><div class="stat-num">20</div><div class="stat-label">起步 NT$/hr</div></div>
-      <div class="stat-card reveal"><div class="stat-num">∞</div><div class="stat-label">打卡美照機會</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="timeline-section" id="timeline">
-  <div class="section-header">
-    <div class="section-label">行程規劃</div>
-    <h2 class="section-title">今日精彩 · 五站探索</h2>
-  </div>
-  <div class="timeline">
-
-    <div class="timeline-item" data-delay="0">
-      <div class="timeline-time"><div class="time-dot"></div><div class="time-text">10:30</div></div>
-      <div class="timeline-card" onclick="toggleCard(this)">
-        <div class="card-header"><div class="card-icon">🏯</div><span class="card-badge badge-paid">NT$40</span></div>
-        <div class="card-body">
-          <div class="card-title">林本源園邸（板橋林家花園）</div>
-          <div class="card-subtitle">西門街 9 號 · 09:00–17:00</div>
-          <p class="card-desc">台灣保存最完整的清代園林建築，漏窗、迴廊與庭院造景精緻無比。旗袍或古裝攝影的絕佳聖地，也是極具質感的打卡點。建議參加中文導覽，更能深入了解林家歷史。</p>
-          <div class="card-parking"><div class="parking-icon">🅿️</div><div class="parking-text"><strong>林家花園收費停車場</strong>　西門街 9 號旁<br>景點直旁停車 · 步行即達</div></div>
-          <div class="card-tips"><p>💡 門票僅 NT$40，部分區域可能因維修關閉，建議出發前確認。漏窗前是最佳拍照位置！</p></div>
-        </div>
-        <div class="card-footer"><button class="card-expand-btn">展開小提示 ▾</button><span class="card-duration">停留約 2 小時</span></div>
-      </div>
-    </div>
-
-    <div class="timeline-item" data-delay="100">
-      <div class="timeline-time"><div class="time-dot"></div><div class="time-text">12:30</div></div>
-      <div class="timeline-card" onclick="toggleCard(this)">
-        <div class="card-header"><div class="card-icon">🍜</div><span class="card-badge badge-food">午餐</span></div>
-        <div class="card-body">
-          <div class="card-title">府中商圈 · 板橋車站美食</div>
-          <div class="card-subtitle">府中路 / 板橋站周邊 · 各店家時間不同</div>
-          <p class="card-desc">府中站附近有油庫口麵線、肉圓等道地小吃，或前往板橋車站環球購物中心與 Mega City 大遠百享用質感異國料理。</p>
-          <div class="card-parking"><div class="parking-icon">🅿️</div><div class="parking-text"><strong>府後立體停車場</strong>　府中路 32 號<br>NT$30/hr · 24H 全天開放 · 商圈最近</div></div>
-          <div class="card-tips"><p>💡 油庫口麵線正午常大排長龍，建議 12:00 前搶先抵達。停好車後步行至商圈覓食最方便。</p></div>
-        </div>
-        <div class="card-footer"><button class="card-expand-btn">展開小提示 ▾</button><span class="card-duration">停留約 1.5 小時</span></div>
-      </div>
-    </div>
-
-    <div class="timeline-item" data-delay="200">
-      <div class="timeline-time"><div class="time-dot"></div><div class="time-text">14:30</div></div>
-      <div class="timeline-card" onclick="toggleCard(this)">
-        <div class="card-header"><div class="card-icon">🎨</div><span class="card-badge badge-free">免費</span></div>
-        <div class="card-body">
-          <div class="card-title">板橋 435 藝文特區</div>
-          <div class="card-subtitle">中正路 435 號 · 09:00–17:00（週末至 18:00）</div>
-          <p class="card-desc">歐式新古典主義風格建築搭配大片草地，牆面上繽紛彩繪壁畫吸引無數打卡人潮。園區內「台灣玩具博物館」充滿童趣，悠閒散步同時創造大量質感照片。</p>
-          <div class="card-parking"><div class="parking-icon">🅿️</div><div class="parking-text"><strong>435 Art Zone 停車場</strong>　環河西路五段 502 號<br>前 30 分免費 · 平日 NT$30/hr · 假日 NT$40/hr</div></div>
-          <div class="card-tips"><p>💡 平日 17:00 關閉，週末延至 18:00。假日停車場較滿，建議早點到以免找不到車位！</p></div>
-        </div>
-        <div class="card-footer"><button class="card-expand-btn">展開小提示 ▾</button><span class="card-duration">停留約 1.5 小時</span></div>
-      </div>
-    </div>
-
-    <div class="timeline-item" data-delay="300">
-      <div class="timeline-time"><div class="time-dot"></div><div class="time-text">16:30</div></div>
-      <div class="timeline-card" onclick="toggleCard(this)">
-        <div class="card-header"><div class="card-icon">🌉</div><span class="card-badge badge-free">免費 · 24H</span></div>
-        <div class="card-body">
-          <div class="card-title">新月橋</div>
-          <div class="card-subtitle">環河道路旁 · 全天開放</div>
-          <p class="card-desc">透明「天空步道」可俯瞰大漢溪，傍晚七彩光雕秀點燈，浪漫指數破表！新月橋僅供行人步行，開車停靠旁邊停車場後步行前往。</p>
-          <div class="card-parking"><div class="parking-icon">🅿️</div><div class="parking-text"><strong>日月亭-新月橋停車場</strong>　新月橋旁<br>前 30 分免費 · NT$20/hr · 悠遊卡出口直刷</div></div>
-          <div class="card-tips"><p>💡 停車場燈光明亮，天黑後取車安全無虞。傍晚 17:00 前後夕陽光線絕美，建議多待一會兒！</p></div>
-        </div>
-        <div class="card-footer"><button class="card-expand-btn">展開小提示 ▾</button><span class="card-duration">停留約 1.5 小時</span></div>
-      </div>
-    </div>
-
-    <div class="timeline-item" data-delay="400">
-      <div class="timeline-time"><div class="time-dot"></div><div class="time-text">18:30</div></div>
-      <div class="timeline-card" onclick="toggleCard(this)">
-        <div class="card-header"><div class="card-icon">🌃</div><span class="card-badge badge-food">晚餐</span></div>
-        <div class="card-body">
-          <div class="card-title">湳雅夜市</div>
-          <div class="card-subtitle">南雅東路一段 · 17:00 開始擺攤</div>
-          <p class="card-desc">板橋最具規模的夜市，必嘗排骨酥、蚵仔餃與煉乳地瓜球，在人聲鼎沸的氛圍中為完美一日畫下最美的句點。</p>
-          <div class="card-parking"><div class="parking-icon">🅿️</div><div class="parking-text"><strong>湳雅夜市停車場</strong>　南雅西路一段 61 號<br>NT$40/30min · 入口巷子較窄，注意慢行</div></div>
-          <div class="card-tips"><p>💡 17:00 才開始擺攤，18:30 後最熱鬧。假日夜市停車場擁擠，可提早抢位或停稍遠步行前往。</p></div>
-        </div>
-        <div class="card-footer"><button class="card-expand-btn">展開小提示 ▾</button><span class="card-duration">停留約 2 小時</span></div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<section class="parking-section" id="parking">
-  <div class="parking-bg-text">停車</div>
-  <div class="section-header">
-    <div class="section-label">自駕必備</div>
-    <h2 class="section-title" style="color:var(--paper)">各景點停車場一覽</h2>
-  </div>
-  <div class="parking-grid">
-    <div class="parking-card reveal">
-      <div class="pc-header"><span class="pc-stop">景點 01 · 林家花園</span><span class="pc-num">P</span></div>
-      <div class="pc-name">林家花園收費停車場</div>
-      <div class="pc-addr">西門街 9 號 · 林本源園邸旁</div>
-      <div class="pc-tags"><span class="pc-tag open">景點直旁</span><span class="pc-tag note">步行即達</span></div>
-    </div>
-    <div class="parking-card reveal">
-      <div class="pc-header"><span class="pc-stop">景點 02 · 府中商圈</span><span class="pc-num">P</span></div>
-      <div class="pc-name">府後立體停車場</div>
-      <div class="pc-addr">府中路 32 號</div>
-      <div class="pc-tags"><span class="pc-tag price">NT$30/hr</span><span class="pc-tag open">24H</span><span class="pc-tag note">商圈最近</span></div>
-      <a class="pc-link" href="https://www.parkinginfo.ntpc.gov.tw/parkinginfo/public/?parkinglotid=010008" target="_blank">查看即時車位 →</a>
-    </div>
-    <div class="parking-card reveal">
-      <div class="pc-header"><span class="pc-stop">景點 02 · 府中備選</span><span class="pc-num">P</span></div>
-      <div class="pc-name">府中立體停車塔</div>
-      <div class="pc-addr">西門街 59 號</div>
-      <div class="pc-tags"><span class="pc-tag open">前30分免費</span><span class="pc-tag note">機械式車位</span></div>
-      <a class="pc-link" href="https://www.parkinginfo.ntpc.gov.tw/parkinginfo/public/?parkinglotid=010018" target="_blank">查看即時車位 →</a>
-    </div>
-    <div class="parking-card reveal">
-      <div class="pc-header"><span class="pc-stop">景點 03 · 435 藝文</span><span class="pc-num">P</span></div>
-      <div class="pc-name">435 Art Zone 停車場</div>
-      <div class="pc-addr">環河西路五段 502 號</div>
-      <div class="pc-tags"><span class="pc-tag open">前30分免費</span><span class="pc-tag price">平日$30/假日$40</span></div>
-    </div>
-    <div class="parking-card reveal">
-      <div class="pc-header"><span class="pc-stop">景點 04 · 新月橋</span><span class="pc-num">P</span></div>
-      <div class="pc-name">日月亭-新月橋停車場</div>
-      <div class="pc-addr">新莊區・新月橋旁</div>
-      <div class="pc-tags"><span class="pc-tag price">NT$20/hr</span><span class="pc-tag open">前30分免費</span><span class="pc-tag note">悠遊卡刷卡</span></div>
-    </div>
-    <div class="parking-card reveal">
-      <div class="pc-header"><span class="pc-stop">景點 05 · 湳雅夜市</span><span class="pc-num">P</span></div>
-      <div class="pc-name">湳雅夜市停車場</div>
-      <div class="pc-addr">南雅西路一段 61 號</div>
-      <div class="pc-tags"><span class="pc-tag price">NT$40/30min</span><span class="pc-tag open">24H</span><span class="pc-tag note">入口巷窄慢行</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="route-section" id="route">
-  <div class="section-header">
-    <div class="section-label">開車路線</div>
-    <h2 class="section-title">自駕串聯 · 輕鬆暢遊</h2>
-  </div>
-  <div class="route-visual reveal">
-    <div class="route-stop"><div class="route-num">1</div><div class="route-info"><div class="route-name">林本源園邸</div><div class="route-time">10:30 · 西門街旁停車場</div></div><div class="route-parking-pill">🅿 景點旁</div></div>
-    <div class="route-connector"><span class="connector-label">🚗 開車約 5 分 · 往府中路方向</span></div>
-    <div class="route-stop"><div class="route-num">2</div><div class="route-info"><div class="route-name">府中商圈 / 板橋車站</div><div class="route-time">12:30 · 府後立體停車場</div></div><div class="route-parking-pill">🅿 NT$30/hr</div></div>
-    <div class="route-connector"><span class="connector-label">🚗 開車約 8 分 · 往中正路方向</span></div>
-    <div class="route-stop"><div class="route-num">3</div><div class="route-info"><div class="route-name">板橋 435 藝文特區</div><div class="route-time">14:30 · 特區附設停車場</div></div><div class="route-parking-pill">🅿 前30分免費</div></div>
-    <div class="route-connector"><span class="connector-label">🚗 開車約 5 分 · 沿河堤路北行</span></div>
-    <div class="route-stop"><div class="route-num">4</div><div class="route-info"><div class="route-name">新月橋</div><div class="route-time">16:30 · 日月亭停車場</div></div><div class="route-parking-pill">🅿 NT$20/hr</div></div>
-    <div class="route-connector"><span class="connector-label">🚗 開車約 10 分 · 往南雅路</span></div>
-    <div class="route-stop"><div class="route-num">5</div><div class="route-info"><div class="route-name">湳雅夜市</div><div class="route-time">18:30 · 湳雅夜市停車場</div></div><div class="route-parking-pill">🅿 NT$40/30min</div></div>
-  </div>
-</section>
-
-<section class="tips-section" id="tips">
-  <div class="section-header">
-    <div class="section-label">行前備忘</div>
-    <h2 class="section-title">自駕出發前的必讀提示</h2>
-  </div>
-  <div class="tips-grid">
-    <div class="tip-card reveal"><div class="tip-icon">🚗</div><div class="tip-title">停車費預算</div><p class="tip-text">全程停車費約 NT$200–350，視停留時間而定。建議準備悠遊卡，多數停車場皆可感應支付，省去找零麻煩。</p></div>
-    <div class="tip-card reveal"><div class="tip-icon">⏰</div><div class="tip-title">停車時機建議</div><p class="tip-text">林家花園、435 藝文特區建議開車直達停好後步行。新月橋與湳雅夜市傍晚人潮漸多，建議提早到達搶好車位。</p></div>
-    <div class="tip-card reveal"><div class="tip-icon">📍</div><div class="tip-title">導航小提示</div><p class="tip-text">輸入「府後立體停車場」至府中商圈；「435 Art Zone 停車場」至藝文特區；「日月亭停車場」至新月橋最準確。</p></div>
-    <div class="tip-card reveal"><div class="tip-icon">🌙</div><div class="tip-title">夜市停車注意</div><p class="tip-text">湳雅夜市假日晚上車位緊張，入口巷子較窄建議放慢速度。若找不到車位，可停附近路邊收費格步行前往。</p></div>
-    <div class="tip-card reveal"><div class="tip-icon">👗</div><div class="tip-title">穿搭建議</div><p class="tip-text">林家花園適合穿著古典風或旗袍，435 藝文特區適合文青穿搭。選擇舒適好走的鞋子，景點內仍需步行遊覽。</p></div>
-    <div class="tip-card reveal"><div class="tip-icon">💰</div><div class="tip-title">全日預算參考</div><p class="tip-text">林家花園門票 NT$40，停車費全程約 NT$200–350，午晚餐各約 NT$100–250，全日總預算約 NT$700–1000。</p></div>
-  </div>
-</section>
-
-<footer>
-  <div class="footer-brand">板橋<span>·</span>一日遊</div>
-  <div class="footer-line"></div>
-  <div class="footer-note">SELF-DRIVE · BANQIAO · NEW TAIPEI CITY</div>
-</footer>
-
 <script>
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove',e=>{
-    mx=e.clientX; my=e.clientY;
-    cursor.style.left=mx-5+'px'; cursor.style.top=my-5+'px';
-  });
-  (function animRing(){
-    rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
-    ring.style.left=rx-18+'px'; ring.style.top=ry-18+'px';
-    requestAnimationFrame(animRing);
-  })();
-  document.querySelectorAll('a,button,.timeline-card,.tip-card,.stat-card,.parking-card').forEach(el=>{
-    el.addEventListener('mouseenter',()=>ring.classList.add('hover'));
-    el.addEventListener('mouseleave',()=>ring.classList.remove('hover'));
-  });
-
-  // Hamburger menu
-  const hamburger = document.getElementById('hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const menuBackdrop = document.getElementById('menuBackdrop');
-
-  function openMenu() {
-    hamburger.classList.add('open');
-    mobileMenu.classList.add('open');
-    document.body.style.overflow = 'hidden';
+const GUJU_DATA = [
+  {
+    id: 'lindi',
+    name: '霧峰林家宮保第',
+    region: '台中霧峰',
+    period: '清領時期（1864年起）',
+    desc: '台灣五大家族之一林家的根據地，林文察因平定太平天國有功受封，宅邸規模宏大，融合閩南與官方建築風格，見證台灣仕紳階層的崛起。',
+    questions: [
+      {
+        q: '霧峰林家在清朝哪項歷史事件中立下大功，讓家族地位大幅提升？',
+        opts: ['鴉片戰爭', '太平天國之亂', '牡丹社事件', '甲午戰爭'],
+        ans: 1,
+        exp: '林文察率軍協助清廷平定太平天國，戰功卓越，受封「福建陸路提督」，是霧峰林家走向政治核心的轉捩點。'
+      },
+      {
+        q: '霧峰林家宅邸建築群使用大量「燕尾脊」，這種屋頂設計代表什麼？',
+        opts: ['商賈富戶的象徵', '官宦仕紳身份的標誌', '宗教廟宇專用', '防禦工事設計'],
+        ans: 1,
+        exp: '燕尾脊（又稱「燕尾翹脊」）在台灣傳統建築中，是具有官宦身份才能使用的屋脊形式，象徵屋主地位崇高。'
+      },
+      {
+        q: '林獻堂在日治時期創辦的文化運動，與林家祖厝精神一脈相承，請問他主導的是？',
+        opts: ['台灣民主運動', '台灣文化協會', '台灣議會設置請願運動', '以上皆是'],
+        ans: 3,
+        exp: '林獻堂是日治時期台灣最重要的民族運動領袖，台灣文化協會與議會請願運動都是他推動的，體現霧峰林家對台灣近代史的深遠影響。'
+      }
+    ]
+  },
+  {
+    id: 'banqiao',
+    name: '板橋林家花園',
+    region: '新北板橋',
+    period: '清領時期（1847年起）',
+    desc: '台灣保存最完整的中式園林建築群，由林本源家族歷時四十餘年建造，融合漢式建築、江南園林與閩南工藝，是台灣豪門大宅的代表。',
+    questions: [
+      {
+        q: '板橋林家花園的「汲古書屋」主要功能是什麼？',
+        opts: ['招待賓客的宴會廳', '供子弟讀書的私塾', '儲存糧食的倉庫', '供奉祖先的祠堂'],
+        ans: 1,
+        exp: '汲古書屋是林家專為子弟讀書求學所建的讀書空間，「汲古」意指從古籍汲取智慧，反映林家重視文教的家風。'
+      },
+      {
+        q: '林本源家族發跡的關鍵是掌握了台灣哪項重要經濟命脈？',
+        opts: ['樟腦與茶葉貿易', '米糧與水利灌溉', '鹽業與漁業', '絲綢與瓷器'],
+        ans: 1,
+        exp: '林家透過控制大坪頂一帶的水利灌溉系統（大安圳等），掌握大片農地的稻米生產，再加上茶葉出口，奠定龐大財富基礎。'
+      },
+      {
+        q: '林家花園建築群中的「觀稼樓」，名稱中的「觀稼」反映了什麼？',
+        opts: ['欣賞花園景致', '遠眺農田耕作', '瞭望防禦敵情', '觀看戲曲表演'],
+        ans: 1,
+        exp: '「稼」意為農作物，觀稼樓原本可遠眺林家所擁有的大片農田，象徵地主家族對土地的掌控，也體現農業社會中土地即財富的價值觀。'
+      }
+    ]
+  },
+  {
+    id: 'guojia',
+    name: '國定古蹟西螺大橋頭鄭家古厝',
+    region: '雲林西螺',
+    period: '清領末期（約1895年）',
+    desc: '西螺平原是台灣重要的米倉，鄭家古厝見證了濁水溪流域農業文明的興衰，三合院格局與紅磚斗栱保留了典型閩南農家建築樣貌。',
+    questions: [
+      {
+        q: '西螺一帶農業發達，最重要的農業灌溉水源來自哪條河流？',
+        opts: ['淡水河', '濁水溪', '大肚溪', '曾文溪'],
+        ans: 1,
+        exp: '濁水溪是台灣最長的河流，流貫雲林彰化平原，豐沛的水源與肥沃沖積土讓西螺成為全台知名的稻米、醬油、蔬菜產區。'
+      },
+      {
+        q: '閩南三合院古厝中，「正身」（正廳）最主要的功能是？',
+        opts: ['主人起居的臥室', '祭祀祖先與神明的空間', '接待商客的店面', '儲存農具的倉庫'],
+        ans: 1,
+        exp: '正廳是三合院的核心，供奉神明與歷代祖先牌位，是家族祭祀、婚喪喜慶等重要儀式舉行的場所，象徵家族的精神中心。'
+      },
+      {
+        q: '西螺醬油文化與農業密切相關，傳統醬油釀造最主要的原料是？',
+        opts: ['高粱與糯米', '黑豆與鹽', '小麥與糖', '地瓜與麥芽'],
+        ans: 1,
+        exp: '西螺傳統醬油以黑豆（蔭豉）為主原料，搭配海鹽，利用天然日曬發酵釀製，是台灣黑豆醬油的重要產地，與當地農業文化緊密相連。'
+      }
+    ]
+  },
+  {
+    id: 'tainan',
+    name: '台南吳園（全台首府）',
+    region: '台南中西區',
+    period: '清領時期（1830年代）',
+    desc: '由鹽商吳尚新建造，是台灣四大名園之一。台南作為清領時期全台首府長達兩百年，府城文化沉積深厚，園林建築是士紳階層文人風雅的具體展現。',
+    questions: [
+      {
+        q: '吳園的主人吳尚新致富的關鍵產業是什麼？',
+        opts: ['糖業', '鹽業', '茶業', '樟腦業'],
+        ans: 1,
+        exp: '吳家是清代台灣重要的鹽商，台南沿海地區鹽田廣布，控制鹽業是當時暴富的主要途徑之一，吳尚新以鹽業資本興建了這座名園。'
+      },
+      {
+        q: '台南被稱為「府城」，「府」在清代行政架構中是指哪一層級？',
+        opts: ['全台最高行政中心（省級）', '地區行政中心（介於省與縣之間）', '地方縣城', '軍事要塞'],
+        ans: 1,
+        exp: '「府」是清代行政層級中介於「省」與「縣」之間的單位，台灣府（後改台南府）長期是全台灣的政治、文化、貿易核心，設有府衙、府學等重要機構。'
+      },
+      {
+        q: '台南至今保有許多清代廟宇，這些廟宇對移民社會最重要的功能是？',
+        opts: ['只做宗教祭祀用途', '作為商業交易的市集', '凝聚移民社群認同與公共事務中心', '提供軍事防禦功能'],
+        ans: 2,
+        exp: '對清代閩粵移民而言，廟宇不只是宗教場所，更是同鄉聚會、調解糾紛、協調公共事務的社群核心，是移民社會建立秩序與認同的重要機制。'
+      }
+    ]
+  },
+  {
+    id: 'jinguashi',
+    name: '金廣福公館（北埔姜家）',
+    region: '新竹北埔',
+    period: '清領時期（1835年）',
+    desc: '台灣現存最早有明確紀年的古厝，由「金廣福」墾號在官府支持下建立，是漢人移民拓墾客家聚落的歷史見證，門額「金廣福公館」直接反映了墾號制度。',
+    questions: [
+      {
+        q: '「金廣福」墾號中的「金」「廣」「福」各代表什麼？',
+        opts: ['三位創辦人的姓氏', '金錢、廣大、福氣的吉祥語', '官府出資、廣東移民、福建移民的合夥', '三個鄉里的名稱'],
+        ans: 2,
+        exp: '「金」代表官府出資，「廣」代表廣東籍（客家人）移民股東，「福」代表福建籍（閩南人）移民股東，是閩客合作墾荒的組織，體現台灣早期移民族群的合作關係。'
+      },
+      {
+        q: '北埔地區是客家人聚居地，客家移民來台主要從事什麼產業讓此地繁榮？',
+        opts: ['海上貿易與捕魚', '樟腦提煉與茶葉種植', '鹽田開發', '礦業採掘'],
+        ans: 1,
+        exp: '北埔客家移民大量開墾山地，種植茶葉並從事樟腦提煉，樟腦是19世紀末全球工業的重要原料，台灣一度是全球最大樟腦出口地，客家人是主要生產者。'
+      },
+      {
+        q: '金廣福公館建築有高牆與槍孔設計，這反映了清代台灣開墾時期什麼樣的社會狀況？',
+        opts: ['防禦外國軍隊入侵', '閩客械鬥與原住民衝突的威脅', '防止颱風侵襲', '彰顯財富的裝飾風格'],
+        ans: 1,
+        exp: '清代台灣拓墾過程中，漢人移民面臨閩客族群械鬥與原住民族的抵抗，古厝高牆、槍孔是真實的防禦設施，反映開墾時代「拓荒如戰場」的艱辛歷史。'
+      }
+    ]
+  },
+  {
+    id: 'sanheyuan',
+    name: '新埔劉家祠堂（枋寮義民廟區）',
+    region: '新竹新埔',
+    period: '清領時期（約1830年代）',
+    desc: '新竹新埔是客家文化重鎮，劉家宗祠與義民廟周邊聚落完整保存客家三合院文化，是台灣義民精神與客家移民歷史的核心場域。',
+    questions: [
+      {
+        q: '義民廟主祀的「義民爺」，他們是在哪場歷史事件中犧牲的客家義勇？',
+        opts: ['鄭成功反清復明之役', '林爽文事件（1786年）', '牡丹社事件', '乙未抗日之役'],
+        ans: 1,
+        exp: '1786年林爽文事件中，北台灣客家義民自發組織武力協助清廷平亂，犧牲者被集體祭祀，成為客家族群凝聚認同的重要信仰，義民廟因此成為全台客家信仰中心。'
+      },
+      {
+        q: '客家三合院「夥房」的格局與閩南三合院最大的差別是？',
+        opts: ['客家夥房沒有正廳', '客家夥房強調大家族共居，橫屋（護龍）更長更多', '客家夥房使用圓形格局', '客家夥房沒有祖先牌位'],
+        ans: 1,
+        exp: '客家「夥房」強調大家族聚居，橫屋（護龍）往往延伸多層，可容納數十戶同姓宗親，與閩南三合院相比規模更大，更強調族群聚合的社會結構。'
+      },
+      {
+        q: '新埔一帶以「柿餅」聞名，這與客家人的什麼文化特質有關？',
+        opts: ['客家人偏愛甜食', '客家人勤儉惜物、善用農產加工保存食物', '柿餅是祭祀義民爺的供品', '柿餅是客家嫁妝必備'],
+        ans: 1,
+        exp: '客家文化有「硬頸」精神與勤儉惜物的傳統，柿餅是將新鮮柿子脫水保存的加工食品，反映客家移民善用山地農產、減少浪費的生活智慧，是農業文化的縮影。'
+      }
+    ]
   }
-  function closeMenu() {
-    hamburger.classList.remove('open');
-    mobileMenu.classList.remove('open');
-    document.body.style.overflow = '';
+];
+
+let selectedGuju = null;
+let currentQ = 0;
+let score = 0;
+let answered = false;
+let questions = [];
+
+function renderTopics() {
+  const grid = document.getElementById('topic-grid');
+  const icons = ['🏛️','🌿','🌾','🏺','🌳','⛩️'];
+  grid.innerHTML = GUJU_DATA.map((g, i) => `
+    <div class="topic-card" id="tc-${g.id}" onclick="selectTopic('${g.id}')">
+      <span class="topic-icon">${icons[i]}</span>
+      <div class="topic-name">${g.name}</div>
+      <div class="topic-loc">${g.region} ・ ${g.period.split('（')[0]}</div>
+    </div>
+  `).join('');
+}
+
+function selectTopic(id) {
+  document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('tc-' + id).classList.add('selected');
+  selectedGuju = GUJU_DATA.find(g => g.id === id);
+  document.getElementById('start-btn').disabled = false;
+  document.getElementById('start-btn').textContent = `開始探索「${selectedGuju.name}」 →`;
+}
+
+function startQuiz() {
+  if (!selectedGuju) return;
+  questions = [...selectedGuju.questions];
+  currentQ = 0;
+  score = 0;
+  answered = false;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  const total = questions.length;
+  const pct = (currentQ / total) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('q-counter').textContent = `${currentQ + 1} / ${total}`;
+  document.getElementById('score-badge').textContent = `得分 ${score}`;
+
+  document.getElementById('guju-card').innerHTML = `
+    <div class="guju-name">${selectedGuju.name}</div>
+    <span class="guju-tag">${selectedGuju.region} ・ ${selectedGuju.period}</span>
+    <div class="guju-desc">${selectedGuju.desc}</div>
+  `;
+
+  document.getElementById('question-text').textContent = `Q${currentQ + 1}. ${q.q}`;
+  document.getElementById('options-grid').innerHTML = q.opts.map((o, i) =>
+    `<button class="opt-btn" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`
+  ).join('');
+  document.getElementById('explain-box').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+  answered = false;
+}
+
+function answer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[currentQ];
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach(b => b.disabled = true);
+  btns[q.ans].classList.add('correct');
+  if (idx !== q.ans) {
+    btns[idx].classList.add('wrong');
+  } else {
+    score++;
   }
-  hamburger.addEventListener('click', () => mobileMenu.classList.contains('open') ? closeMenu() : openMenu());
-  menuBackdrop.addEventListener('click', closeMenu);
-  document.querySelectorAll('.menu-link').forEach(a => {
-    a.addEventListener('click', e => {
-      e.preventDefault();
-      const target = document.querySelector(a.getAttribute('href'));
-      closeMenu();
-      setTimeout(() => { if(target) target.scrollIntoView({behavior:'smooth',block:'start'}); }, 350);
-    });
-  });
+  document.getElementById('score-badge').textContent = `得分 ${score}`;
+  const exp = document.getElementById('explain-box');
+  exp.style.display = 'block';
+  exp.innerHTML = `<div class="explain-title">${idx === q.ans ? '✓ 答對了！' : '✗ 答錯了'} — 歷史小知識</div>${q.exp}`;
+  document.getElementById('next-btn').style.display = 'block';
+  document.getElementById('next-btn').textContent = currentQ + 1 < questions.length ? '下一題 →' : '查看成績 →';
+}
 
-  const pc=document.getElementById('particles');
-  for(let i=0;i<35;i++){
-    const p=document.createElement('div'); p.className='particle';
-    p.style.cssText=`left:${Math.random()*100}%;--dur:${6+Math.random()*8}s;--delay:${-Math.random()*10}s;--drift:${(Math.random()-0.5)*80}px;width:${1+Math.random()*3}px;height:${1+Math.random()*3}px;`;
-    pc.appendChild(p);
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= questions.length) {
+    showResult();
+  } else {
+    renderQuestion();
   }
+}
 
-  window.addEventListener('scroll',()=>{ document.getElementById('nav').classList.toggle('scrolled',window.scrollY>80); });
+function showResult() {
+  showScreen('screen-result');
+  const total = questions.length;
+  const pct = Math.round((score / total) * 100);
+  let icon, msg, title;
+  if (pct === 100) { icon='🏆'; title='完美通關！'; msg=`你對「${selectedGuju.name}」的歷史文化瞭如指掌！先人的智慧與故事已深深刻入你的記憶中，歡迎繼續探索其他古厝。`; }
+  else if (pct >= 67) { icon='🎖️'; title='表現優秀！'; msg=`你掌握了「${selectedGuju.name}」的主要脈絡，對台灣先人拓墾的艱辛有相當深入的了解，再複習一下答錯的題目，歷史知識會更扎實。`; }
+  else { icon='📖'; title='繼續加油！'; msg=`台灣古厝背後藏著豐富的故事，建議你再挑戰一次，或實際走訪「${selectedGuju.region}」，親眼感受那些建築帶來的時代感動。`; }
 
-  const obs=new IntersectionObserver(e=>{ e.forEach(x=>{ if(x.isIntersecting){x.target.classList.add('visible');obs.unobserve(x.target);} }); },{threshold:0.15});
-  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+  document.getElementById('result-wrap').innerHTML = `
+    <span class="result-icon">${icon}</span>
+    <div class="result-score">${score} / ${total}</div>
+    <div class="result-label">${title} 答對率 ${pct}%</div>
+    <div class="result-msg">${msg}</div>
+    <div class="medals">
+      <span class="medal gold">🥇 全台五大古厝</span>
+      <span class="medal silver">🏛️ ${selectedGuju.region} 在地文化</span>
+      <span class="medal bronze">📜 ${selectedGuju.period}</span>
+    </div>
+    <div class="result-actions">
+      <button class="btn-retry" onclick="startQuiz()">再挑戰一次</button>
+      <button class="btn-explore" onclick="goHome()">探索其他古厝 ↗</button>
+    </div>
+  `;
+}
 
-  const tlo=new IntersectionObserver(e=>{ e.forEach(x=>{ if(x.isIntersecting){setTimeout(()=>x.target.classList.add('visible'),parseInt(x.target.dataset.delay)||0); tlo.unobserve(x.target);} }); },{threshold:0.1});
-  document.querySelectorAll('.timeline-item').forEach(el=>tlo.observe(el));
+function goHome() {
+  showScreen('screen-home');
+  selectedGuju = null;
+  document.getElementById('start-btn').disabled = true;
+  document.getElementById('start-btn').textContent = '選擇古厝開始遊戲 →';
+  document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
+}
 
-  function toggleCard(card){
-    const isExp=card.classList.contains('expanded');
-    document.querySelectorAll('.timeline-card.expanded').forEach(c=>{ c.classList.remove('expanded'); c.querySelector('.card-expand-btn').textContent='展開小提示 ▾'; });
-    if(!isExp){ card.classList.add('expanded'); card.querySelector('.card-expand-btn').textContent='收起小提示 ▴'; }
-  }
-
-  document.querySelectorAll('a[href^="#"]').forEach(a=>{
-    a.addEventListener('click',e=>{ e.preventDefault(); const t=document.querySelector(a.getAttribute('href')); if(t)t.scrollIntoView({behavior:'smooth',block:'start'}); });
-  });
+renderTopics();
 </script>
-</body>
-</html>
