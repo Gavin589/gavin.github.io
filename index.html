@@ -1,374 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
 
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--font-sans); }
-  .game-wrap { padding: 1.5rem 0; max-width: 720px; margin: 0 auto; }
-  .screen { display: none; }
-  .screen.active { display: block; }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
 
-  .home-header { text-align: center; padding: 2rem 0 1.5rem; }
-  .home-title { font-size: 28px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 8px; }
-  .home-sub { font-size: 15px; color: var(--color-text-secondary); line-height: 1.6; }
-  .home-img { font-size: 52px; margin-bottom: 1rem; display: block; }
+<body>
+  <table>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-  .topic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 1.5rem 0; }
-  .topic-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem 1rem; cursor: pointer; transition: border-color 0.15s, background 0.15s; text-align: center; }
-  .topic-card:hover { border-color: var(--color-border-secondary); background: var(--color-background-secondary); }
-  .topic-card.selected { border: 2px solid #1D9E75; }
-  .topic-icon { font-size: 24px; margin-bottom: 8px; display: block; }
-  .topic-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
-  .topic-loc { font-size: 12px; color: var(--color-text-secondary); }
+      body {
+        font-family: var(--font-sans);
+      }
 
-  .start-btn { display: block; width: 100%; padding: 14px; background: #1D9E75; color: #04342C; border: none; border-radius: var(--border-radius-md); font-size: 16px; font-weight: 500; cursor: pointer; margin-top: 1rem; transition: opacity 0.15s; }
-  .start-btn:hover { opacity: 0.88; }
-  .start-btn:disabled { opacity: 0.4; cursor: default; }
+      .game-wrap {
+        padding: 1.5rem 0;
+        max-width: 720px;
+        margin: 0 auto;
+      }
 
-  .quiz-top { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
-  .back-btn { background: none; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 6px 12px; font-size: 13px; color: var(--color-text-secondary); cursor: pointer; }
-  .back-btn:hover { background: var(--color-background-secondary); }
-  .progress-bar { flex: 1; height: 6px; background: var(--color-background-secondary); border-radius: 3px; overflow: hidden; }
-  .progress-fill { height: 100%; background: #1D9E75; border-radius: 3px; transition: width 0.3s; }
-  .q-counter { font-size: 13px; color: var(--color-text-secondary); white-space: nowrap; }
-  .score-badge { font-size: 13px; font-weight: 500; color: #0F6E56; background: #E1F5EE; padding: 4px 10px; border-radius: var(--border-radius-md); white-space: nowrap; }
+      .screen {
+        display: none;
+      }
 
-  .guju-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; margin-bottom: 1.25rem; }
-  .guju-name { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
-  .guju-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); background: #E1F5EE; color: #0F6E56; margin-bottom: 0.75rem; }
-  .guju-desc { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; }
+      .screen.active {
+        display: block;
+      }
 
-  .question-text { font-size: 17px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 1.25rem; line-height: 1.6; }
-  .options-grid { display: flex; flex-direction: column; gap: 10px; }
-  .opt-btn { background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 14px 16px; text-align: left; font-size: 15px; color: var(--color-text-primary); cursor: pointer; transition: all 0.15s; line-height: 1.5; }
-  .opt-btn:hover:not(:disabled) { border-color: #1D9E75; background: #E1F5EE; color: #085041; }
-  .opt-btn.correct { background: #E1F5EE; border-color: #1D9E75; color: #085041; font-weight: 500; }
-  .opt-btn.wrong { background: #FCEBEB; border-color: #E24B4A; color: #501313; }
-  .opt-btn:disabled { cursor: default; }
+      .home-header {
+        text-align: center;
+        padding: 2rem 0 1.5rem;
+      }
 
-  .explain-box { background: var(--color-background-secondary); border-left: 3px solid #1D9E75; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: 1rem 1.25rem; margin-top: 1rem; font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; }
-  .explain-title { font-size: 13px; font-weight: 500; color: #0F6E56; margin-bottom: 6px; }
+      .home-title {
+        font-size: 28px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+        margin-bottom: 8px;
+      }
 
-  .next-btn { display: block; width: 100%; padding: 12px; background: none; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 15px; font-weight: 500; color: var(--color-text-primary); cursor: pointer; margin-top: 1rem; transition: background 0.15s; }
-  .next-btn:hover { background: var(--color-background-secondary); }
+      .home-sub {
+        font-size: 15px;
+        color: var(--color-text-secondary);
+        line-height: 1.6;
+      }
 
-  .result-wrap { text-align: center; padding: 2rem 0; }
-  .result-icon { font-size: 48px; margin-bottom: 1rem; display: block; }
-  .result-score { font-size: 40px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
-  .result-label { font-size: 16px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
-  .result-msg { font-size: 15px; color: var(--color-text-primary); line-height: 1.7; margin-bottom: 1.5rem; padding: 1rem 1.25rem; background: var(--color-background-secondary); border-radius: var(--border-radius-lg); text-align: left; }
-  .medals { display: flex; gap: 10px; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
-  .medal { font-size: 13px; padding: 4px 12px; border-radius: var(--border-radius-md); }
-  .medal.gold { background: #FAEEDA; color: #633806; }
-  .medal.silver { background: #D3D1C7; color: #2C2C2A; }
-  .medal.bronze { background: #FAECE7; color: #4A1B0C; }
-  .result-actions { display: flex; gap: 10px; }
-  .result-actions button { flex: 1; padding: 12px; border-radius: var(--border-radius-md); font-size: 15px; font-weight: 500; cursor: pointer; }
-  .btn-retry { background: none; border: 0.5px solid var(--color-border-secondary); color: var(--color-text-primary); }
-  .btn-retry:hover { background: var(--color-background-secondary); }
-  .btn-explore { background: #1D9E75; border: none; color: #04342C; }
-  .btn-explore:hover { opacity: 0.88; }
-</style>
+      .home-img {
+        font-size: 52px;
+        margin-bottom: 1rem;
+        display: block;
+      }
 
-<div class="game-wrap">
+      .topic-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin: 1.5rem 0;
+      }
 
-  <div id="screen-home" class="screen active">
-    <div class="home-header">
-      <span class="home-img">🏯</span>
-      <div class="home-title">台灣古厝探索</div>
-      <div class="home-sub">從建築走進歷史，探索先人留下的文化軌跡<br>選擇一座古厝，開始你的知識之旅</div>
+      .topic-card {
+        background: var(--color-background-primary);
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-lg);
+        padding: 1.25rem 1rem;
+        cursor: pointer;
+        transition: border-color 0.15s, background 0.15s;
+        text-align: center;
+      }
+
+      .topic-card:hover {
+        border-color: var(--color-border-secondary);
+        background: var(--color-background-secondary);
+      }
+
+      .topic-card.selected {
+        border: 2px solid #1D9E75;
+      }
+
+      .topic-icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      .topic-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+        margin-bottom: 4px;
+      }
+
+      .topic-loc {
+        font-size: 12px;
+        color: var(--color-text-secondary);
+      }
+
+      .start-btn {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        background: #1D9E75;
+        color: #04342C;
+        border: none;
+        border-radius: var(--border-radius-md);
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        margin-top: 1rem;
+        transition: opacity 0.15s;
+      }
+
+      .start-btn:hover {
+        opacity: 0.88;
+      }
+
+      .start-btn:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+
+      .quiz-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1.5rem;
+      }
+
+      .back-btn {
+        background: none;
+        border: 0.5px solid var(--color-border-secondary);
+        border-radius: var(--border-radius-md);
+        padding: 6px 12px;
+        font-size: 13px;
+        color: var(--color-text-secondary);
+        cursor: pointer;
+      }
+
+      .back-btn:hover {
+        background: var(--color-background-secondary);
+      }
+
+      .progress-bar {
+        flex: 1;
+        height: 6px;
+        background: var(--color-background-secondary);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: #1D9E75;
+        border-radius: 3px;
+        transition: width 0.3s;
+      }
+
+      .q-counter {
+        font-size: 13px;
+        color: var(--color-text-secondary);
+        white-space: nowrap;
+      }
+
+      .score-badge {
+        font-size: 13px;
+        font-weight: 500;
+        color: #0F6E56;
+        background: #E1F5EE;
+        padding: 4px 10px;
+        border-radius: var(--border-radius-md);
+        white-space: nowrap;
+      }
+
+      .guju-card {
+        background: var(--color-background-primary);
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-lg);
+        padding: 1.5rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .guju-name {
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+        margin-bottom: 4px;
+      }
+
+      .guju-tag {
+        display: inline-block;
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: var(--border-radius-md);
+        background: #E1F5EE;
+        color: #0F6E56;
+        margin-bottom: 0.75rem;
+      }
+
+      .guju-desc {
+        font-size: 14px;
+        color: var(--color-text-secondary);
+        line-height: 1.7;
+      }
+
+      .question-text {
+        font-size: 17px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+        margin-bottom: 1.25rem;
+        line-height: 1.6;
+      }
+
+      .options-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .opt-btn {
+        background: var(--color-background-primary);
+        border: 0.5px solid var(--color-border-secondary);
+        border-radius: var(--border-radius-md);
+        padding: 14px 16px;
+        text-align: left;
+        font-size: 15px;
+        color: var(--color-text-primary);
+        cursor: pointer;
+        transition: all 0.15s;
+        line-height: 1.5;
+      }
+
+      .opt-btn:hover:not(:disabled) {
+        border-color: #1D9E75;
+        background: #E1F5EE;
+        color: #085041;
+      }
+
+      .opt-btn.correct {
+        background: #E1F5EE;
+        border-color: #1D9E75;
+        color: #085041;
+        font-weight: 500;
+      }
+
+      .opt-btn.wrong {
+        background: #FCEBEB;
+        border-color: #E24B4A;
+        color: #501313;
+      }
+
+      .opt-btn:disabled {
+        cursor: default;
+      }
+
+      .explain-box {
+        background: var(--color-background-secondary);
+        border-left: 3px solid #1D9E75;
+        border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+        padding: 1rem 1.25rem;
+        margin-top: 1rem;
+        font-size: 14px;
+        color: var(--color-text-secondary);
+        line-height: 1.7;
+      }
+
+      .explain-title {
+        font-size: 13px;
+        font-weight: 500;
+        color: #0F6E56;
+        margin-bottom: 6px;
+      }
+
+      .next-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background: none;
+        border: 0.5px solid var(--color-border-secondary);
+        border-radius: var(--border-radius-md);
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+        cursor: pointer;
+        margin-top: 1rem;
+        transition: background 0.15s;
+      }
+
+      .next-btn:hover {
+        background: var(--color-background-secondary);
+      }
+
+      .result-wrap {
+        text-align: center;
+        padding: 2rem 0;
+      }
+
+      .result-icon {
+        font-size: 48px;
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .result-score {
+        font-size: 40px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+        margin-bottom: 4px;
+      }
+
+      .result-label {
+        font-size: 16px;
+        color: var(--color-text-secondary);
+        margin-bottom: 1.5rem;
+      }
+
+      .result-msg {
+        font-size: 15px;
+        color: var(--color-text-primary);
+        line-height: 1.7;
+        margin-bottom: 1.5rem;
+        padding: 1rem 1.25rem;
+        background: var(--color-background-secondary);
+        border-radius: var(--border-radius-lg);
+        text-align: left;
+      }
+
+      .medals {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .medal {
+        font-size: 13px;
+        padding: 4px 12px;
+        border-radius: var(--border-radius-md);
+      }
+
+      .medal.gold {
+        background: #FAEEDA;
+        color: #633806;
+      }
+
+      .medal.silver {
+        background: #D3D1C7;
+        color: #2C2C2A;
+      }
+
+      .medal.bronze {
+        background: #FAECE7;
+        color: #4A1B0C;
+      }
+
+      .result-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .result-actions button {
+        flex: 1;
+        padding: 12px;
+        border-radius: var(--border-radius-md);
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .btn-retry {
+        background: none;
+        border: 0.5px solid var(--color-border-secondary);
+        color: var(--color-text-primary);
+      }
+
+      .btn-retry:hover {
+        background: var(--color-background-secondary);
+      }
+
+      .btn-explore {
+        background: #1D9E75;
+        border: none;
+        color: #04342C;
+      }
+
+      .btn-explore:hover {
+        opacity: 0.88;
+      }
+    </style>
+
+    <div class="game-wrap">
+
+      <div id="screen-home" class="screen active">
+        <div class="home-header">
+          <span class="home-img">🏯</span>
+          <div class="home-title">台灣古厝探索</div>
+          <div class="home-sub">從建築走進歷史，探索先人留下的文化軌跡<br>選擇一座古厝，開始你的知識之旅</div>
+        </div>
+        <div class="topic-grid" id="topic-grid"></div>
+        <button class="start-btn" id="start-btn" disabled onclick="startQuiz()">選擇古厝開始遊戲 →</button>
+      </div>
+
+      <div id="screen-quiz" class="screen">
+        <div class="quiz-top">
+          <button class="back-btn" onclick="goHome()">← 返回</button>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <span class="q-counter" id="q-counter"></span>
+          <span class="score-badge" id="score-badge">得分 0</span>
+        </div>
+        <div class="guju-card" id="guju-card"></div>
+        <div class="question-text" id="question-text"></div>
+        <div class="options-grid" id="options-grid"></div>
+        <div class="explain-box" id="explain-box" style="display:none"></div>
+        <button class="next-btn" id="next-btn" style="display:none" onclick="nextQuestion()">下一題 →</button>
+      </div>
+
+      <div id="screen-result" class="screen">
+        <div class="result-wrap" id="result-wrap"></div>
+      </div>
+
     </div>
-    <div class="topic-grid" id="topic-grid"></div>
-    <button class="start-btn" id="start-btn" disabled onclick="startQuiz()">選擇古厝開始遊戲 →</button>
-  </div>
 
-  <div id="screen-quiz" class="screen">
-    <div class="quiz-top">
-      <button class="back-btn" onclick="goHome()">← 返回</button>
-      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-      <span class="q-counter" id="q-counter"></span>
-      <span class="score-badge" id="score-badge">得分 0</span>
-    </div>
-    <div class="guju-card" id="guju-card"></div>
-    <div class="question-text" id="question-text"></div>
-    <div class="options-grid" id="options-grid"></div>
-    <div class="explain-box" id="explain-box" style="display:none"></div>
-    <button class="next-btn" id="next-btn" style="display:none" onclick="nextQuestion()">下一題 →</button>
-  </div>
+  </table>
+<table>
+  <div style="border: 2px solid black; width: 60%; display: flex; justify-content: center; align-items: center; margin: 5% auto;"></div>
+</table>
+  <table>
+    <script>
+      const GUJU_DATA = [
+        {
+          id: 'lindi',
+          name: '霧峰林家宮保第',
+          region: '台中霧峰',
+          period: '清領時期（1864年起）',
+          desc: '台灣五大家族之一林家的根據地，林文察因平定太平天國有功受封，宅邸規模宏大，融合閩南與官方建築風格，見證台灣仕紳階層的崛起。',
+          questions: [
+            {
+              q: '霧峰林家在清朝哪項歷史事件中立下大功，讓家族地位大幅提升？',
+              opts: ['鴉片戰爭', '太平天國之亂', '牡丹社事件', '甲午戰爭'],
+              ans: 1,
+              exp: '林文察率軍協助清廷平定太平天國，戰功卓越，受封「福建陸路提督」，是霧峰林家走向政治核心的轉捩點。'
+            },
+            {
+              q: '霧峰林家宅邸建築群使用大量「燕尾脊」，這種屋頂設計代表什麼？',
+              opts: ['商賈富戶的象徵', '官宦仕紳身份的標誌', '宗教廟宇專用', '防禦工事設計'],
+              ans: 1,
+              exp: '燕尾脊（又稱「燕尾翹脊」）在台灣傳統建築中，是具有官宦身份才能使用的屋脊形式，象徵屋主地位崇高。'
+            },
+            {
+              q: '林獻堂在日治時期創辦的文化運動，與林家祖厝精神一脈相承，請問他主導的是？',
+              opts: ['台灣民主運動', '台灣文化協會', '台灣議會設置請願運動', '以上皆是'],
+              ans: 3,
+              exp: '林獻堂是日治時期台灣最重要的民族運動領袖，台灣文化協會與議會請願運動都是他推動的，體現霧峰林家對台灣近代史的深遠影響。'
+            }
+          ]
+        },
+        {
+          id: 'banqiao',
+          name: '板橋林家花園',
+          region: '新北板橋',
+          period: '清領時期（1847年起）',
+          desc: '台灣保存最完整的中式園林建築群，由林本源家族歷時四十餘年建造，融合漢式建築、江南園林與閩南工藝，是台灣豪門大宅的代表。',
+          questions: [
+            {
+              q: '板橋林家花園的「汲古書屋」主要功能是什麼？',
+              opts: ['招待賓客的宴會廳', '供子弟讀書的私塾', '儲存糧食的倉庫', '供奉祖先的祠堂'],
+              ans: 1,
+              exp: '汲古書屋是林家專為子弟讀書求學所建的讀書空間，「汲古」意指從古籍汲取智慧，反映林家重視文教的家風。'
+            },
+            {
+              q: '林本源家族發跡的關鍵是掌握了台灣哪項重要經濟命脈？',
+              opts: ['樟腦與茶葉貿易', '米糧與水利灌溉', '鹽業與漁業', '絲綢與瓷器'],
+              ans: 1,
+              exp: '林家透過控制大坪頂一帶的水利灌溉系統（大安圳等），掌握大片農地的稻米生產，再加上茶葉出口，奠定龐大財富基礎。'
+            },
+            {
+              q: '林家花園建築群中的「觀稼樓」，名稱中的「觀稼」反映了什麼？',
+              opts: ['欣賞花園景致', '遠眺農田耕作', '瞭望防禦敵情', '觀看戲曲表演'],
+              ans: 1,
+              exp: '「稼」意為農作物，觀稼樓原本可遠眺林家所擁有的大片農田，象徵地主家族對土地的掌控，也體現農業社會中土地即財富的價值觀。'
+            }
+          ]
+        },
+        {
+          id: 'guojia',
+          name: '國定古蹟西螺大橋頭鄭家古厝',
+          region: '雲林西螺',
+          period: '清領末期（約1895年）',
+          desc: '西螺平原是台灣重要的米倉，鄭家古厝見證了濁水溪流域農業文明的興衰，三合院格局與紅磚斗栱保留了典型閩南農家建築樣貌。',
+          questions: [
+            {
+              q: '西螺一帶農業發達，最重要的農業灌溉水源來自哪條河流？',
+              opts: ['淡水河', '濁水溪', '大肚溪', '曾文溪'],
+              ans: 1,
+              exp: '濁水溪是台灣最長的河流，流貫雲林彰化平原，豐沛的水源與肥沃沖積土讓西螺成為全台知名的稻米、醬油、蔬菜產區。'
+            },
+            {
+              q: '閩南三合院古厝中，「正身」（正廳）最主要的功能是？',
+              opts: ['主人起居的臥室', '祭祀祖先與神明的空間', '接待商客的店面', '儲存農具的倉庫'],
+              ans: 1,
+              exp: '正廳是三合院的核心，供奉神明與歷代祖先牌位，是家族祭祀、婚喪喜慶等重要儀式舉行的場所，象徵家族的精神中心。'
+            },
+            {
+              q: '西螺醬油文化與農業密切相關，傳統醬油釀造最主要的原料是？',
+              opts: ['高粱與糯米', '黑豆與鹽', '小麥與糖', '地瓜與麥芽'],
+              ans: 1,
+              exp: '西螺傳統醬油以黑豆（蔭豉）為主原料，搭配海鹽，利用天然日曬發酵釀製，是台灣黑豆醬油的重要產地，與當地農業文化緊密相連。'
+            }
+          ]
+        },
+        {
+          id: 'tainan',
+          name: '台南吳園（全台首府）',
+          region: '台南中西區',
+          period: '清領時期（1830年代）',
+          desc: '由鹽商吳尚新建造，是台灣四大名園之一。台南作為清領時期全台首府長達兩百年，府城文化沉積深厚，園林建築是士紳階層文人風雅的具體展現。',
+          questions: [
+            {
+              q: '吳園的主人吳尚新致富的關鍵產業是什麼？',
+              opts: ['糖業', '鹽業', '茶業', '樟腦業'],
+              ans: 1,
+              exp: '吳家是清代台灣重要的鹽商，台南沿海地區鹽田廣布，控制鹽業是當時暴富的主要途徑之一，吳尚新以鹽業資本興建了這座名園。'
+            },
+            {
+              q: '台南被稱為「府城」，「府」在清代行政架構中是指哪一層級？',
+              opts: ['全台最高行政中心（省級）', '地區行政中心（介於省與縣之間）', '地方縣城', '軍事要塞'],
+              ans: 1,
+              exp: '「府」是清代行政層級中介於「省」與「縣」之間的單位，台灣府（後改台南府）長期是全台灣的政治、文化、貿易核心，設有府衙、府學等重要機構。'
+            },
+            {
+              q: '台南至今保有許多清代廟宇，這些廟宇對移民社會最重要的功能是？',
+              opts: ['只做宗教祭祀用途', '作為商業交易的市集', '凝聚移民社群認同與公共事務中心', '提供軍事防禦功能'],
+              ans: 2,
+              exp: '對清代閩粵移民而言，廟宇不只是宗教場所，更是同鄉聚會、調解糾紛、協調公共事務的社群核心，是移民社會建立秩序與認同的重要機制。'
+            }
+          ]
+        },
+        {
+          id: 'jinguashi',
+          name: '金廣福公館（北埔姜家）',
+          region: '新竹北埔',
+          period: '清領時期（1835年）',
+          desc: '台灣現存最早有明確紀年的古厝，由「金廣福」墾號在官府支持下建立，是漢人移民拓墾客家聚落的歷史見證，門額「金廣福公館」直接反映了墾號制度。',
+          questions: [
+            {
+              q: '「金廣福」墾號中的「金」「廣」「福」各代表什麼？',
+              opts: ['三位創辦人的姓氏', '金錢、廣大、福氣的吉祥語', '官府出資、廣東移民、福建移民的合夥', '三個鄉里的名稱'],
+              ans: 2,
+              exp: '「金」代表官府出資，「廣」代表廣東籍（客家人）移民股東，「福」代表福建籍（閩南人）移民股東，是閩客合作墾荒的組織，體現台灣早期移民族群的合作關係。'
+            },
+            {
+              q: '北埔地區是客家人聚居地，客家移民來台主要從事什麼產業讓此地繁榮？',
+              opts: ['海上貿易與捕魚', '樟腦提煉與茶葉種植', '鹽田開發', '礦業採掘'],
+              ans: 1,
+              exp: '北埔客家移民大量開墾山地，種植茶葉並從事樟腦提煉，樟腦是19世紀末全球工業的重要原料，台灣一度是全球最大樟腦出口地，客家人是主要生產者。'
+            },
+            {
+              q: '金廣福公館建築有高牆與槍孔設計，這反映了清代台灣開墾時期什麼樣的社會狀況？',
+              opts: ['防禦外國軍隊入侵', '閩客械鬥與原住民衝突的威脅', '防止颱風侵襲', '彰顯財富的裝飾風格'],
+              ans: 1,
+              exp: '清代台灣拓墾過程中，漢人移民面臨閩客族群械鬥與原住民族的抵抗，古厝高牆、槍孔是真實的防禦設施，反映開墾時代「拓荒如戰場」的艱辛歷史。'
+            }
+          ]
+        },
+        {
+          id: 'sanheyuan',
+          name: '新埔劉家祠堂（枋寮義民廟區）',
+          region: '新竹新埔',
+          period: '清領時期（約1830年代）',
+          desc: '新竹新埔是客家文化重鎮，劉家宗祠與義民廟周邊聚落完整保存客家三合院文化，是台灣義民精神與客家移民歷史的核心場域。',
+          questions: [
+            {
+              q: '義民廟主祀的「義民爺」，他們是在哪場歷史事件中犧牲的客家義勇？',
+              opts: ['鄭成功反清復明之役', '林爽文事件（1786年）', '牡丹社事件', '乙未抗日之役'],
+              ans: 1,
+              exp: '1786年林爽文事件中，北台灣客家義民自發組織武力協助清廷平亂，犧牲者被集體祭祀，成為客家族群凝聚認同的重要信仰，義民廟因此成為全台客家信仰中心。'
+            },
+            {
+              q: '客家三合院「夥房」的格局與閩南三合院最大的差別是？',
+              opts: ['客家夥房沒有正廳', '客家夥房強調大家族共居，橫屋（護龍）更長更多', '客家夥房使用圓形格局', '客家夥房沒有祖先牌位'],
+              ans: 1,
+              exp: '客家「夥房」強調大家族聚居，橫屋（護龍）往往延伸多層，可容納數十戶同姓宗親，與閩南三合院相比規模更大，更強調族群聚合的社會結構。'
+            },
+            {
+              q: '新埔一帶以「柿餅」聞名，這與客家人的什麼文化特質有關？',
+              opts: ['客家人偏愛甜食', '客家人勤儉惜物、善用農產加工保存食物', '柿餅是祭祀義民爺的供品', '柿餅是客家嫁妝必備'],
+              ans: 1,
+              exp: '客家文化有「硬頸」精神與勤儉惜物的傳統，柿餅是將新鮮柿子脫水保存的加工食品，反映客家移民善用山地農產、減少浪費的生活智慧，是農業文化的縮影。'
+            }
+          ]
+        }
+      ];
 
-  <div id="screen-result" class="screen">
-    <div class="result-wrap" id="result-wrap"></div>
-  </div>
+      let selectedGuju = null;
+      let currentQ = 0;
+      let score = 0;
+      let answered = false;
+      let questions = [];
 
-</div>
-
-<script>
-const GUJU_DATA = [
-  {
-    id: 'lindi',
-    name: '霧峰林家宮保第',
-    region: '台中霧峰',
-    period: '清領時期（1864年起）',
-    desc: '台灣五大家族之一林家的根據地，林文察因平定太平天國有功受封，宅邸規模宏大，融合閩南與官方建築風格，見證台灣仕紳階層的崛起。',
-    questions: [
-      {
-        q: '霧峰林家在清朝哪項歷史事件中立下大功，讓家族地位大幅提升？',
-        opts: ['鴉片戰爭', '太平天國之亂', '牡丹社事件', '甲午戰爭'],
-        ans: 1,
-        exp: '林文察率軍協助清廷平定太平天國，戰功卓越，受封「福建陸路提督」，是霧峰林家走向政治核心的轉捩點。'
-      },
-      {
-        q: '霧峰林家宅邸建築群使用大量「燕尾脊」，這種屋頂設計代表什麼？',
-        opts: ['商賈富戶的象徵', '官宦仕紳身份的標誌', '宗教廟宇專用', '防禦工事設計'],
-        ans: 1,
-        exp: '燕尾脊（又稱「燕尾翹脊」）在台灣傳統建築中，是具有官宦身份才能使用的屋脊形式，象徵屋主地位崇高。'
-      },
-      {
-        q: '林獻堂在日治時期創辦的文化運動，與林家祖厝精神一脈相承，請問他主導的是？',
-        opts: ['台灣民主運動', '台灣文化協會', '台灣議會設置請願運動', '以上皆是'],
-        ans: 3,
-        exp: '林獻堂是日治時期台灣最重要的民族運動領袖，台灣文化協會與議會請願運動都是他推動的，體現霧峰林家對台灣近代史的深遠影響。'
-      }
-    ]
-  },
-  {
-    id: 'banqiao',
-    name: '板橋林家花園',
-    region: '新北板橋',
-    period: '清領時期（1847年起）',
-    desc: '台灣保存最完整的中式園林建築群，由林本源家族歷時四十餘年建造，融合漢式建築、江南園林與閩南工藝，是台灣豪門大宅的代表。',
-    questions: [
-      {
-        q: '板橋林家花園的「汲古書屋」主要功能是什麼？',
-        opts: ['招待賓客的宴會廳', '供子弟讀書的私塾', '儲存糧食的倉庫', '供奉祖先的祠堂'],
-        ans: 1,
-        exp: '汲古書屋是林家專為子弟讀書求學所建的讀書空間，「汲古」意指從古籍汲取智慧，反映林家重視文教的家風。'
-      },
-      {
-        q: '林本源家族發跡的關鍵是掌握了台灣哪項重要經濟命脈？',
-        opts: ['樟腦與茶葉貿易', '米糧與水利灌溉', '鹽業與漁業', '絲綢與瓷器'],
-        ans: 1,
-        exp: '林家透過控制大坪頂一帶的水利灌溉系統（大安圳等），掌握大片農地的稻米生產，再加上茶葉出口，奠定龐大財富基礎。'
-      },
-      {
-        q: '林家花園建築群中的「觀稼樓」，名稱中的「觀稼」反映了什麼？',
-        opts: ['欣賞花園景致', '遠眺農田耕作', '瞭望防禦敵情', '觀看戲曲表演'],
-        ans: 1,
-        exp: '「稼」意為農作物，觀稼樓原本可遠眺林家所擁有的大片農田，象徵地主家族對土地的掌控，也體現農業社會中土地即財富的價值觀。'
-      }
-    ]
-  },
-  {
-    id: 'guojia',
-    name: '國定古蹟西螺大橋頭鄭家古厝',
-    region: '雲林西螺',
-    period: '清領末期（約1895年）',
-    desc: '西螺平原是台灣重要的米倉，鄭家古厝見證了濁水溪流域農業文明的興衰，三合院格局與紅磚斗栱保留了典型閩南農家建築樣貌。',
-    questions: [
-      {
-        q: '西螺一帶農業發達，最重要的農業灌溉水源來自哪條河流？',
-        opts: ['淡水河', '濁水溪', '大肚溪', '曾文溪'],
-        ans: 1,
-        exp: '濁水溪是台灣最長的河流，流貫雲林彰化平原，豐沛的水源與肥沃沖積土讓西螺成為全台知名的稻米、醬油、蔬菜產區。'
-      },
-      {
-        q: '閩南三合院古厝中，「正身」（正廳）最主要的功能是？',
-        opts: ['主人起居的臥室', '祭祀祖先與神明的空間', '接待商客的店面', '儲存農具的倉庫'],
-        ans: 1,
-        exp: '正廳是三合院的核心，供奉神明與歷代祖先牌位，是家族祭祀、婚喪喜慶等重要儀式舉行的場所，象徵家族的精神中心。'
-      },
-      {
-        q: '西螺醬油文化與農業密切相關，傳統醬油釀造最主要的原料是？',
-        opts: ['高粱與糯米', '黑豆與鹽', '小麥與糖', '地瓜與麥芽'],
-        ans: 1,
-        exp: '西螺傳統醬油以黑豆（蔭豉）為主原料，搭配海鹽，利用天然日曬發酵釀製，是台灣黑豆醬油的重要產地，與當地農業文化緊密相連。'
-      }
-    ]
-  },
-  {
-    id: 'tainan',
-    name: '台南吳園（全台首府）',
-    region: '台南中西區',
-    period: '清領時期（1830年代）',
-    desc: '由鹽商吳尚新建造，是台灣四大名園之一。台南作為清領時期全台首府長達兩百年，府城文化沉積深厚，園林建築是士紳階層文人風雅的具體展現。',
-    questions: [
-      {
-        q: '吳園的主人吳尚新致富的關鍵產業是什麼？',
-        opts: ['糖業', '鹽業', '茶業', '樟腦業'],
-        ans: 1,
-        exp: '吳家是清代台灣重要的鹽商，台南沿海地區鹽田廣布，控制鹽業是當時暴富的主要途徑之一，吳尚新以鹽業資本興建了這座名園。'
-      },
-      {
-        q: '台南被稱為「府城」，「府」在清代行政架構中是指哪一層級？',
-        opts: ['全台最高行政中心（省級）', '地區行政中心（介於省與縣之間）', '地方縣城', '軍事要塞'],
-        ans: 1,
-        exp: '「府」是清代行政層級中介於「省」與「縣」之間的單位，台灣府（後改台南府）長期是全台灣的政治、文化、貿易核心，設有府衙、府學等重要機構。'
-      },
-      {
-        q: '台南至今保有許多清代廟宇，這些廟宇對移民社會最重要的功能是？',
-        opts: ['只做宗教祭祀用途', '作為商業交易的市集', '凝聚移民社群認同與公共事務中心', '提供軍事防禦功能'],
-        ans: 2,
-        exp: '對清代閩粵移民而言，廟宇不只是宗教場所，更是同鄉聚會、調解糾紛、協調公共事務的社群核心，是移民社會建立秩序與認同的重要機制。'
-      }
-    ]
-  },
-  {
-    id: 'jinguashi',
-    name: '金廣福公館（北埔姜家）',
-    region: '新竹北埔',
-    period: '清領時期（1835年）',
-    desc: '台灣現存最早有明確紀年的古厝，由「金廣福」墾號在官府支持下建立，是漢人移民拓墾客家聚落的歷史見證，門額「金廣福公館」直接反映了墾號制度。',
-    questions: [
-      {
-        q: '「金廣福」墾號中的「金」「廣」「福」各代表什麼？',
-        opts: ['三位創辦人的姓氏', '金錢、廣大、福氣的吉祥語', '官府出資、廣東移民、福建移民的合夥', '三個鄉里的名稱'],
-        ans: 2,
-        exp: '「金」代表官府出資，「廣」代表廣東籍（客家人）移民股東，「福」代表福建籍（閩南人）移民股東，是閩客合作墾荒的組織，體現台灣早期移民族群的合作關係。'
-      },
-      {
-        q: '北埔地區是客家人聚居地，客家移民來台主要從事什麼產業讓此地繁榮？',
-        opts: ['海上貿易與捕魚', '樟腦提煉與茶葉種植', '鹽田開發', '礦業採掘'],
-        ans: 1,
-        exp: '北埔客家移民大量開墾山地，種植茶葉並從事樟腦提煉，樟腦是19世紀末全球工業的重要原料，台灣一度是全球最大樟腦出口地，客家人是主要生產者。'
-      },
-      {
-        q: '金廣福公館建築有高牆與槍孔設計，這反映了清代台灣開墾時期什麼樣的社會狀況？',
-        opts: ['防禦外國軍隊入侵', '閩客械鬥與原住民衝突的威脅', '防止颱風侵襲', '彰顯財富的裝飾風格'],
-        ans: 1,
-        exp: '清代台灣拓墾過程中，漢人移民面臨閩客族群械鬥與原住民族的抵抗，古厝高牆、槍孔是真實的防禦設施，反映開墾時代「拓荒如戰場」的艱辛歷史。'
-      }
-    ]
-  },
-  {
-    id: 'sanheyuan',
-    name: '新埔劉家祠堂（枋寮義民廟區）',
-    region: '新竹新埔',
-    period: '清領時期（約1830年代）',
-    desc: '新竹新埔是客家文化重鎮，劉家宗祠與義民廟周邊聚落完整保存客家三合院文化，是台灣義民精神與客家移民歷史的核心場域。',
-    questions: [
-      {
-        q: '義民廟主祀的「義民爺」，他們是在哪場歷史事件中犧牲的客家義勇？',
-        opts: ['鄭成功反清復明之役', '林爽文事件（1786年）', '牡丹社事件', '乙未抗日之役'],
-        ans: 1,
-        exp: '1786年林爽文事件中，北台灣客家義民自發組織武力協助清廷平亂，犧牲者被集體祭祀，成為客家族群凝聚認同的重要信仰，義民廟因此成為全台客家信仰中心。'
-      },
-      {
-        q: '客家三合院「夥房」的格局與閩南三合院最大的差別是？',
-        opts: ['客家夥房沒有正廳', '客家夥房強調大家族共居，橫屋（護龍）更長更多', '客家夥房使用圓形格局', '客家夥房沒有祖先牌位'],
-        ans: 1,
-        exp: '客家「夥房」強調大家族聚居，橫屋（護龍）往往延伸多層，可容納數十戶同姓宗親，與閩南三合院相比規模更大，更強調族群聚合的社會結構。'
-      },
-      {
-        q: '新埔一帶以「柿餅」聞名，這與客家人的什麼文化特質有關？',
-        opts: ['客家人偏愛甜食', '客家人勤儉惜物、善用農產加工保存食物', '柿餅是祭祀義民爺的供品', '柿餅是客家嫁妝必備'],
-        ans: 1,
-        exp: '客家文化有「硬頸」精神與勤儉惜物的傳統，柿餅是將新鮮柿子脫水保存的加工食品，反映客家移民善用山地農產、減少浪費的生活智慧，是農業文化的縮影。'
-      }
-    ]
-  }
-];
-
-let selectedGuju = null;
-let currentQ = 0;
-let score = 0;
-let answered = false;
-let questions = [];
-
-function renderTopics() {
-  const grid = document.getElementById('topic-grid');
-  const icons = ['🏛️','🌿','🌾','🏺','🌳','⛩️'];
-  grid.innerHTML = GUJU_DATA.map((g, i) => `
+      function renderTopics() {
+        const grid = document.getElementById('topic-grid');
+        const icons = ['🏛️', '🌿', '🌾', '🏺', '🌳', '⛩️'];
+        grid.innerHTML = GUJU_DATA.map((g, i) => `
     <div class="topic-card" id="tc-${g.id}" onclick="selectTopic('${g.id}')">
       <span class="topic-icon">${icons[i]}</span>
       <div class="topic-name">${g.name}</div>
       <div class="topic-loc">${g.region} ・ ${g.period.split('（')[0]}</div>
     </div>
   `).join('');
-}
+      }
 
-function selectTopic(id) {
-  document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
-  document.getElementById('tc-' + id).classList.add('selected');
-  selectedGuju = GUJU_DATA.find(g => g.id === id);
-  document.getElementById('start-btn').disabled = false;
-  document.getElementById('start-btn').textContent = `開始探索「${selectedGuju.name}」 →`;
-}
+      function selectTopic(id) {
+        document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
+        document.getElementById('tc-' + id).classList.add('selected');
+        selectedGuju = GUJU_DATA.find(g => g.id === id);
+        document.getElementById('start-btn').disabled = false;
+        document.getElementById('start-btn').textContent = `開始探索「${selectedGuju.name}」 →`;
+      }
 
-function startQuiz() {
-  if (!selectedGuju) return;
-  questions = [...selectedGuju.questions];
-  currentQ = 0;
-  score = 0;
-  answered = false;
-  showScreen('screen-quiz');
-  renderQuestion();
-}
+      function startQuiz() {
+        if (!selectedGuju) return;
+        questions = [...selectedGuju.questions];
+        currentQ = 0;
+        score = 0;
+        answered = false;
+        showScreen('screen-quiz');
+        renderQuestion();
+      }
 
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+      function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+      }
 
-function renderQuestion() {
-  const q = questions[currentQ];
-  const total = questions.length;
-  const pct = (currentQ / total) * 100;
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('q-counter').textContent = `${currentQ + 1} / ${total}`;
-  document.getElementById('score-badge').textContent = `得分 ${score}`;
+      function renderQuestion() {
+        const q = questions[currentQ];
+        const total = questions.length;
+        const pct = (currentQ / total) * 100;
+        document.getElementById('progress-fill').style.width = pct + '%';
+        document.getElementById('q-counter').textContent = `${currentQ + 1} / ${total}`;
+        document.getElementById('score-badge').textContent = `得分 ${score}`;
 
-  document.getElementById('guju-card').innerHTML = `
+        document.getElementById('guju-card').innerHTML = `
     <div class="guju-name">${selectedGuju.name}</div>
     <span class="guju-tag">${selectedGuju.region} ・ ${selectedGuju.period}</span>
     <div class="guju-desc">${selectedGuju.desc}</div>
   `;
 
-  document.getElementById('question-text').textContent = `Q${currentQ + 1}. ${q.q}`;
-  document.getElementById('options-grid').innerHTML = q.opts.map((o, i) =>
-    `<button class="opt-btn" onclick="answer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`
-  ).join('');
-  document.getElementById('explain-box').style.display = 'none';
-  document.getElementById('next-btn').style.display = 'none';
-  answered = false;
-}
+        document.getElementById('question-text').textContent = `Q${currentQ + 1}. ${q.q}`;
+        document.getElementById('options-grid').innerHTML = q.opts.map((o, i) =>
+          `<button class="opt-btn" onclick="answer(${i})">${String.fromCharCode(65 + i)}. ${o}</button>`
+        ).join('');
+        document.getElementById('explain-box').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+        answered = false;
+      }
 
-function answer(idx) {
-  if (answered) return;
-  answered = true;
-  const q = questions[currentQ];
-  const btns = document.querySelectorAll('.opt-btn');
-  btns.forEach(b => b.disabled = true);
-  btns[q.ans].classList.add('correct');
-  if (idx !== q.ans) {
-    btns[idx].classList.add('wrong');
-  } else {
-    score++;
-  }
-  document.getElementById('score-badge').textContent = `得分 ${score}`;
-  const exp = document.getElementById('explain-box');
-  exp.style.display = 'block';
-  exp.innerHTML = `<div class="explain-title">${idx === q.ans ? '✓ 答對了！' : '✗ 答錯了'} — 歷史小知識</div>${q.exp}`;
-  document.getElementById('next-btn').style.display = 'block';
-  document.getElementById('next-btn').textContent = currentQ + 1 < questions.length ? '下一題 →' : '查看成績 →';
-}
+      function answer(idx) {
+        if (answered) return;
+        answered = true;
+        const q = questions[currentQ];
+        const btns = document.querySelectorAll('.opt-btn');
+        btns.forEach(b => b.disabled = true);
+        btns[q.ans].classList.add('correct');
+        if (idx !== q.ans) {
+          btns[idx].classList.add('wrong');
+        } else {
+          score++;
+        }
+        document.getElementById('score-badge').textContent = `得分 ${score}`;
+        const exp = document.getElementById('explain-box');
+        exp.style.display = 'block';
+        exp.innerHTML = `<div class="explain-title">${idx === q.ans ? '✓ 答對了！' : '✗ 答錯了'} — 歷史小知識</div>${q.exp}`;
+        document.getElementById('next-btn').style.display = 'block';
+        document.getElementById('next-btn').textContent = currentQ + 1 < questions.length ? '下一題 →' : '查看成績 →';
+      }
 
-function nextQuestion() {
-  currentQ++;
-  if (currentQ >= questions.length) {
-    showResult();
-  } else {
-    renderQuestion();
-  }
-}
+      function nextQuestion() {
+        currentQ++;
+        if (currentQ >= questions.length) {
+          showResult();
+        } else {
+          renderQuestion();
+        }
+      }
 
-function showResult() {
-  showScreen('screen-result');
-  const total = questions.length;
-  const pct = Math.round((score / total) * 100);
-  let icon, msg, title;
-  if (pct === 100) { icon='🏆'; title='完美通關！'; msg=`你對「${selectedGuju.name}」的歷史文化瞭如指掌！先人的智慧與故事已深深刻入你的記憶中，歡迎繼續探索其他古厝。`; }
-  else if (pct >= 67) { icon='🎖️'; title='表現優秀！'; msg=`你掌握了「${selectedGuju.name}」的主要脈絡，對台灣先人拓墾的艱辛有相當深入的了解，再複習一下答錯的題目，歷史知識會更扎實。`; }
-  else { icon='📖'; title='繼續加油！'; msg=`台灣古厝背後藏著豐富的故事，建議你再挑戰一次，或實際走訪「${selectedGuju.region}」，親眼感受那些建築帶來的時代感動。`; }
+      function showResult() {
+        showScreen('screen-result');
+        const total = questions.length;
+        const pct = Math.round((score / total) * 100);
+        let icon, msg, title;
+        if (pct === 100) { icon = '🏆'; title = '完美通關！'; msg = `你對「${selectedGuju.name}」的歷史文化瞭如指掌！先人的智慧與故事已深深刻入你的記憶中，歡迎繼續探索其他古厝。`; }
+        else if (pct >= 67) { icon = '🎖️'; title = '表現優秀！'; msg = `你掌握了「${selectedGuju.name}」的主要脈絡，對台灣先人拓墾的艱辛有相當深入的了解，再複習一下答錯的題目，歷史知識會更扎實。`; }
+        else { icon = '📖'; title = '繼續加油！'; msg = `台灣古厝背後藏著豐富的故事，建議你再挑戰一次，或實際走訪「${selectedGuju.region}」，親眼感受那些建築帶來的時代感動。`; }
 
-  document.getElementById('result-wrap').innerHTML = `
+        document.getElementById('result-wrap').innerHTML = `
     <span class="result-icon">${icon}</span>
     <div class="result-score">${score} / ${total}</div>
     <div class="result-label">${title} 答對率 ${pct}%</div>
@@ -383,15 +717,648 @@ function showResult() {
       <button class="btn-explore" onclick="goHome()">探索其他古厝 ↗</button>
     </div>
   `;
-}
+      }
 
-function goHome() {
-  showScreen('screen-home');
-  selectedGuju = null;
-  document.getElementById('start-btn').disabled = true;
-  document.getElementById('start-btn').textContent = '選擇古厝開始遊戲 →';
-  document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
-}
+      function goHome() {
+        showScreen('screen-home');
+        selectedGuju = null;
+        document.getElementById('start-btn').disabled = true;
+        document.getElementById('start-btn').textContent = '選擇古厝開始遊戲 →';
+        document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
+      }
 
-renderTopics();
-</script>
+      renderTopics();
+    </script>
+
+
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500&display=swap');
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --ocean: #1a4a6e;
+        --ocean-light: #2a6a9e;
+        --gold: #c8922a;
+        --gold-light: #e8b84a;
+        --cream: #f5efe2;
+        --red: #b02020;
+        --ink: #1a1208;
+        --muted: #6b5a3e;
+        --correct: #2d7a3e;
+        --wrong: #b02020;
+        --card-bg: #fdf8f0;
+      }
+
+      body {
+        background: transparent;
+        font-family: 'Noto Sans TC', sans-serif;
+      }
+
+      #game-wrap {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 1rem 0.5rem 2rem;
+      }
+
+      /* Header */
+      .game-header {
+        text-align: center;
+        padding: 1.5rem 1rem 1rem;
+        border-bottom: 2px solid var(--gold);
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+
+      .game-header::before {
+        content: '⛵';
+        font-size: 22px;
+        position: absolute;
+        left: 1rem;
+        top: 1.4rem;
+      }
+
+      .game-header::after {
+        content: '🏯';
+        font-size: 22px;
+        position: absolute;
+        right: 1rem;
+        top: 1.4rem;
+      }
+
+      .game-title {
+        font-family: 'Noto Serif TC', serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--ocean);
+        letter-spacing: 2px;
+      }
+
+      .game-subtitle {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+
+      /* Category select screen */
+      #screen-category {
+        display: block;
+      }
+
+      #screen-quiz {
+        display: none;
+      }
+
+      #screen-result {
+        display: none;
+      }
+
+      .section-label {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 500;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 0.75rem;
+        text-align: center;
+      }
+
+      .category-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 1.5rem;
+      }
+
+      .cat-btn {
+        background: var(--card-bg);
+        border: 1.5px solid var(--gold);
+        border-radius: 10px;
+        padding: 1rem 0.75rem;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.18s;
+      }
+
+      .cat-btn:hover {
+        background: #fef4de;
+        border-color: var(--gold-light);
+        transform: translateY(-2px);
+      }
+
+      .cat-btn.selected {
+        background: var(--ocean);
+        border-color: var(--ocean);
+        color: white;
+      }
+
+      .cat-btn.selected .cat-name {
+        color: white;
+      }
+
+      .cat-btn.selected .cat-desc {
+        color: #a8c8e8;
+      }
+
+      .cat-icon {
+        font-size: 26px;
+        margin-bottom: 6px;
+      }
+
+      .cat-name {
+        font-family: 'Noto Serif TC', serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--ocean);
+      }
+
+      .cat-desc {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      .start-btn {
+        display: block;
+        width: 100%;
+        background: var(--ocean);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 14px;
+        font-size: 16px;
+        font-family: 'Noto Serif TC', serif;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 2px;
+        transition: background 0.18s;
+      }
+
+      .start-btn:hover {
+        background: var(--ocean-light);
+      }
+
+      .start-btn:disabled {
+        background: #aaa;
+        cursor: not-allowed;
+      }
+
+      /* Quiz screen */
+      .progress-bar-wrap {
+        height: 6px;
+        background: #ddd;
+        border-radius: 99px;
+        margin-bottom: 1rem;
+      }
+
+      .progress-bar-fill {
+        height: 100%;
+        background: var(--gold);
+        border-radius: 99px;
+        transition: width 0.4s;
+      }
+
+      .quiz-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .quiz-cat-tag {
+        font-size: 11px;
+        background: var(--ocean);
+        color: white;
+        border-radius: 99px;
+        padding: 3px 10px;
+      }
+
+      .quiz-score-tag {
+        font-size: 13px;
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      .question-card {
+        background: var(--card-bg);
+        border: 1.5px solid var(--gold);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .question-num {
+        font-size: 11px;
+        color: var(--gold);
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+
+      .question-text {
+        font-family: 'Noto Serif TC', serif;
+        font-size: 17px;
+        color: var(--ink);
+        line-height: 1.7;
+      }
+
+      .options-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 1rem;
+      }
+
+      .option-btn {
+        background: var(--card-bg);
+        border: 1.5px solid #d4c4a0;
+        border-radius: 8px;
+        padding: 12px 14px;
+        font-size: 14px;
+        color: var(--ink);
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.15s;
+        font-family: 'Noto Sans TC', sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .option-btn:hover:not(:disabled) {
+        background: #fef4de;
+        border-color: var(--gold);
+      }
+
+      .option-btn .opt-label {
+        background: var(--ocean);
+        color: white;
+        border-radius: 4px;
+        width: 22px;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      .option-btn.correct {
+        background: #e6f4ea;
+        border-color: var(--correct);
+      }
+
+      .option-btn.correct .opt-label {
+        background: var(--correct);
+      }
+
+      .option-btn.wrong {
+        background: #fdecea;
+        border-color: var(--wrong);
+      }
+
+      .option-btn.wrong .opt-label {
+        background: var(--wrong);
+      }
+
+      .option-btn:disabled {
+        cursor: default;
+      }
+
+      .explanation-box {
+        background: #eef4f8;
+        border-left: 3px solid var(--ocean);
+        border-radius: 0 8px 8px 0;
+        padding: 10px 14px;
+        font-size: 13px;
+        color: var(--ocean);
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      .next-btn {
+        display: block;
+        width: 100%;
+        background: var(--gold);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 15px;
+        font-family: 'Noto Serif TC', serif;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 1px;
+        transition: background 0.15s;
+        display: none;
+      }
+
+      .next-btn:hover {
+        background: var(--gold-light);
+      }
+
+      /* Result screen */
+      .result-card {
+        background: var(--card-bg);
+        border: 2px solid var(--gold);
+        border-radius: 14px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+      }
+
+      .result-icon {
+        font-size: 48px;
+        margin-bottom: 0.5rem;
+      }
+
+      .result-title {
+        font-family: 'Noto Serif TC', serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--ocean);
+        margin-bottom: 0.5rem;
+      }
+
+      .result-score {
+        font-size: 40px;
+        font-weight: 700;
+        color: var(--gold);
+        font-family: 'Noto Serif TC', serif;
+      }
+
+      .result-total {
+        font-size: 16px;
+        color: var(--muted);
+        margin-bottom: 1.5rem;
+      }
+
+      .result-msg {
+        font-size: 14px;
+        color: var(--muted);
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+      }
+
+      .result-btns {
+        display: flex;
+        gap: 10px;
+      }
+
+      .result-btns button {
+        flex: 1;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 14px;
+        font-family: 'Noto Sans TC', sans-serif;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+
+      .btn-retry {
+        background: var(--ocean);
+        color: white;
+        border: none;
+      }
+
+      .btn-retry:hover {
+        background: var(--ocean-light);
+      }
+
+      .btn-menu {
+        background: transparent;
+        color: var(--ocean);
+        border: 1.5px solid var(--ocean);
+      }
+
+      .btn-menu:hover {
+        background: #eef4f8;
+      }
+    </style>
+
+    <div id="game-wrap">
+      <div class="game-header">
+        <div class="game-title">馬祖民間知識王</div>
+        <div class="game-subtitle">探索馬祖的歷史、信仰與文化</div>
+      </div>
+
+      <!-- 選擇類別 -->
+      <div id="screen-category">
+        <p class="section-label">選擇主題</p>
+        <div class="category-grid">
+          <div class="cat-btn" data-cat="history">
+            <div class="cat-icon">🏯</div>
+            <div class="cat-name">歷史戰役</div>
+            <div class="cat-desc">古寧頭 · 砲戰 · 戰地歲月</div>
+          </div>
+          <div class="cat-btn" data-cat="faith">
+            <div class="cat-icon">🏮</div>
+            <div class="cat-name">民間信仰</div>
+            <div class="cat-desc">媽祖 · 五靈公 · 廟宇傳說</div>
+          </div>
+          <div class="cat-btn" data-cat="festival">
+            <div class="cat-icon">🎭</div>
+            <div class="cat-name">節慶習俗</div>
+            <div class="cat-desc">擺暝 · 元宵 · 傳統儀式</div>
+          </div>
+          <div class="cat-btn" data-cat="nature">
+            <div class="cat-icon">🌊</div>
+            <div class="cat-name">自然與飲食</div>
+            <div class="cat-desc">藍眼淚 · 老酒 · 繼光餅</div>
+          </div>
+        </div>
+        <button class="start-btn" id="start-btn" disabled>請先選擇主題</button>
+      </div>
+
+      <!-- 問答 -->
+      <div id="screen-quiz">
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+        <div class="quiz-meta">
+          <span class="quiz-cat-tag" id="quiz-cat-tag">-</span>
+          <span class="quiz-score-tag">得分 <span id="score-display">0</span></span>
+        </div>
+        <div class="question-card">
+          <div class="question-num" id="q-num">第 1 題 / 共 5 題</div>
+          <div class="question-text" id="q-text">題目載入中...</div>
+        </div>
+        <div class="options-list" id="options-list"></div>
+        <div class="explanation-box" id="explanation-box"></div>
+        <button class="next-btn" id="next-btn">下一題 →</button>
+      </div>
+
+      <!-- 結果 -->
+      <div id="screen-result">
+        <div class="result-card">
+          <div class="result-icon" id="result-icon">🏅</div>
+          <div class="result-title" id="result-title">挑戰完成！</div>
+          <div class="result-score" id="result-score">0</div>
+          <div class="result-total" id="result-total">/ 5 題答對</div>
+          <div class="result-msg" id="result-msg"></div>
+          <div class="result-btns">
+            <button class="btn-retry" onclick="retryQuiz()">再挑戰一次</button>
+            <button class="btn-menu" onclick="goMenu()">換個主題</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <script>
+      const QUESTIONS = {
+        history: [
+          { q: "1949年的古寧頭戰役中，共軍登陸後最終被擊退，請問這場戰役的結果對於保衛哪個地區最關鍵？", opts: ["台灣本島", "金門與馬祖", "澎湖群島", "台東外島"], ans: 1, exp: "古寧頭戰役（1949年10月）是國共內戰後期重要一役，共軍登陸金門後全軍覆沒，此役穩定了金馬防線，對保衛台澎金馬意義重大。" },
+          { q: "1958年爆發的「八二三砲戰」，共軍密集砲轟金馬，請問此役持續了多少天？", opts: ["44天", "87天", "474天（斷斷續續）", "23天"], ans: 2, exp: "八二三砲戰從1958年8月23日開始，理論上至1979年才正式停止（雖後期已象徵性砲擊），若計算斷斷續續的砲擊期間長達二十餘年。主要激烈戰鬥則約44天。" },
+          { q: "馬祖地區在戰地政務時期（1956–1992）受到嚴格管制，請問「戰地政務委員會」大約解除了哪一年？", opts: ["1979年", "1987年", "1992年", "2000年"], ans: 2, exp: "馬祖的戰地政務於1992年正式解除，此後馬祖才逐步開放觀光，並與台灣本島民主化進程接軌。" },
+          { q: "馬祖列島的地理位置與哪個中國大陸省份的省會最近？", opts: ["廣東省廣州", "浙江省杭州", "福建省福州", "江西省南昌"], ans: 2, exp: "馬祖距福建省福州約50公里，福州馬尾與馬祖之間甚至有小三通航線，地緣關係十分密切。" },
+          { q: "馬祖地區的軍事坑道非常著名，請問俗稱「地下坑道」最知名的是哪一座？", opts: ["北海坑道（南竿）", "獅子山坑道", "鐵堡坑道", "枕戈待旦坑道"], ans: 0, exp: "北海坑道位於南竿，是1960至70年代人工鑿建的坑道，全長約700公尺，供小型船艇停靠，現已成為著名旅遊景點，可搭船穿越。" },
+        ],
+        faith: [
+          { q: "馬祖的「媽祖」信仰源遠流長，馬祖地名據說就來自媽祖的哪個傳說？", opts: ["媽祖曾在此顯靈退敵", "媽祖（林默娘）遺體在此海岸被漁民發現", "媽祖在此處出生", "媽祖在此處羽化升天"], ans: 1, exp: "相傳宋朝林默娘（媽祖）去世後，其遺體漂流至馬祖列島，當地漁民感念其德，建廟祀奉，「媽祖」之名也成為島嶼地名的由來。" },
+          { q: "馬祖最重要的廟宇——天后宮供奉的是哪位神明？", opts: ["關聖帝君", "土地公", "媽祖（天后）", "玄天上帝"], ans: 2, exp: "天后宮供奉天后媽祖，是馬祖人最重要的精神信仰中心，每逢媽祖誕辰（農曆三月二十三日），會舉行盛大祭典。" },
+          { q: "馬祖民間信仰中，「五靈公」是哪類神明？", opts: ["海上守護神", "瘟神轉化的保護神", "山岳守護神", "農業豐收神"], ans: 1, exp: "五靈公原為瘟神，後被信眾轉化為保護神明，在馬祖（尤其是南竿）深受崇拜，每年祭典儀式莊嚴隆重。" },
+          { q: "馬祖常見的廟宇建築風格主要受哪個地區的建築影響？", opts: ["廣東潮汕", "福建閩東（福州）", "浙江沿海", "台灣本島"], ans: 1, exp: "馬祖居民以福建閩東（福州）移民後裔為主，廟宇建築風格、語言（馬祖語即閩東語）及宗教習俗均深受閩東文化影響。" },
+          { q: "馬祖「擺暝」活動中，信眾會製作「神明繞境」，請問「擺暝」最主要的儀式意義是？", opts: ["祈求漁獲豐收", "驅邪淨境、酬謝神明", "紀念媽祖升天", "慶祝元旦新年"], ans: 1, exp: "擺暝是馬祖最重要的民俗祭典，通常在元宵前後舉行，各村輪流供奉神明出巡遶境，主要目的是驅邪淨境、答謝神明一年來的庇佑。" },
+        ],
+        festival: [
+          { q: "「擺暝」是馬祖最具代表性的傳統祭典，通常在農曆哪個時節舉行？", opts: ["農曆七月（鬼月）", "農曆正月元宵前後", "農曆五月端午", "農曆九月重陽"], ans: 1, exp: "擺暝通常在農曆正月（元宵前後）舉行，各村依序輪辦，儀式包含神明遶境、演戲酬神、村民共宴等，熱鬧非凡。" },
+          { q: "馬祖元宵節有一項特殊習俗，由年輕力壯的男丁將神明「猛力擲轎」，此習俗叫做什麼？", opts: ["擲筊問聖", "鑽轎腳", "乞龜活動", "擺暝抬轎衝衝"], ans: 3, exp: "馬祖元宵抬轎時，信徒會劇烈搖晃、衝撞神轎，俗稱「瘋神轎」或「操轎」，象徵神明威力強大、也為信眾帶來好運與庇佑。" },
+          { q: "馬祖「跳鐘馗」儀式中，扮演鐘馗的表演者主要功能是？", opts: ["帶領漁船出海", "驅鬼避邪、保佑平安", "為新人祈福", "祈求風調雨順"], ans: 1, exp: "鐘馗是道教中的驅鬼神明，馬祖民間舉辦「跳鐘馗」儀式，由藝人扮演鐘馗巡境，象徵驅除邪祟、保佑村莊平安。" },
+          { q: "馬祖傳統婚俗中，新娘出嫁時有「潑水」習俗，代表什麼意思？", opts: ["洗去厄運，帶來清淨", "嫁出去的女兒如潑出的水，祝福她一去如水長流", "祝福新家庭財源滾滾", "A與B皆是民間說法"], ans: 3, exp: "馬祖傳統「潑水送嫁」習俗，一說象徵女兒嫁出如水不回，另一說是祝福洗去舊運迎接新生活，兩種說法在民間都有流傳。" },
+          { q: "馬祖的「繼光餅」與哪位歷史人物有關？", opts: ["鄭成功", "戚繼光", "施琅", "林默娘"], ans: 1, exp: "繼光餅相傳為明朝抗倭名將戚繼光所發明，讓士兵可將餅串掛頸上行軍食用，後在馬祖、福建一帶流傳至今，成為當地名產。" },
+        ],
+        nature: [
+          { q: "馬祖的「藍眼淚」是一種奇特的自然景觀，它的成因是什麼？", opts: ["海底螢光礦物質", "發光浮游生物（夜光藻）大量聚集", "月光折射海水", "深海生物發光"], ans: 1, exp: "馬祖藍眼淚是由「夜光藻」（Noctiluca scintillans）等發光浮游生物在海岸大量聚集所產生，受到波浪擾動便發出藍光，是全球罕見的自然奇景。" },
+          { q: "馬祖列島是哪種鷗科候鳥的重要繁殖地，每年夏天吸引大批賞鳥人潮？", opts: ["紅腳鰹鳥", "黑尾鷗", "燕鷗（神話之鳥）", "白額雁"], ans: 2, exp: "馬祖是神話之鳥「黑嘴端鳳頭燕鷗」的重要繁殖地，這種燕鷗極為稀少，全球僅存數十隻，每年5至9月可在馬祖看到，被稱為「神話之鳥」。" },
+          { q: "馬祖傳統酒類「老酒」是用什麼釀製的？", opts: ["高粱", "糯米加紅麴", "小麥", "地瓜"], ans: 1, exp: "馬祖老酒以糯米為原料，加入紅麴發酵釀製而成，口感甘醇、色澤橙紅，是馬祖最具代表性的傳統飲品，婦女坐月子時也常飲用。" },
+          { q: "馬祖的石屋聚落保存完好，傳統民居以什麼材料為主要建材？", opts: ["木材與茅草", "花崗岩與玄武岩", "紅磚與琉璃瓦", "夯土與竹編"], ans: 1, exp: "馬祖傳統聚落多以就地取材的花崗岩砌成石屋，厚重的石牆可抵禦海風與戰時砲擊，芹壁村是保存最完整的石屋聚落，已成為知名景點。" },
+          { q: "馬祖的「高粱酒」與金門高粱同樣知名，但馬祖高粱酒的特色是什麼？", opts: ["酒精度更高（超過70度）", "採用泉水釀造，口感較清爽", "以海鹽調味，帶鹹香", "加入藥材，為藥酒"], ans: 1, exp: "馬祖高粱酒以當地優質水源釀造，口感清爽純淨，香氣怡人，雖產量不及金門，但品質受到不少酒迷青睞，是馬祖伴手禮的熱門選項。" },
+        ]
+      };
+
+      const CATS = { history: '歷史戰役', faith: '民間信仰', festival: '節慶習俗', nature: '自然與飲食' };
+
+      let currentCat = null, currentQs = [], currentIdx = 0, score = 0;
+
+      // Category select
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          currentCat = btn.dataset.cat;
+          const sb = document.getElementById('start-btn');
+          sb.disabled = false;
+          sb.textContent = '開始挑戰 →';
+        });
+      });
+
+      document.getElementById('start-btn').addEventListener('click', startQuiz);
+
+      function startQuiz() {
+        const qs = QUESTIONS[currentCat];
+        currentQs = [...qs].sort(() => Math.random() - 0.5).slice(0, 5);
+        currentIdx = 0; score = 0;
+        document.getElementById('screen-category').style.display = 'none';
+        document.getElementById('screen-result').style.display = 'none';
+        document.getElementById('screen-quiz').style.display = 'block';
+        document.getElementById('quiz-cat-tag').textContent = CATS[currentCat];
+        showQuestion();
+      }
+
+      function showQuestion() {
+        const q = currentQs[currentIdx];
+        const total = currentQs.length;
+        document.getElementById('progress-fill').style.width = (currentIdx / total * 100) + '%';
+        document.getElementById('q-num').textContent = `第 ${currentIdx + 1} 題 / 共 ${total} 題`;
+        document.getElementById('q-text').textContent = q.q;
+        document.getElementById('score-display').textContent = score;
+        document.getElementById('explanation-box').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+
+        const list = document.getElementById('options-list');
+        list.innerHTML = '';
+        const labels = ['A', 'B', 'C', 'D'];
+        q.opts.forEach((opt, i) => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.innerHTML = `<span class="opt-label">${labels[i]}</span>${opt}`;
+          btn.addEventListener('click', () => selectOption(i));
+          list.appendChild(btn);
+        });
+      }
+
+      function selectOption(chosen) {
+        const q = currentQs[currentIdx];
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach((btn, i) => {
+          btn.disabled = true;
+          if (i === q.ans) btn.classList.add('correct');
+          if (i === chosen && chosen !== q.ans) btn.classList.add('wrong');
+        });
+        if (chosen === q.ans) score++;
+        document.getElementById('score-display').textContent = score;
+
+        const expBox = document.getElementById('explanation-box');
+        expBox.textContent = '📖 ' + q.exp;
+        expBox.style.display = 'block';
+
+        const nb = document.getElementById('next-btn');
+        nb.style.display = 'block';
+        nb.textContent = currentIdx < currentQs.length - 1 ? '下一題 →' : '查看結果 →';
+      }
+
+      document.getElementById('next-btn').addEventListener('click', () => {
+        currentIdx++;
+        if (currentIdx < currentQs.length) {
+          showQuestion();
+        } else {
+          showResult();
+        }
+      });
+
+      function showResult() {
+        document.getElementById('screen-quiz').style.display = 'none';
+        document.getElementById('screen-result').style.display = 'block';
+        const total = currentQs.length;
+        document.getElementById('result-score').textContent = score;
+        document.getElementById('result-total').textContent = `/ ${total} 題答對`;
+        document.getElementById('progress-fill').style.width = '100%';
+
+        let icon, title, msg;
+        const pct = score / total;
+        if (pct === 1) { icon = '🥇'; title = '馬祖通！'; msg = '完美答題！您對馬祖文化的了解令人驚嘆，堪稱真正的馬祖達人！'; }
+        else if (pct >= 0.8) { icon = '🏅'; title = '成績優秀！'; msg = '非常好！您對馬祖的歷史與文化有相當深入的了解，繼續探索更多吧！'; }
+        else if (pct >= 0.6) { icon = '⚓'; title = '不錯喔！'; msg = '答得還不錯！還有一些馬祖的故事等你去發現，再挑戰一次吧！'; }
+        else { icon = '⛵'; title = '繼續加油！'; msg = '沒關係，馬祖的文化博大精深，重新挑戰，相信你能更上一層樓！'; }
+
+        document.getElementById('result-icon').textContent = icon;
+        document.getElementById('result-title').textContent = title;
+        document.getElementById('result-msg').textContent = msg;
+      }
+
+      function retryQuiz() {
+        document.getElementById('screen-result').style.display = 'none';
+        startQuiz();
+      }
+
+      function goMenu() {
+        document.getElementById('screen-result').style.display = 'none';
+        document.getElementById('screen-quiz').style.display = 'none';
+        document.getElementById('screen-category').style.display = 'block';
+      }
+    </script>
+  </table>
+
+
+
+</body>
+
+</html>
