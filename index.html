@@ -1,715 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>端午 · Dragon Boat Festival</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400&family=Shippori+Mincho:wght@300;400&display=swap" rel="stylesheet">
 <style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+:root {
+  --washi:   #f7f4ef;
+  --ink:     #1c1c1c;
+  --ink-40:  rgba(28,28,28,0.40);
+  --ink-15:  rgba(28,28,28,0.10);
+  --rouge:   #a0453a;
+  --rouge-t: rgba(160,69,58,0.08);
+  --sage:    #5a6e5a;
+  --sage-t:  rgba(90,110,90,0.10);
+  --line:    rgba(28,28,28,0.10);
+}
 
-  body {
-    font-family: var(--font-sans);
-  }
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
 
-  .game-wrap {
-    padding: 1.5rem 0;
-    max-width: 720px;
-    margin: 0 auto;
-  }
+body {
+  font-family: 'Noto Serif TC', 'Shippori Mincho', serif;
+  font-weight: 300;
+  background: var(--washi);
+  color: var(--ink);
+  overflow-x: hidden;
+}
 
-  .screen {
-    display: none;
-  }
+/* subtle paper grain */
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9999;
+}
 
-  .screen.active {
-    display: block;
-  }
+/* ════════════════════════
+   HERO
+════════════════════════ */
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--washi);
+}
 
-  .home-header {
-    text-align: center;
-    padding: 2rem 0 1.5rem;
-  }
+/* faint ink-wash circle */
+.hero-circle {
+  position: absolute;
+  width: min(58vw, 460px);
+  height: min(58vw, 460px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(28,28,28,0.045) 0%, transparent 68%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
 
-  .home-title {
-    font-size: 28px;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    margin-bottom: 8px;
-  }
+/* horizon hairline */
+.hero-horizon {
+  position: absolute;
+  bottom: 32%;
+  left: 0; width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line) 20%, var(--line) 80%, transparent);
+}
 
-  .home-sub {
-    font-size: 15px;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-  }
+/* water strokes */
+.water-strokes {
+  position: absolute;
+  bottom: 0;
+  left: 0; width: 200%;
+  height: 32%;
+  animation: waterDrift 20s linear infinite;
+  pointer-events: none;
+  opacity: 0.5;
+}
+@keyframes waterDrift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
 
-  .home-img {
-    font-size: 52px;
-    margin-bottom: 1rem;
-    display: block;
-  }
+/* dragon boat */
+.boat-wrap {
+  position: absolute;
+  bottom: 30%;
+  width: 100%;
+  pointer-events: none;
+}
+.boat-svg {
+  animation: boatCross 22s linear infinite;
+  will-change: transform;
+}
+@keyframes boatCross {
+  0%   { transform: translateX(-18vw); }
+  100% { transform: translateX(112vw); }
+}
 
-  .topic-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    margin: 1.5rem 0;
-  }
+/* hero text */
+.hero-inner {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.3rem;
+  padding: 2rem;
+}
 
-  .topic-card {
-    background: var(--color-background-primary);
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: var(--border-radius-lg);
-    padding: 1.25rem 1rem;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
-    text-align: center;
-  }
+.kana-label {
+  font-size: clamp(0.58rem, 1.1vw, 0.7rem);
+  letter-spacing: 0.55em;
+  color: var(--ink-40);
+  font-weight: 300;
+  opacity: 0;
+  animation: rise 1s ease 0.4s forwards;
+}
 
-  .topic-card:hover {
-    border-color: var(--color-border-secondary);
-    background: var(--color-background-secondary);
-  }
+.hero-zh {
+  font-size: clamp(4rem, 11vw, 8.5rem);
+  font-weight: 200;
+  letter-spacing: 0.2em;
+  color: var(--ink);
+  line-height: 1;
+  opacity: 0;
+  animation: rise 1.2s ease 0.7s forwards;
+  position: relative;
+}
+.hero-zh::before {
+  content: '';
+  position: absolute;
+  left: -1.6rem;
+  top: 12%;
+  height: 76%;
+  width: 1px;
+  background: var(--rouge);
+  opacity: 0.4;
+}
 
-  .topic-card.selected {
-    border: 2px solid #1D9E75;
-  }
+.hero-divider {
+  width: 28px;
+  height: 1px;
+  background: var(--ink-40);
+  opacity: 0;
+  animation: rise 1s ease 1.1s forwards;
+}
 
-  .topic-icon {
-    font-size: 24px;
-    margin-bottom: 8px;
-    display: block;
-  }
+.hero-en {
+  font-size: clamp(0.58rem, 1.2vw, 0.78rem);
+  letter-spacing: 0.48em;
+  color: var(--ink-40);
+  font-weight: 300;
+  opacity: 0;
+  animation: rise 1s ease 1.3s forwards;
+}
 
-  .topic-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    margin-bottom: 4px;
-  }
+.hero-blessing {
+  margin-top: 0.4rem;
+  font-size: clamp(0.82rem, 1.6vw, 1rem);
+  font-weight: 300;
+  letter-spacing: 0.24em;
+  color: var(--rouge);
+  opacity: 0;
+  animation: rise 1s ease 1.6s forwards;
+}
 
-  .topic-loc {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-  }
+.hero-stamp {
+  margin-top: 0.6rem;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--rouge);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: rise 0.8s ease 2s forwards;
+}
+.hero-stamp span {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  color: var(--rouge);
+  writing-mode: vertical-rl;
+  line-height: 1.5;
+  font-weight: 400;
+}
 
-  .start-btn {
-    display: block;
-    width: 100%;
-    padding: 14px;
-    background: #1D9E75;
-    color: #04342C;
-    border: none;
-    border-radius: var(--border-radius-md);
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: opacity 0.15s;
-  }
+/* scroll indicator */
+.scroll-arrow {
+  position: absolute;
+  bottom: 2.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  z-index: 10;
+  opacity: 0;
+  animation: rise 1s ease 2.4s forwards;
+}
+.scroll-arrow span {
+  font-size: 0.55rem;
+  letter-spacing: 0.5em;
+  color: var(--ink-40);
+}
+.arrow-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(180deg, var(--ink-40) 0%, transparent 100%);
+  animation: arrowPulse 2.4s ease-in-out infinite;
+}
+@keyframes arrowPulse {
+  0%,100% { opacity:0.25; transform:scaleY(0.7) translateY(0); }
+  50%     { opacity:0.7;  transform:scaleY(1)   translateY(5px); }
+}
 
-  .start-btn:hover {
-    opacity: 0.88;
-  }
+@keyframes rise {
+  from { opacity:0; transform:translateY(14px); }
+  to   { opacity:1; transform:translateY(0); }
+}
 
-  .start-btn:disabled {
-    opacity: 0.4;
-    cursor: default;
-  }
+/* ════════════════════════
+   SHARED
+════════════════════════ */
+.section {
+  padding: clamp(5rem, 10vw, 9rem) clamp(1.8rem, 6vw, 5rem);
+}
 
-  .quiz-top {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 1.5rem;
-  }
+.sec-eyebrow {
+  font-size: 0.6rem;
+  letter-spacing: 0.6em;
+  color: var(--ink-40);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 1.4rem;
+}
 
-  .back-btn {
-    background: none;
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: var(--border-radius-md);
-    padding: 6px 12px;
-    font-size: 13px;
-    color: var(--color-text-secondary);
-    cursor: pointer;
-  }
+.sec-title {
+  font-size: clamp(1.7rem, 3.8vw, 2.8rem);
+  font-weight: 200;
+  letter-spacing: 0.16em;
+  color: var(--ink);
+  line-height: 1.45;
+}
 
-  .back-btn:hover {
-    background: var(--color-background-secondary);
-  }
+.sec-body {
+  font-size: clamp(0.85rem, 1.4vw, 0.98rem);
+  font-weight: 300;
+  line-height: 2.5;
+  color: var(--ink-40);
+  letter-spacing: 0.09em;
+  max-width: 540px;
+}
 
-  .progress-bar {
-    flex: 1;
-    height: 6px;
-    background: var(--color-background-secondary);
-    border-radius: 3px;
-    overflow: hidden;
-  }
+.thin-rule {
+  width: 36px;
+  height: 1px;
+  background: var(--rouge);
+  opacity: 0.45;
+  margin: 2.2rem 0;
+}
 
-  .progress-fill {
-    height: 100%;
-    background: #1D9E75;
-    border-radius: 3px;
-    transition: width 0.3s;
-  }
+/* ════════════════════════
+   INTRO
+════════════════════════ */
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(3rem, 6vw, 6rem);
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.intro-deco {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.vertical-chars {
+  writing-mode: vertical-rl;
+  font-size: clamp(5rem, 9vw, 7.5rem);
+  font-weight: 200;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  opacity: 0.05;
+  line-height: 1;
+  user-select: none;
+}
 
-  .q-counter {
-    font-size: 13px;
-    color: var(--color-text-secondary);
-    white-space: nowrap;
-  }
+@media (max-width: 680px) {
+  .intro-grid { grid-template-columns: 1fr; }
+  .intro-deco { display: none; }
+}
 
-  .score-badge {
-    font-size: 13px;
-    font-weight: 500;
-    color: #0F6E56;
-    background: #E1F5EE;
-    padding: 4px 10px;
-    border-radius: var(--border-radius-md);
-    white-space: nowrap;
-  }
+/* ════════════════════════
+   VIDEO PANELS
+════════════════════════ */
+.panels-section {
+  padding: clamp(4rem, 8vw, 7rem) clamp(1.2rem, 4vw, 3rem);
+  border-top: 1px solid var(--line);
+}
 
-  .guju-card {
-    background: var(--color-background-primary);
-    border: 0.5px solid var(--color-border-tertiary);
-    border-radius: var(--border-radius-lg);
-    padding: 1.5rem;
-    margin-bottom: 1.25rem;
-  }
+.panels-header {
+  text-align: center;
+  margin-bottom: clamp(3rem, 5vw, 5rem);
+}
 
-  .guju-name {
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    margin-bottom: 4px;
-  }
+.panels-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1rem, 2vw, 2rem);
+  max-width: 1320px;
+  margin: 0 auto;
+  align-items: start;
+}
 
-  .guju-tag {
-    display: inline-block;
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: var(--border-radius-md);
-    background: #E1F5EE;
-    color: #0F6E56;
-    margin-bottom: 0.75rem;
+@media (max-width: 580px) {
+  .panels-grid {
+    grid-template-columns: 1fr;
+    max-width: 340px;
   }
+}
 
-  .guju-desc {
-    font-size: 14px;
-    color: var(--color-text-secondary);
-    line-height: 1.7;
-  }
+.video-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  .question-text {
-    font-size: 17px;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    margin-bottom: 1.25rem;
-    line-height: 1.6;
-  }
+/* 1179 : 2556 ratio */
+.video-frame {
+  position: relative;
+  width: 100%;
+  padding-top: calc(2556 / 1179 * 100%);
+  background: #181612;
+  overflow: hidden;
+}
 
-  .options-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+/* single pixel outline */
+.video-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--line);
+  z-index: 4;
+  pointer-events: none;
+}
+/* top-left corner mark */
+.video-frame::after {
+  content: '';
+  position: absolute;
+  top: 10px; left: 10px;
+  width: 18px; height: 18px;
+  border-top: 1px solid var(--rouge);
+  border-left: 1px solid var(--rouge);
+  opacity: 0.4;
+  z-index: 5;
+  pointer-events: none;
+}
+/* bottom-right corner mark via child */
+.frame-corner {
+  position: absolute;
+  bottom: 10px; right: 10px;
+  width: 18px; height: 18px;
+  border-bottom: 1px solid var(--rouge);
+  border-right: 1px solid var(--rouge);
+  opacity: 0.4;
+  z-index: 5;
+  pointer-events: none;
+}
 
-  .opt-btn {
-    background: var(--color-background-primary);
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: var(--border-radius-md);
-    padding: 14px 16px;
-    text-align: left;
-    font-size: 15px;
-    color: var(--color-text-primary);
-    cursor: pointer;
-    transition: all 0.15s;
-    line-height: 1.5;
-  }
+/* placeholder */
+.video-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  transition: opacity 0.6s;
+}
+.ph-char {
+  font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+  font-weight: 200;
+  color: rgba(247,244,239,0.15);
+  writing-mode: vertical-rl;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+}
+.ph-label {
+  font-size: 0.55rem;
+  letter-spacing: 0.55em;
+  color: rgba(247,244,239,0.18);
+  text-transform: uppercase;
+}
 
-  .opt-btn:hover:not(:disabled) {
-    border-color: #1D9E75;
-    background: #E1F5EE;
-    color: #085041;
-  }
+.panel-video {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
 
-  .opt-btn.correct {
-    background: #E1F5EE;
-    border-color: #1D9E75;
-    color: #085041;
-    font-weight: 500;
-  }
+/* caption */
+.panel-caption {
+  margin-top: 1.3rem;
+  text-align: center;
+  width: 100%;
+}
+.panel-num {
+  display: block;
+  font-size: 0.52rem;
+  letter-spacing: 0.6em;
+  color: var(--ink-40);
+  margin-bottom: 0.5rem;
+}
+.panel-title {
+  display: block;
+  font-size: clamp(0.95rem, 1.8vw, 1.2rem);
+  font-weight: 200;
+  letter-spacing: 0.24em;
+  color: var(--ink);
+  margin-bottom: 0.45rem;
+}
+.panel-sub {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: var(--ink-40);
+  letter-spacing: 0.1em;
+  line-height: 2;
+}
 
-  .opt-btn.wrong {
-    background: #FCEBEB;
-    border-color: #E24B4A;
-    color: #501313;
-  }
+/* upload */
+.upload-label {
+  display: block;
+  margin-top: 1rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  color: var(--sage);
+  border: 1px solid var(--line);
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+  transition: background 0.25s, border-color 0.25s;
+  text-align: center;
+  width: 100%;
+}
+.upload-label:hover {
+  background: var(--sage-t);
+  border-color: rgba(90,110,90,0.4);
+}
+.upload-label input { display: none; }
 
-  .opt-btn:disabled {
-    cursor: default;
-  }
+/* ════════════════════════
+   TRADITIONS
+════════════════════════ */
+.traditions-section {
+  border-top: 1px solid var(--line);
+  padding: clamp(5rem, 9vw, 8rem) clamp(1.8rem, 6vw, 5rem);
+}
+.traditions-header { margin-bottom: clamp(3rem, 5vw, 5rem); }
 
-  .explain-box {
-    background: var(--color-background-secondary);
-    border-left: 3px solid #1D9E75;
-    border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
-    padding: 1rem 1.25rem;
-    margin-top: 1rem;
-    font-size: 14px;
-    color: var(--color-text-secondary);
-    line-height: 1.7;
-  }
+.traditions-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+@media (max-width: 760px) {
+  .traditions-list { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 420px) {
+  .traditions-list { grid-template-columns: 1fr; }
+}
 
-  .explain-title {
-    font-size: 13px;
-    font-weight: 500;
-    color: #0F6E56;
-    margin-bottom: 6px;
-  }
+.trad-item {
+  padding: 2.4rem 2rem;
+  border-right: 1px solid var(--line);
+  transition: background 0.3s;
+}
+.trad-item:last-child { border-right: none; }
+.trad-item:hover { background: var(--rouge-t); }
 
-  .next-btn {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    background: none;
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: var(--border-radius-md);
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    cursor: pointer;
-    margin-top: 1rem;
-    transition: background 0.15s;
-  }
+.trad-num {
+  display: block;
+  font-size: 0.52rem;
+  letter-spacing: 0.58em;
+  color: var(--ink-40);
+  margin-bottom: 1.1rem;
+}
+.trad-icon {
+  font-size: 1.4rem;
+  display: block;
+  margin-bottom: 1rem;
+  opacity: 0.65;
+}
+.trad-name {
+  font-size: clamp(0.95rem, 1.7vw, 1.15rem);
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 0.9rem;
+}
+.trad-text {
+  font-size: 0.78rem;
+  font-weight: 300;
+  line-height: 2.15;
+  color: var(--ink-40);
+  letter-spacing: 0.05em;
+}
 
-  .next-btn:hover {
-    background: var(--color-background-secondary);
-  }
+/* ════════════════════════
+   BLESSING
+════════════════════════ */
+.blessing-section {
+  background: var(--ink);
+  padding: clamp(5rem, 9vw, 9rem) clamp(1.8rem, 6vw, 5rem);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.blessing-ghost {
+  position: absolute;
+  right: -0.05em;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(12rem, 22vw, 20rem);
+  font-weight: 200;
+  color: rgba(247,244,239,0.022);
+  pointer-events: none;
+  line-height: 1;
+  user-select: none;
+}
+.blessing-eyebrow {
+  font-size: 0.58rem;
+  letter-spacing: 0.62em;
+  color: rgba(247,244,239,0.3);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 1.8rem;
+}
+.blessing-title {
+  font-size: clamp(1.5rem, 3.2vw, 2.4rem);
+  font-weight: 200;
+  letter-spacing: 0.24em;
+  color: rgba(247,244,239,0.82);
+  margin-bottom: 3.5rem;
+}
+.blessing-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.blessing-chip {
+  font-size: clamp(0.72rem, 1.2vw, 0.85rem);
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  color: rgba(247,244,239,0.42);
+  padding: 0.5rem 1.1rem;
+  border: 1px solid rgba(247,244,239,0.08);
+  cursor: default;
+  transition: color 0.3s, border-color 0.3s;
+}
+.blessing-chip:hover {
+  color: rgba(160,69,58,0.8);
+  border-color: rgba(160,69,58,0.3);
+}
 
-  .result-wrap {
-    text-align: center;
-    padding: 2rem 0;
-  }
+/* ════════════════════════
+   FOOTER
+════════════════════════ */
+.footer {
+  padding: 2.8rem clamp(1.8rem,6vw,5rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-left {
+  font-size: 0.6rem;
+  letter-spacing: 0.4em;
+  color: var(--ink-40);
+}
+.footer-rouge {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--rouge);
+  opacity: 0.3;
+}
 
-  .result-icon {
-    font-size: 48px;
-    margin-bottom: 1rem;
-    display: block;
-  }
-
-  .result-score {
-    font-size: 40px;
-    font-weight: 500;
-    color: var(--color-text-primary);
-    margin-bottom: 4px;
-  }
-
-  .result-label {
-    font-size: 16px;
-    color: var(--color-text-secondary);
-    margin-bottom: 1.5rem;
-  }
-
-  .result-msg {
-    font-size: 15px;
-    color: var(--color-text-primary);
-    line-height: 1.7;
-    margin-bottom: 1.5rem;
-    padding: 1rem 1.25rem;
-    background: var(--color-background-secondary);
-    border-radius: var(--border-radius-lg);
-    text-align: left;
-  }
-
-  .medals {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-  }
-
-  .medal {
-    font-size: 13px;
-    padding: 4px 12px;
-    border-radius: var(--border-radius-md);
-  }
-
-  .medal.gold {
-    background: #FAEEDA;
-    color: #633806;
-  }
-
-  .medal.silver {
-    background: #D3D1C7;
-    color: #2C2C2A;
-  }
-
-  .medal.bronze {
-    background: #FAECE7;
-    color: #4A1B0C;
-  }
-
-  .result-actions {
-    display: flex;
-    gap: 10px;
-  }
-
-  .result-actions button {
-    flex: 1;
-    padding: 12px;
-    border-radius: var(--border-radius-md);
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-  }
-
-  .btn-retry {
-    background: none;
-    border: 0.5px solid var(--color-border-secondary);
-    color: var(--color-text-primary);
-  }
-
-  .btn-retry:hover {
-    background: var(--color-background-secondary);
-  }
-
-  .btn-explore {
-    background: #1D9E75;
-    border: none;
-    color: #04342C;
-  }
-
-  .btn-explore:hover {
-    opacity: 0.88;
-  }
+/* ════════════════════════
+   SCROLL REVEAL
+════════════════════════ */
+.fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.fade-up.in { opacity:1; transform:translateY(0); }
+.d1 { transition-delay:0.1s; }
+.d2 { transition-delay:0.22s; }
+.d3 { transition-delay:0.34s; }
+.d4 { transition-delay:0.46s; }
 </style>
+</head>
+<body>
 
-<div class="game-wrap">
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-circle"></div>
+  <div class="hero-horizon"></div>
 
-  <div id="screen-home" class="screen active">
-    <div class="home-header">
-      <span class="home-img">🏯</span>
-      <div class="home-title">台灣古厝探索</div>
-      <div class="home-sub">從建築走進歷史，探索先人留下的文化軌跡<br>選擇一座古厝，開始你的知識之旅</div>
-    </div>
-    <div class="topic-grid" id="topic-grid"></div>
-    <button class="start-btn" id="start-btn" disabled onclick="startQuiz()">選擇古厝開始遊戲 →</button>
+  <!-- water lines -->
+  <svg class="water-strokes" viewBox="0 0 1440 200" preserveAspectRatio="none"
+       xmlns="http://www.w3.org/2000/svg">
+    <g stroke="rgba(28,28,28,0.09)" stroke-width="0.7" fill="none">
+      <path d="M0 28 Q180 18 360 28 Q540 38 720 28 Q900 18 1080 28 Q1260 38 1440 28 Q1620 18 1800 28 Q1980 38 2160 28 Q2340 18 2520 28 Q2700 38 2880 28"/>
+      <path d="M0 52 Q200 42 400 52 Q600 62 800 52 Q1000 42 1200 52 Q1400 62 1600 52 Q1800 42 2000 52 Q2200 62 2400 52 Q2600 42 2800 52"/>
+      <path d="M0 76 Q200 64 400 76 Q600 88 800 76 Q1000 64 1200 76 Q1400 88 1600 76 Q1800 64 2000 76 Q2200 88 2400 76 Q2600 64 2800 76"/>
+      <path d="M0 100 Q220 88 440 100 Q660 112 880 100 Q1100 88 1320 100 Q1540 112 1760 100 Q1980 88 2200 100 Q2420 112 2640 100 Q2860 88 2880 100"/>
+      <path d="M0 124 Q220 112 440 124 Q660 136 880 124 Q1100 112 1320 124 Q1540 136 1760 124 Q1980 112 2200 124 Q2420 136 2640 124 Q2860 112 2880 124"/>
+      <path d="M0 148 Q240 136 480 148 Q720 160 960 148 Q1200 136 1440 148 Q1680 160 1920 148 Q2160 136 2400 148 Q2640 160 2880 148"/>
+      <path d="M0 172 Q240 160 480 172 Q720 184 960 172 Q1200 160 1440 172 Q1680 184 1920 172 Q2160 160 2400 172 Q2640 184 2880 172"/>
+    </g>
+  </svg>
+
+  <!-- dragon boat -->
+  <div class="boat-wrap">
+    <svg class="boat-svg" width="250" height="84" viewBox="0 0 250 84"
+         xmlns="http://www.w3.org/2000/svg">
+      <path d="M16 62 C50 70 200 70 234 62 L220 76 C185 83 65 83 30 76Z"
+            fill="rgba(28,28,28,0.72)"/>
+      <path d="M16 62 C50 69 200 69 234 62 L228 66 C193 72 57 72 22 66Z"
+            fill="rgba(160,69,58,0.45)"/>
+      <g transform="translate(226,46)">
+        <path d="M0 10 C5 6,16 4,20 10 C16 16,5 14,0 10Z" fill="rgba(28,28,28,0.65)"/>
+        <circle cx="16" cy="8" r="1.8" fill="rgba(247,244,239,0.45)"/>
+        <path d="M18 6 L24 3 M20 8 L26 6" stroke="rgba(160,69,58,0.55)" stroke-width="0.9" stroke-linecap="round" fill="none"/>
+      </g>
+      <path d="M16 62 C5 54,0 44,3 40 C7 36,12 48,16 46 C20 44,16 56,16 62Z"
+            fill="rgba(28,28,28,0.48)"/>
+      <g fill="rgba(28,28,28,0.4)">
+        <rect x="58"  y="45" width="4" height="13" rx="2"/>
+        <rect x="78"  y="45" width="4" height="13" rx="2"/>
+        <rect x="98"  y="45" width="4" height="13" rx="2"/>
+        <rect x="118" y="45" width="4" height="13" rx="2"/>
+        <rect x="138" y="45" width="4" height="13" rx="2"/>
+        <rect x="158" y="45" width="4" height="13" rx="2"/>
+        <rect x="178" y="45" width="4" height="13" rx="2"/>
+      </g>
+      <g stroke="rgba(28,28,28,0.2)" stroke-width="1" stroke-linecap="round">
+        <line x1="60"  y1="52" x2="49"  y2="66"/>
+        <line x1="80"  y1="52" x2="69"  y2="66"/>
+        <line x1="100" y1="52" x2="89"  y2="66"/>
+        <line x1="120" y1="52" x2="109" y2="66"/>
+        <line x1="140" y1="52" x2="129" y2="66"/>
+        <line x1="160" y1="52" x2="149" y2="66"/>
+        <line x1="180" y1="52" x2="169" y2="66"/>
+      </g>
+      <line x1="125" y1="18" x2="125" y2="46" stroke="rgba(28,28,28,0.35)" stroke-width="1"/>
+      <path d="M125 18 L142 25 L125 32Z" fill="rgba(160,69,58,0.45)"/>
+    </svg>
   </div>
 
-  <div id="screen-quiz" class="screen">
-    <div class="quiz-top">
-      <button class="back-btn" onclick="goHome()">← 返回</button>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progress-fill"></div>
+  <!-- hero text -->
+  <div class="hero-inner">
+    <span class="kana-label">農曆五月初五 &nbsp;·&nbsp; Dragon Boat Festival</span>
+    <h1 class="hero-zh">端午</h1>
+    <div class="hero-divider"></div>
+    <span class="hero-en">Duānwǔ Jié &nbsp;·&nbsp; 二〇二五</span>
+    <p class="hero-blessing">龍舟競渡，粽香千里</p>
+    <div class="hero-stamp"><span>端午<br>安康</span></div>
+  </div>
+
+  <div class="scroll-arrow">
+    <span>scroll</span>
+    <div class="arrow-line"></div>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section class="section" style="border-top:1px solid var(--line)">
+  <div class="intro-grid">
+    <div class="intro-deco">
+      <span class="vertical-chars">端午佳節</span>
+    </div>
+    <div>
+      <span class="sec-eyebrow fade-up">About the Festival</span>
+      <h2 class="sec-title fade-up d1">千年傳統<br>萬代流傳</h2>
+      <div class="thin-rule fade-up d2"></div>
+      <p class="sec-body fade-up d2">
+        端午節，農曆五月初五，是中國重要的傳統節日之一，
+        已有超過兩千年的歷史。相傳源於紀念愛國詩人屈原，
+        人們划龍舟、包粽子、掛艾草，以驅邪避疫、祈求平安。
+        這個節日不僅在中華文化圈廣泛慶祝，
+        更被列入聯合國人類非物質文化遺產名錄。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO PANELS -->
+<section class="panels-section">
+  <div class="panels-header">
+    <span class="sec-eyebrow fade-up">節日風情</span>
+    <h2 class="sec-title fade-up d1">三重景致</h2>
+  </div>
+
+  <div class="panels-grid">
+    <!-- 1 -->
+    <div class="video-panel fade-up d1">
+      <div class="video-frame" id="frame1">
+        <div class="frame-corner"></div>
+        <div class="video-placeholder" id="ph1">
+          <span class="ph-char">龍<br>舟</span>
+          <span class="ph-label">Dragon Boat</span>
+        </div>
       </div>
-      <span class="q-counter" id="q-counter"></span>
-      <span class="score-badge" id="score-badge">得分 0</span>
+      <div class="panel-caption">
+        <span class="panel-num">01 &nbsp;/&nbsp; 03</span>
+        <span class="panel-title">龍舟競渡</span>
+        <span class="panel-sub">鼓聲震天，槳影如飛</span>
+      </div>
+      <label class="upload-label" for="vid1">
+        ＋ &nbsp;上傳影片（1179 × 2556）
+        <input type="file" id="vid1" accept="video/*"
+               onchange="loadVideo(this,'frame1','ph1')">
+      </label>
     </div>
-    <div class="guju-card" id="guju-card"></div>
-    <div class="question-text" id="question-text"></div>
-    <div class="options-grid" id="options-grid"></div>
-    <div class="explain-box" id="explain-box" style="display:none"></div>
-    <button class="next-btn" id="next-btn" style="display:none" onclick="nextQuestion()">下一題 →</button>
+    <!-- 2 -->
+    <div class="video-panel fade-up d2">
+      <div class="video-frame" id="frame2">
+        <div class="frame-corner"></div>
+        <div class="video-placeholder" id="ph2">
+          <span class="ph-char">粽<br>香</span>
+          <span class="ph-label">Zongzi Making</span>
+        </div>
+      </div>
+      <div class="panel-caption">
+        <span class="panel-num">02 &nbsp;/&nbsp; 03</span>
+        <span class="panel-title">粽香四溢</span>
+        <span class="panel-sub">竹葉翠綠，糯米飄香</span>
+      </div>
+      <label class="upload-label" for="vid2">
+        ＋ &nbsp;上傳影片（1179 × 2556）
+        <input type="file" id="vid2" accept="video/*"
+               onchange="loadVideo(this,'frame2','ph2')">
+      </label>
+    </div>
+    <!-- 3 -->
+    <div class="video-panel fade-up d3">
+      <div class="video-frame" id="frame3">
+        <div class="frame-corner"></div>
+        <div class="video-placeholder" id="ph3">
+          <span class="ph-char">艾<br>草</span>
+          <span class="ph-label">Traditions</span>
+        </div>
+      </div>
+      <div class="panel-caption">
+        <span class="panel-num">03 &nbsp;/&nbsp; 03</span>
+        <span class="panel-title">艾草辟邪</span>
+        <span class="panel-sub">清香驅瘴，保佑平安</span>
+      </div>
+      <label class="upload-label" for="vid3">
+        ＋ &nbsp;上傳影片（1179 × 2556）
+        <input type="file" id="vid3" accept="video/*"
+               onchange="loadVideo(this,'frame3','ph3')">
+      </label>
+    </div>
   </div>
+</section>
 
-  <div id="screen-result" class="screen">
-    <div class="result-wrap" id="result-wrap"></div>
+<!-- TRADITIONS -->
+<section class="traditions-section">
+  <div class="traditions-header">
+    <span class="sec-eyebrow fade-up">傳統習俗</span>
+    <h2 class="sec-title fade-up d1">端午四事</h2>
   </div>
+  <div class="traditions-list">
+    <div class="trad-item fade-up d1">
+      <span class="trad-num">01</span>
+      <span class="trad-icon">🐉</span>
+      <span class="trad-name">划龍舟</span>
+      <p class="trad-text">楚人競相划船打撈屈原，龍舟競渡由此而生，象徵團結與勇氣。</p>
+    </div>
+    <div class="trad-item fade-up d2">
+      <span class="trad-num">02</span>
+      <span class="trad-icon">🎋</span>
+      <span class="trad-name">包粽子</span>
+      <p class="trad-text">竹葉包裹糯米投入江中祭屈原，後演變為家戶相互贈食的美好習俗。</p>
+    </div>
+    <div class="trad-item fade-up d3">
+      <span class="trad-num">03</span>
+      <span class="trad-icon">🌿</span>
+      <span class="trad-name">掛艾草</span>
+      <p class="trad-text">門口懸掛艾草與菖蒲，取其芳香辟邪之效，驅蚊蟲、護家宅。</p>
+    </div>
+    <div class="trad-item fade-up d4">
+      <span class="trad-num">04</span>
+      <span class="trad-icon">🥚</span>
+      <span class="trad-name">立雞蛋</span>
+      <p class="trad-text">端午正午天地之氣最旺，此時立蛋最易成功，象徵好運連連。</p>
+    </div>
+  </div>
+</section>
 
-</div>
+<!-- BLESSING -->
+<section class="blessing-section">
+  <span class="blessing-ghost">節</span>
+  <span class="blessing-eyebrow fade-up">Blessings · 祝福語</span>
+  <h2 class="blessing-title fade-up d1">願您端午安康</h2>
+  <div class="blessing-row fade-up d2">
+    <span class="blessing-chip">粽情粽意，端午安康</span>
+    <span class="blessing-chip">龍舟競渡，旗開得勝</span>
+    <span class="blessing-chip">萬事如意，闔家平安</span>
+    <span class="blessing-chip">艾香飄飄，健康常在</span>
+    <span class="blessing-chip">五月端陽，喜氣洋洋</span>
+    <span class="blessing-chip">屈原精神，薪火相傳</span>
+    <span class="blessing-chip">粽葉飄香，情意綿長</span>
+    <span class="blessing-chip">鑼鼓喧天，吉星高照</span>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <span class="footer-left">端午佳節 &nbsp;·&nbsp; Dragon Boat Festival &nbsp;·&nbsp; 農曆五月初五</span>
+  <div class="footer-rouge"></div>
+</footer>
 
 <script>
-  const GUJU_DATA = [
-    {
-      id: 'lindi',
-      name: '霧峰林家宮保第',
-      region: '台中霧峰',
-      period: '清領時期（1864年起）',
-      desc: '台灣五大家族之一林家的根據地，林文察因平定太平天國有功受封，宅邸規模宏大，融合閩南與官方建築風格，見證台灣仕紳階層的崛起。',
-      questions: [
-        {
-          q: '霧峰林家在清朝哪項歷史事件中立下大功，讓家族地位大幅提升？',
-          opts: ['鴉片戰爭', '太平天國之亂', '牡丹社事件', '甲午戰爭'],
-          ans: 1,
-          exp: '林文察率軍協助清廷平定太平天國，戰功卓越，受封「福建陸路提督」，是霧峰林家走向政治核心的轉捩點。'
-        },
-        {
-          q: '霧峰林家宅邸建築群使用大量「燕尾脊」，這種屋頂設計代表什麼？',
-          opts: ['商賈富戶的象徵', '官宦仕紳身份的標誌', '宗教廟宇專用', '防禦工事設計'],
-          ans: 1,
-          exp: '燕尾脊（又稱「燕尾翹脊」）在台灣傳統建築中，是具有官宦身份才能使用的屋脊形式，象徵屋主地位崇高。'
-        },
-        {
-          q: '林獻堂在日治時期創辦的文化運動，與林家祖厝精神一脈相承，請問他主導的是？',
-          opts: ['台灣民主運動', '台灣文化協會', '台灣議會設置請願運動', '以上皆是'],
-          ans: 3,
-          exp: '林獻堂是日治時期台灣最重要的民族運動領袖，台灣文化協會與議會請願運動都是他推動的，體現霧峰林家對台灣近代史的深遠影響。'
-        }
-      ]
-    },
-    {
-      id: 'banqiao',
-      name: '板橋林家花園',
-      region: '新北板橋',
-      period: '清領時期（1847年起）',
-      desc: '台灣保存最完整的中式園林建築群，由林本源家族歷時四十餘年建造，融合漢式建築、江南園林與閩南工藝，是台灣豪門大宅的代表。',
-      questions: [
-        {
-          q: '板橋林家花園的「汲古書屋」主要功能是什麼？',
-          opts: ['招待賓客的宴會廳', '供子弟讀書的私塾', '儲存糧食的倉庫', '供奉祖先的祠堂'],
-          ans: 1,
-          exp: '汲古書屋是林家專為子弟讀書求學所建的讀書空間，「汲古」意指從古籍汲取智慧，反映林家重視文教的家風。'
-        },
-        {
-          q: '林本源家族發跡的關鍵是掌握了台灣哪項重要經濟命脈？',
-          opts: ['樟腦與茶葉貿易', '米糧與水利灌溉', '鹽業與漁業', '絲綢與瓷器'],
-          ans: 1,
-          exp: '林家透過控制大坪頂一帶的水利灌溉系統（大安圳等），掌握大片農地的稻米生產，再加上茶葉出口，奠定龐大財富基礎。'
-        },
-        {
-          q: '林家花園建築群中的「觀稼樓」，名稱中的「觀稼」反映了什麼？',
-          opts: ['欣賞花園景致', '遠眺農田耕作', '瞭望防禦敵情', '觀看戲曲表演'],
-          ans: 1,
-          exp: '「稼」意為農作物，觀稼樓原本可遠眺林家所擁有的大片農田，象徵地主家族對土地的掌控，也體現農業社會中土地即財富的價值觀。'
-        }
-      ]
-    },
-    {
-      id: 'guojia',
-      name: '國定古蹟西螺大橋頭鄭家古厝',
-      region: '雲林西螺',
-      period: '清領末期（約1895年）',
-      desc: '西螺平原是台灣重要的米倉，鄭家古厝見證了濁水溪流域農業文明的興衰，三合院格局與紅磚斗栱保留了典型閩南農家建築樣貌。',
-      questions: [
-        {
-          q: '西螺一帶農業發達，最重要的農業灌溉水源來自哪條河流？',
-          opts: ['淡水河', '濁水溪', '大肚溪', '曾文溪'],
-          ans: 1,
-          exp: '濁水溪是台灣最長的河流，流貫雲林彰化平原，豐沛的水源與肥沃沖積土讓西螺成為全台知名的稻米、醬油、蔬菜產區。'
-        },
-        {
-          q: '閩南三合院古厝中，「正身」（正廳）最主要的功能是？',
-          opts: ['主人起居的臥室', '祭祀祖先與神明的空間', '接待商客的店面', '儲存農具的倉庫'],
-          ans: 1,
-          exp: '正廳是三合院的核心，供奉神明與歷代祖先牌位，是家族祭祀、婚喪喜慶等重要儀式舉行的場所，象徵家族的精神中心。'
-        },
-        {
-          q: '西螺醬油文化與農業密切相關，傳統醬油釀造最主要的原料是？',
-          opts: ['高粱與糯米', '黑豆與鹽', '小麥與糖', '地瓜與麥芽'],
-          ans: 1,
-          exp: '西螺傳統醬油以黑豆（蔭豉）為主原料，搭配海鹽，利用天然日曬發酵釀製，是台灣黑豆醬油的重要產地，與當地農業文化緊密相連。'
-        }
-      ]
-    },
-    {
-      id: 'tainan',
-      name: '台南吳園（全台首府）',
-      region: '台南中西區',
-      period: '清領時期（1830年代）',
-      desc: '由鹽商吳尚新建造，是台灣四大名園之一。台南作為清領時期全台首府長達兩百年，府城文化沉積深厚，園林建築是士紳階層文人風雅的具體展現。',
-      questions: [
-        {
-          q: '吳園的主人吳尚新致富的關鍵產業是什麼？',
-          opts: ['糖業', '鹽業', '茶業', '樟腦業'],
-          ans: 1,
-          exp: '吳家是清代台灣重要的鹽商，台南沿海地區鹽田廣布，控制鹽業是當時暴富的主要途徑之一，吳尚新以鹽業資本興建了這座名園。'
-        },
-        {
-          q: '台南被稱為「府城」，「府」在清代行政架構中是指哪一層級？',
-          opts: ['全台最高行政中心（省級）', '地區行政中心（介於省與縣之間）', '地方縣城', '軍事要塞'],
-          ans: 1,
-          exp: '「府」是清代行政層級中介於「省」與「縣」之間的單位，台灣府（後改台南府）長期是全台灣的政治、文化、貿易核心，設有府衙、府學等重要機構。'
-        },
-        {
-          q: '台南至今保有許多清代廟宇，這些廟宇對移民社會最重要的功能是？',
-          opts: ['只做宗教祭祀用途', '作為商業交易的市集', '凝聚移民社群認同與公共事務中心', '提供軍事防禦功能'],
-          ans: 2,
-          exp: '對清代閩粵移民而言，廟宇不只是宗教場所，更是同鄉聚會、調解糾紛、協調公共事務的社群核心，是移民社會建立秩序與認同的重要機制。'
-        }
-      ]
-    },
-    {
-      id: 'jinguashi',
-      name: '金廣福公館（北埔姜家）',
-      region: '新竹北埔',
-      period: '清領時期（1835年）',
-      desc: '台灣現存最早有明確紀年的古厝，由「金廣福」墾號在官府支持下建立，是漢人移民拓墾客家聚落的歷史見證，門額「金廣福公館」直接反映了墾號制度。',
-      questions: [
-        {
-          q: '「金廣福」墾號中的「金」「廣」「福」各代表什麼？',
-          opts: ['三位創辦人的姓氏', '金錢、廣大、福氣的吉祥語', '官府出資、廣東移民、福建移民的合夥', '三個鄉里的名稱'],
-          ans: 2,
-          exp: '「金」代表官府出資，「廣」代表廣東籍（客家人）移民股東，「福」代表福建籍（閩南人）移民股東，是閩客合作墾荒的組織，體現台灣早期移民族群的合作關係。'
-        },
-        {
-          q: '北埔地區是客家人聚居地，客家移民來台主要從事什麼產業讓此地繁榮？',
-          opts: ['海上貿易與捕魚', '樟腦提煉與茶葉種植', '鹽田開發', '礦業採掘'],
-          ans: 1,
-          exp: '北埔客家移民大量開墾山地，種植茶葉並從事樟腦提煉，樟腦是19世紀末全球工業的重要原料，台灣一度是全球最大樟腦出口地，客家人是主要生產者。'
-        },
-        {
-          q: '金廣福公館建築有高牆與槍孔設計，這反映了清代台灣開墾時期什麼樣的社會狀況？',
-          opts: ['防禦外國軍隊入侵', '閩客械鬥與原住民衝突的威脅', '防止颱風侵襲', '彰顯財富的裝飾風格'],
-          ans: 1,
-          exp: '清代台灣拓墾過程中，漢人移民面臨閩客族群械鬥與原住民族的抵抗，古厝高牆、槍孔是真實的防禦設施，反映開墾時代「拓荒如戰場」的艱辛歷史。'
-        }
-      ]
-    },
-    {
-      id: 'sanheyuan',
-      name: '新埔劉家祠堂（枋寮義民廟區）',
-      region: '新竹新埔',
-      period: '清領時期（約1830年代）',
-      desc: '新竹新埔是客家文化重鎮，劉家宗祠與義民廟周邊聚落完整保存客家三合院文化，是台灣義民精神與客家移民歷史的核心場域。',
-      questions: [
-        {
-          q: '義民廟主祀的「義民爺」，他們是在哪場歷史事件中犧牲的客家義勇？',
-          opts: ['鄭成功反清復明之役', '林爽文事件（1786年）', '牡丹社事件', '乙未抗日之役'],
-          ans: 1,
-          exp: '1786年林爽文事件中，北台灣客家義民自發組織武力協助清廷平亂，犧牲者被集體祭祀，成為客家族群凝聚認同的重要信仰，義民廟因此成為全台客家信仰中心。'
-        },
-        {
-          q: '客家三合院「夥房」的格局與閩南三合院最大的差別是？',
-          opts: ['客家夥房沒有正廳', '客家夥房強調大家族共居，橫屋（護龍）更長更多', '客家夥房使用圓形格局', '客家夥房沒有祖先牌位'],
-          ans: 1,
-          exp: '客家「夥房」強調大家族聚居，橫屋（護龍）往往延伸多層，可容納數十戶同姓宗親，與閩南三合院相比規模更大，更強調族群聚合的社會結構。'
-        },
-        {
-          q: '新埔一帶以「柿餅」聞名，這與客家人的什麼文化特質有關？',
-          opts: ['客家人偏愛甜食', '客家人勤儉惜物、善用農產加工保存食物', '柿餅是祭祀義民爺的供品', '柿餅是客家嫁妝必備'],
-          ans: 1,
-          exp: '客家文化有「硬頸」精神與勤儉惜物的傳統，柿餅是將新鮮柿子脫水保存的加工食品，反映客家移民善用山地農產、減少浪費的生活智慧，是農業文化的縮影。'
-        }
-      ]
-    }
-  ];
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
 
-  let selectedGuju = null;
-  let currentQ = 0;
-  let score = 0;
-  let answered = false;
-  let questions = [];
-
-  function renderTopics() {
-    const grid = document.getElementById('topic-grid');
-    const icons = ['🏛️', '🌿', '🌾', '🏺', '🌳', '⛩️'];
-    grid.innerHTML = GUJU_DATA.map((g, i) => `
-    <div class="topic-card" id="tc-${g.id}" onclick="selectTopic('${g.id}')">
-      <span class="topic-icon">${icons[i]}</span>
-      <div class="topic-name">${g.name}</div>
-      <div class="topic-loc">${g.region} ・ ${g.period.split('（')[0]}</div>
-    </div>
-  `).join('');
-  }
-
-  function selectTopic(id) {
-    document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
-    document.getElementById('tc-' + id).classList.add('selected');
-    selectedGuju = GUJU_DATA.find(g => g.id === id);
-    document.getElementById('start-btn').disabled = false;
-    document.getElementById('start-btn').textContent = `開始探索「${selectedGuju.name}」 →`;
-  }
-
-  function startQuiz() {
-    if (!selectedGuju) return;
-    questions = [...selectedGuju.questions];
-    currentQ = 0;
-    score = 0;
-    answered = false;
-    showScreen('screen-quiz');
-    renderQuestion();
-  }
-
-  function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-  }
-
-  function renderQuestion() {
-    const q = questions[currentQ];
-    const total = questions.length;
-    const pct = (currentQ / total) * 100;
-    document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('q-counter').textContent = `${currentQ + 1} / ${total}`;
-    document.getElementById('score-badge').textContent = `得分 ${score}`;
-
-    document.getElementById('guju-card').innerHTML = `
-    <div class="guju-name">${selectedGuju.name}</div>
-    <span class="guju-tag">${selectedGuju.region} ・ ${selectedGuju.period}</span>
-    <div class="guju-desc">${selectedGuju.desc}</div>
-  `;
-
-    document.getElementById('question-text').textContent = `Q${currentQ + 1}. ${q.q}`;
-    document.getElementById('options-grid').innerHTML = q.opts.map((o, i) =>
-      `<button class="opt-btn" onclick="answer(${i})">${String.fromCharCode(65 + i)}. ${o}</button>`
-    ).join('');
-    document.getElementById('explain-box').style.display = 'none';
-    document.getElementById('next-btn').style.display = 'none';
-    answered = false;
-  }
-
-  function answer(idx) {
-    if (answered) return;
-    answered = true;
-    const q = questions[currentQ];
-    const btns = document.querySelectorAll('.opt-btn');
-    btns.forEach(b => b.disabled = true);
-    btns[q.ans].classList.add('correct');
-    if (idx !== q.ans) {
-      btns[idx].classList.add('wrong');
-    } else {
-      score++;
-    }
-    document.getElementById('score-badge').textContent = `得分 ${score}`;
-    const exp = document.getElementById('explain-box');
-    exp.style.display = 'block';
-    exp.innerHTML = `<div class="explain-title">${idx === q.ans ? '✓ 答對了！' : '✗ 答錯了'} — 歷史小知識</div>${q.exp}`;
-    document.getElementById('next-btn').style.display = 'block';
-    document.getElementById('next-btn').textContent = currentQ + 1 < questions.length ? '下一題 →' : '查看成績 →';
-  }
-
-  function nextQuestion() {
-    currentQ++;
-    if (currentQ >= questions.length) {
-      showResult();
-    } else {
-      renderQuestion();
-    }
-  }
-
-  function showResult() {
-    showScreen('screen-result');
-    const total = questions.length;
-    const pct = Math.round((score / total) * 100);
-    let icon, msg, title;
-    if (pct === 100) { icon = '🏆'; title = '完美通關！'; msg = `你對「${selectedGuju.name}」的歷史文化瞭如指掌！先人的智慧與故事已深深刻入你的記憶中，歡迎繼續探索其他古厝。`; }
-    else if (pct >= 67) { icon = '🎖️'; title = '表現優秀！'; msg = `你掌握了「${selectedGuju.name}」的主要脈絡，對台灣先人拓墾的艱辛有相當深入的了解，再複習一下答錯的題目，歷史知識會更扎實。`; }
-    else { icon = '📖'; title = '繼續加油！'; msg = `台灣古厝背後藏著豐富的故事，建議你再挑戰一次，或實際走訪「${selectedGuju.region}」，親眼感受那些建築帶來的時代感動。`; }
-
-    document.getElementById('result-wrap').innerHTML = `
-    <span class="result-icon">${icon}</span>
-    <div class="result-score">${score} / ${total}</div>
-    <div class="result-label">${title} 答對率 ${pct}%</div>
-    <div class="result-msg">${msg}</div>
-    <div class="medals">
-      <span class="medal gold">🥇 全台五大古厝</span>
-      <span class="medal silver">🏛️ ${selectedGuju.region} 在地文化</span>
-      <span class="medal bronze">📜 ${selectedGuju.period}</span>
-    </div>
-    <div class="result-actions">
-      <button class="btn-retry" onclick="startQuiz()">再挑戰一次</button>
-      <button class="btn-explore" onclick="goHome()">探索其他古厝 ↗</button>
-    </div>
-  `;
-  }
-
-  function goHome() {
-    showScreen('screen-home');
-    selectedGuju = null;
-    document.getElementById('start-btn').disabled = true;
-    document.getElementById('start-btn').textContent = '選擇古厝開始遊戲 →';
-    document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
-  }
-
-  renderTopics();
+function loadVideo(input, frameId, phId) {
+  const file = input.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  const frame = document.getElementById(frameId);
+  const ph    = document.getElementById(phId);
+  const old   = frame.querySelector('video');
+  if (old) old.remove();
+  const v = document.createElement('video');
+  v.className = 'panel-video';
+  v.src = url;
+  v.autoplay = v.loop = v.muted = v.playsInline = true;
+  v.controls = false;
+  ph.style.opacity = '0';
+  ph.style.pointerEvents = 'none';
+  frame.appendChild(v);
+  v.play().catch(() => {});
+}
 </script>
+</body>
+</html>
