@@ -3,872 +3,804 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>端午 · Dragon Boat Festival</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200;300;400&family=Shippori+Mincho:wght@300;400&display=swap" rel="stylesheet">
+<title>巴黎生活圈地圖 · 15e</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --washi:   #f7f4ef;
-  --ink:     #1c1c1c;
-  --ink-40:  rgba(28,28,28,0.40);
-  --ink-15:  rgba(28,28,28,0.10);
-  --rouge:   #a0453a;
-  --rouge-t: rgba(160,69,58,0.08);
-  --sage:    #5a6e5a;
-  --sage-t:  rgba(90,110,90,0.10);
-  --line:    rgba(28,28,28,0.10);
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
+  :root {
+    --navy: #0d1b2a;
+    --navy-mid: #162032;
+    --navy-card: #1c2b3a;
+    --navy-border: #243447;
+    --gold: #c9a84c;
+    --gold-light: #e8c96b;
+    --text: #e8edf2;
+    --text-dim: #8ea4ba;
+    --text-muted: #5c7a94;
 
-body {
-  font-family: 'Noto Serif TC', 'Shippori Mincho', serif;
-  font-weight: 300;
-  background: var(--washi);
-  color: var(--ink);
-  overflow-x: hidden;
-}
+    --route-a: #e63946;
+    --route-b: #3a9bd5;
+    --route-c: #f4a329;
+    --route-d: #a855f7;
+    --route-e: #22c55e;
+    --route-school: #e91e8c;
 
-/* subtle paper grain */
-body::after {
-  content:'';
-  position:fixed; inset:0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events:none;
-  z-index:9999;
-}
-
-/* ════════════════════════
-   HERO
-════════════════════════ */
-.hero {
-  position: relative;
-  height: 100svh;
-  min-height: 600px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: var(--washi);
-}
-
-/* faint ink-wash circle */
-.hero-circle {
-  position: absolute;
-  width: min(58vw, 460px);
-  height: min(58vw, 460px);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(28,28,28,0.045) 0%, transparent 68%);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
-/* horizon hairline */
-.hero-horizon {
-  position: absolute;
-  bottom: 32%;
-  left: 0; width: 100%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--line) 20%, var(--line) 80%, transparent);
-}
-
-/* water strokes */
-.water-strokes {
-  position: absolute;
-  bottom: 0;
-  left: 0; width: 200%;
-  height: 32%;
-  animation: waterDrift 20s linear infinite;
-  pointer-events: none;
-  opacity: 0.5;
-}
-@keyframes waterDrift {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-/* dragon boat */
-.boat-wrap {
-  position: absolute;
-  bottom: 30%;
-  width: 100%;
-  pointer-events: none;
-}
-.boat-svg {
-  animation: boatCross 22s linear infinite;
-  will-change: transform;
-}
-@keyframes boatCross {
-  0%   { transform: translateX(-18vw); }
-  100% { transform: translateX(112vw); }
-}
-
-/* hero text */
-.hero-inner {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.3rem;
-  padding: 2rem;
-}
-
-.kana-label {
-  font-size: clamp(0.58rem, 1.1vw, 0.7rem);
-  letter-spacing: 0.55em;
-  color: var(--ink-40);
-  font-weight: 300;
-  opacity: 0;
-  animation: rise 1s ease 0.4s forwards;
-}
-
-.hero-zh {
-  font-size: clamp(4rem, 11vw, 8.5rem);
-  font-weight: 200;
-  letter-spacing: 0.2em;
-  color: var(--ink);
-  line-height: 1;
-  opacity: 0;
-  animation: rise 1.2s ease 0.7s forwards;
-  position: relative;
-}
-.hero-zh::before {
-  content: '';
-  position: absolute;
-  left: -1.6rem;
-  top: 12%;
-  height: 76%;
-  width: 1px;
-  background: var(--rouge);
-  opacity: 0.4;
-}
-
-.hero-divider {
-  width: 28px;
-  height: 1px;
-  background: var(--ink-40);
-  opacity: 0;
-  animation: rise 1s ease 1.1s forwards;
-}
-
-.hero-en {
-  font-size: clamp(0.58rem, 1.2vw, 0.78rem);
-  letter-spacing: 0.48em;
-  color: var(--ink-40);
-  font-weight: 300;
-  opacity: 0;
-  animation: rise 1s ease 1.3s forwards;
-}
-
-.hero-blessing {
-  margin-top: 0.4rem;
-  font-size: clamp(0.82rem, 1.6vw, 1rem);
-  font-weight: 300;
-  letter-spacing: 0.24em;
-  color: var(--rouge);
-  opacity: 0;
-  animation: rise 1s ease 1.6s forwards;
-}
-
-.hero-stamp {
-  margin-top: 0.6rem;
-  width: 48px;
-  height: 48px;
-  border: 1px solid var(--rouge);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  animation: rise 0.8s ease 2s forwards;
-}
-.hero-stamp span {
-  font-size: 0.66rem;
-  letter-spacing: 0.08em;
-  color: var(--rouge);
-  writing-mode: vertical-rl;
-  line-height: 1.5;
-  font-weight: 400;
-}
-
-/* scroll indicator */
-.scroll-arrow {
-  position: absolute;
-  bottom: 2.2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  z-index: 10;
-  opacity: 0;
-  animation: rise 1s ease 2.4s forwards;
-}
-.scroll-arrow span {
-  font-size: 0.55rem;
-  letter-spacing: 0.5em;
-  color: var(--ink-40);
-}
-.arrow-line {
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(180deg, var(--ink-40) 0%, transparent 100%);
-  animation: arrowPulse 2.4s ease-in-out infinite;
-}
-@keyframes arrowPulse {
-  0%,100% { opacity:0.25; transform:scaleY(0.7) translateY(0); }
-  50%     { opacity:0.7;  transform:scaleY(1)   translateY(5px); }
-}
-
-@keyframes rise {
-  from { opacity:0; transform:translateY(14px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-
-/* ════════════════════════
-   SHARED
-════════════════════════ */
-.section {
-  padding: clamp(5rem, 10vw, 9rem) clamp(1.8rem, 6vw, 5rem);
-}
-
-.sec-eyebrow {
-  font-size: 0.6rem;
-  letter-spacing: 0.6em;
-  color: var(--ink-40);
-  text-transform: uppercase;
-  display: block;
-  margin-bottom: 1.4rem;
-}
-
-.sec-title {
-  font-size: clamp(1.7rem, 3.8vw, 2.8rem);
-  font-weight: 200;
-  letter-spacing: 0.16em;
-  color: var(--ink);
-  line-height: 1.45;
-}
-
-.sec-body {
-  font-size: clamp(0.85rem, 1.4vw, 0.98rem);
-  font-weight: 300;
-  line-height: 2.5;
-  color: var(--ink-40);
-  letter-spacing: 0.09em;
-  max-width: 540px;
-}
-
-.thin-rule {
-  width: 36px;
-  height: 1px;
-  background: var(--rouge);
-  opacity: 0.45;
-  margin: 2.2rem 0;
-}
-
-/* ════════════════════════
-   INTRO
-════════════════════════ */
-.intro-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(3rem, 6vw, 6rem);
-  align-items: center;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-.intro-deco {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-.vertical-chars {
-  writing-mode: vertical-rl;
-  font-size: clamp(5rem, 9vw, 7.5rem);
-  font-weight: 200;
-  letter-spacing: 0.12em;
-  color: var(--ink);
-  opacity: 0.05;
-  line-height: 1;
-  user-select: none;
-}
-
-@media (max-width: 680px) {
-  .intro-grid { grid-template-columns: 1fr; }
-  .intro-deco { display: none; }
-}
-
-/* ════════════════════════
-   VIDEO PANELS
-════════════════════════ */
-.panels-section {
-  padding: clamp(4rem, 8vw, 7rem) clamp(1.2rem, 4vw, 3rem);
-  border-top: 1px solid var(--line);
-}
-
-.panels-header {
-  text-align: center;
-  margin-bottom: clamp(3rem, 5vw, 5rem);
-}
-
-.panels-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(1rem, 2vw, 2rem);
-  max-width: 1320px;
-  margin: 0 auto;
-  align-items: start;
-}
-
-@media (max-width: 580px) {
-  .panels-grid {
-    grid-template-columns: 1fr;
-    max-width: 340px;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.35);
+    --shadow-hover: 0 8px 32px rgba(0,0,0,0.5);
   }
-}
 
-.video-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  html { scroll-behavior: smooth; }
 
-/* 1179 : 2556 ratio */
-.video-frame {
-  position: relative;
-  width: 100%;
-  padding-top: calc(2556 / 1179 * 100%);
-  background: #181612;
-  overflow: hidden;
-}
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
 
-/* single pixel outline */
-.video-frame::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 1px solid var(--line);
-  z-index: 4;
-  pointer-events: none;
-}
-/* top-left corner mark */
-.video-frame::after {
-  content: '';
-  position: absolute;
-  top: 10px; left: 10px;
-  width: 18px; height: 18px;
-  border-top: 1px solid var(--rouge);
-  border-left: 1px solid var(--rouge);
-  opacity: 0.4;
-  z-index: 5;
-  pointer-events: none;
-}
-/* bottom-right corner mark via child */
-.frame-corner {
-  position: absolute;
-  bottom: 10px; right: 10px;
-  width: 18px; height: 18px;
-  border-bottom: 1px solid var(--rouge);
-  border-right: 1px solid var(--rouge);
-  opacity: 0.4;
-  z-index: 5;
-  pointer-events: none;
-}
+  /* ── Grid background ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-/* placeholder */
-.video-placeholder {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  transition: opacity 0.6s;
-}
-.ph-char {
-  font-size: clamp(2.2rem, 4.5vw, 3.5rem);
-  font-weight: 200;
-  color: rgba(247,244,239,0.15);
-  writing-mode: vertical-rl;
-  line-height: 1.4;
-  letter-spacing: 0.1em;
-}
-.ph-label {
-  font-size: 0.55rem;
-  letter-spacing: 0.55em;
-  color: rgba(247,244,239,0.18);
-  text-transform: uppercase;
-}
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding: 56px 24px 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--navy-border);
+    background: linear-gradient(180deg, rgba(13,27,42,0) 0%, rgba(22,32,50,0.6) 100%);
+  }
 
-.panel-video {
-  position: absolute;
-  inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-}
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
 
-/* caption */
-.panel-caption {
-  margin-top: 1.3rem;
-  text-align: center;
-  width: 100%;
-}
-.panel-num {
-  display: block;
-  font-size: 0.52rem;
-  letter-spacing: 0.6em;
-  color: var(--ink-40);
-  margin-bottom: 0.5rem;
-}
-.panel-title {
-  display: block;
-  font-size: clamp(0.95rem, 1.8vw, 1.2rem);
-  font-weight: 200;
-  letter-spacing: 0.24em;
-  color: var(--ink);
-  margin-bottom: 0.45rem;
-}
-.panel-sub {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 300;
-  color: var(--ink-40);
-  letter-spacing: 0.1em;
-  line-height: 2;
-}
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+  }
 
-/* upload */
-.upload-label {
-  display: block;
-  margin-top: 1rem;
-  font-size: 0.6rem;
-  letter-spacing: 0.35em;
-  color: var(--sage);
-  border: 1px solid var(--line);
-  padding: 0.65rem 1rem;
-  cursor: pointer;
-  transition: background 0.25s, border-color 0.25s;
-  text-align: center;
-  width: 100%;
-}
-.upload-label:hover {
-  background: var(--sage-t);
-  border-color: rgba(90,110,90,0.4);
-}
-.upload-label input { display: none; }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
 
-/* ════════════════════════
-   TRADITIONS
-════════════════════════ */
-.traditions-section {
-  border-top: 1px solid var(--line);
-  padding: clamp(5rem, 9vw, 8rem) clamp(1.8rem, 6vw, 5rem);
-}
-.traditions-header { margin-bottom: clamp(3rem, 5vw, 5rem); }
+  .hero h1 span {
+    color: var(--gold);
+  }
 
-.traditions-list {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-}
-@media (max-width: 760px) {
-  .traditions-list { grid-template-columns: repeat(2,1fr); }
-}
-@media (max-width: 420px) {
-  .traditions-list { grid-template-columns: 1fr; }
-}
+  .hero-sub {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+  }
 
-.trad-item {
-  padding: 2.4rem 2rem;
-  border-right: 1px solid var(--line);
-  transition: background 0.3s;
-}
-.trad-item:last-child { border-right: none; }
-.trad-item:hover { background: var(--rouge-t); }
+  /* Home pin */
+  .home-pin {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--navy-card);
+    border: 1px solid var(--navy-border);
+    border-radius: 100px;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
 
-.trad-num {
-  display: block;
-  font-size: 0.52rem;
-  letter-spacing: 0.58em;
-  color: var(--ink-40);
-  margin-bottom: 1.1rem;
-}
-.trad-icon {
-  font-size: 1.4rem;
-  display: block;
-  margin-bottom: 1rem;
-  opacity: 0.65;
-}
-.trad-name {
-  font-size: clamp(0.95rem, 1.7vw, 1.15rem);
-  font-weight: 300;
-  letter-spacing: 0.22em;
-  color: var(--ink);
-  display: block;
-  margin-bottom: 0.9rem;
-}
-.trad-text {
-  font-size: 0.78rem;
-  font-weight: 300;
-  line-height: 2.15;
-  color: var(--ink-40);
-  letter-spacing: 0.05em;
-}
+  .home-pin:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-1px);
+    box-shadow: 0 0 20px rgba(201,168,76,0.15);
+  }
 
-/* ════════════════════════
-   BLESSING
-════════════════════════ */
-.blessing-section {
-  background: var(--ink);
-  padding: clamp(5rem, 9vw, 9rem) clamp(1.8rem, 6vw, 5rem);
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.blessing-ghost {
-  position: absolute;
-  right: -0.05em;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: clamp(12rem, 22vw, 20rem);
-  font-weight: 200;
-  color: rgba(247,244,239,0.022);
-  pointer-events: none;
-  line-height: 1;
-  user-select: none;
-}
-.blessing-eyebrow {
-  font-size: 0.58rem;
-  letter-spacing: 0.62em;
-  color: rgba(247,244,239,0.3);
-  text-transform: uppercase;
-  display: block;
-  margin-bottom: 1.8rem;
-}
-.blessing-title {
-  font-size: clamp(1.5rem, 3.2vw, 2.4rem);
-  font-weight: 200;
-  letter-spacing: 0.24em;
-  color: rgba(247,244,239,0.82);
-  margin-bottom: 3.5rem;
-}
-.blessing-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  max-width: 720px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-.blessing-chip {
-  font-size: clamp(0.72rem, 1.2vw, 0.85rem);
-  font-weight: 300;
-  letter-spacing: 0.2em;
-  color: rgba(247,244,239,0.42);
-  padding: 0.5rem 1.1rem;
-  border: 1px solid rgba(247,244,239,0.08);
-  cursor: default;
-  transition: color 0.3s, border-color 0.3s;
-}
-.blessing-chip:hover {
-  color: rgba(160,69,58,0.8);
-  border-color: rgba(160,69,58,0.3);
-}
+  .pin-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    position: relative;
+  }
 
-/* ════════════════════════
-   FOOTER
-════════════════════════ */
-.footer {
-  padding: 2.8rem clamp(1.8rem,6vw,5rem);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid var(--line);
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-.footer-left {
-  font-size: 0.6rem;
-  letter-spacing: 0.4em;
-  color: var(--ink-40);
-}
-.footer-rouge {
-  width: 24px;
-  height: 24px;
-  border: 1px solid var(--rouge);
-  opacity: 0.3;
-}
+  .pin-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    animation: pulse 2s ease-in-out infinite;
+  }
 
-/* ════════════════════════
-   SCROLL REVEAL
-════════════════════════ */
-.fade-up {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.9s ease, transform 0.9s ease;
-}
-.fade-up.in { opacity:1; transform:translateY(0); }
-.d1 { transition-delay:0.1s; }
-.d2 { transition-delay:0.22s; }
-.d3 { transition-delay:0.34s; }
-.d4 { transition-delay:0.46s; }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 0; transform: scale(2); }
+  }
+
+  /* ── Nav tabs ── */
+  .nav-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,27,42,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--navy-border);
+    padding: 0 16px;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .nav-tab:hover { color: var(--text); }
+
+  .nav-tab.active { color: var(--text); }
+
+  .tab-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Main layout ── */
+  .main {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 16px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  /* ── Route section ── */
+  .route-section { scroll-margin-top: 54px; }
+
+  .route-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .route-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+    letter-spacing: 0;
+  }
+
+  .route-title-group { flex: 1; }
+
+  .route-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .route-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ── Cards grid ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    background: var(--navy-card);
+    border: 1px solid var(--navy-border);
+    border-radius: var(--radius);
+    padding: 18px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.22s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    border-radius: 3px 0 0 3px;
+    transition: opacity 0.2s;
+    opacity: 0.7;
+  }
+
+  .card:hover {
+    border-color: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .card-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .card-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+    opacity: 0.9;
+  }
+
+  .card-address {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .tag {
+    font-size: 10.5px;
+    padding: 3px 8px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.06);
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .card-walk {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .card-maps-btn {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+
+  .card:hover .card-maps-btn { opacity: 1; }
+
+  /* ── School card (full width) ── */
+  .school-card {
+    background: linear-gradient(135deg, rgba(233,30,140,0.12), rgba(13,27,42,0.8));
+    border-color: rgba(233,30,140,0.25);
+  }
+
+  .school-card::before { background: var(--route-school); }
+
+  /* ── Walk connector ── */
+  .walk-connector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0 6px 6px;
+  }
+
+  .walk-line {
+    width: 1px;
+    height: 28px;
+    background: linear-gradient(to bottom, transparent, var(--navy-border), transparent);
+    margin-left: 21px;
+  }
+
+  /* ── Tip badges ── */
+  .tip-strip {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .tip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.03em;
+  }
+
+  .tip-hot {
+    background: rgba(244,163,41,0.15);
+    color: #f4a329;
+    border: 1px solid rgba(244,163,41,0.25);
+  }
+
+  .tip-rec {
+    background: rgba(34,197,94,0.12);
+    color: #22c55e;
+    border: 1px solid rgba(34,197,94,0.2);
+  }
+
+  /* ── Footer ── */
+  .footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 28px 16px;
+    border-top: 1px solid var(--navy-border);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ── RWD ── */
+  @media (max-width: 600px) {
+    .hero { padding: 40px 16px 32px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .nav-tab { padding: 12px 12px; font-size: 11px; }
+    .main { gap: 36px; padding-top: 28px; }
+    .route-header { gap: 10px; }
+    .route-badge { width: 38px; height: 38px; font-size: 13px; }
+  }
 </style>
 </head>
 <body>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-circle"></div>
-  <div class="hero-horizon"></div>
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-eyebrow">Paris 15e · Convention</div>
+  <h1>我的巴黎<span>生活圈</span></h1>
+  <p class="hero-sub">Convention 站周邊日常路線 × NEOMA 上學路</p>
+  <a class="home-pin" href="https://www.google.com/maps/search/?api=1&query=13+Rue+du+Hameau,+75015+Paris" target="_blank" rel="noopener">
+    <span class="pin-dot"></span>
+    住處：13 Rue du Hameau, 75015 Paris
+    <span style="color:var(--text-muted); font-size:11px;">↗</span>
+  </a>
+</header>
 
-  <!-- water lines -->
-  <svg class="water-strokes" viewBox="0 0 1440 200" preserveAspectRatio="none"
-       xmlns="http://www.w3.org/2000/svg">
-    <g stroke="rgba(28,28,28,0.09)" stroke-width="0.7" fill="none">
-      <path d="M0 28 Q180 18 360 28 Q540 38 720 28 Q900 18 1080 28 Q1260 38 1440 28 Q1620 18 1800 28 Q1980 38 2160 28 Q2340 18 2520 28 Q2700 38 2880 28"/>
-      <path d="M0 52 Q200 42 400 52 Q600 62 800 52 Q1000 42 1200 52 Q1400 62 1600 52 Q1800 42 2000 52 Q2200 62 2400 52 Q2600 42 2800 52"/>
-      <path d="M0 76 Q200 64 400 76 Q600 88 800 76 Q1000 64 1200 76 Q1400 88 1600 76 Q1800 64 2000 76 Q2200 88 2400 76 Q2600 64 2800 76"/>
-      <path d="M0 100 Q220 88 440 100 Q660 112 880 100 Q1100 88 1320 100 Q1540 112 1760 100 Q1980 88 2200 100 Q2420 112 2640 100 Q2860 88 2880 100"/>
-      <path d="M0 124 Q220 112 440 124 Q660 136 880 124 Q1100 112 1320 124 Q1540 136 1760 124 Q1980 112 2200 124 Q2420 136 2640 124 Q2860 112 2880 124"/>
-      <path d="M0 148 Q240 136 480 148 Q720 160 960 148 Q1200 136 1440 148 Q1680 160 1920 148 Q2160 136 2400 148 Q2640 160 2880 148"/>
-      <path d="M0 172 Q240 160 480 172 Q720 184 960 172 Q1200 160 1440 172 Q1680 184 1920 172 Q2160 160 2400 172 Q2640 184 2880 172"/>
-    </g>
-  </svg>
-
-  <!-- dragon boat -->
-  <div class="boat-wrap">
-    <svg class="boat-svg" width="250" height="84" viewBox="0 0 250 84"
-         xmlns="http://www.w3.org/2000/svg">
-      <path d="M16 62 C50 70 200 70 234 62 L220 76 C185 83 65 83 30 76Z"
-            fill="rgba(28,28,28,0.72)"/>
-      <path d="M16 62 C50 69 200 69 234 62 L228 66 C193 72 57 72 22 66Z"
-            fill="rgba(160,69,58,0.45)"/>
-      <g transform="translate(226,46)">
-        <path d="M0 10 C5 6,16 4,20 10 C16 16,5 14,0 10Z" fill="rgba(28,28,28,0.65)"/>
-        <circle cx="16" cy="8" r="1.8" fill="rgba(247,244,239,0.45)"/>
-        <path d="M18 6 L24 3 M20 8 L26 6" stroke="rgba(160,69,58,0.55)" stroke-width="0.9" stroke-linecap="round" fill="none"/>
-      </g>
-      <path d="M16 62 C5 54,0 44,3 40 C7 36,12 48,16 46 C20 44,16 56,16 62Z"
-            fill="rgba(28,28,28,0.48)"/>
-      <g fill="rgba(28,28,28,0.4)">
-        <rect x="58"  y="45" width="4" height="13" rx="2"/>
-        <rect x="78"  y="45" width="4" height="13" rx="2"/>
-        <rect x="98"  y="45" width="4" height="13" rx="2"/>
-        <rect x="118" y="45" width="4" height="13" rx="2"/>
-        <rect x="138" y="45" width="4" height="13" rx="2"/>
-        <rect x="158" y="45" width="4" height="13" rx="2"/>
-        <rect x="178" y="45" width="4" height="13" rx="2"/>
-      </g>
-      <g stroke="rgba(28,28,28,0.2)" stroke-width="1" stroke-linecap="round">
-        <line x1="60"  y1="52" x2="49"  y2="66"/>
-        <line x1="80"  y1="52" x2="69"  y2="66"/>
-        <line x1="100" y1="52" x2="89"  y2="66"/>
-        <line x1="120" y1="52" x2="109" y2="66"/>
-        <line x1="140" y1="52" x2="129" y2="66"/>
-        <line x1="160" y1="52" x2="149" y2="66"/>
-        <line x1="180" y1="52" x2="169" y2="66"/>
-      </g>
-      <line x1="125" y1="18" x2="125" y2="46" stroke="rgba(28,28,28,0.35)" stroke-width="1"/>
-      <path d="M125 18 L142 25 L125 32Z" fill="rgba(160,69,58,0.45)"/>
-    </svg>
+<!-- Sticky nav -->
+<nav class="nav-wrap">
+  <div class="nav-tabs">
+    <a class="nav-tab" href="#school" style="border-bottom-color: var(--route-school);">
+      <span class="tab-dot" style="background:var(--route-school);"></span>學校
+    </a>
+    <a class="nav-tab" href="#route-a" style="border-bottom-color: var(--route-a);">
+      <span class="tab-dot" style="background:var(--route-a);"></span>路線 A
+    </a>
+    <a class="nav-tab" href="#route-b" style="border-bottom-color: var(--route-b);">
+      <span class="tab-dot" style="background:var(--route-b);"></span>路線 B
+    </a>
+    <a class="nav-tab" href="#route-c" style="border-bottom-color: var(--route-c);">
+      <span class="tab-dot" style="background:var(--route-c);"></span>路線 C
+    </a>
+    <a class="nav-tab" href="#route-d" style="border-bottom-color: var(--route-d);">
+      <span class="tab-dot" style="background:var(--route-d);"></span>路線 D
+    </a>
+    <a class="nav-tab" href="#route-e" style="border-bottom-color: var(--route-e);">
+      <span class="tab-dot" style="background:var(--route-e);"></span>路線 E
+    </a>
   </div>
+</nav>
 
-  <!-- hero text -->
-  <div class="hero-inner">
-    <span class="kana-label">農曆五月初五 &nbsp;·&nbsp; Dragon Boat Festival</span>
-    <h1 class="hero-zh">端午</h1>
-    <div class="hero-divider"></div>
-    <span class="hero-en">Duānwǔ Jié &nbsp;·&nbsp; 二〇二五</span>
-    <p class="hero-blessing">龍舟競渡，粽香千里</p>
-    <div class="hero-stamp"><span>端午<br>安康</span></div>
-  </div>
+<main class="main">
 
-  <div class="scroll-arrow">
-    <span>scroll</span>
-    <div class="arrow-line"></div>
-  </div>
-</section>
-
-<!-- INTRO -->
-<section class="section" style="border-top:1px solid var(--line)">
-  <div class="intro-grid">
-    <div class="intro-deco">
-      <span class="vertical-chars">端午佳節</span>
+  <!-- ══ SCHOOL ══ -->
+  <section class="route-section" id="school">
+    <div class="route-header">
+      <div class="route-badge" style="background: var(--route-school);">🎓</div>
+      <div class="route-title-group">
+        <div class="route-title">NEOMA Business School</div>
+        <div class="route-meta">上學路線 · 75013 Paris · BUS約 40 分 / 地鐵約 35 分</div>
+      </div>
     </div>
-    <div>
-      <span class="sec-eyebrow fade-up">About the Festival</span>
-      <h2 class="sec-title fade-up d1">千年傳統<br>萬代流傳</h2>
-      <div class="thin-rule fade-up d2"></div>
-      <p class="sec-body fade-up d2">
-        端午節，農曆五月初五，是中國重要的傳統節日之一，
-        已有超過兩千年的歷史。相傳源於紀念愛國詩人屈原，
-        人們划龍舟、包粽子、掛艾草，以驅邪避疫、祈求平安。
-        這個節日不僅在中華文化圈廣泛慶祝，
-        更被列入聯合國人類非物質文化遺產名錄。
-      </p>
-    </div>
-  </div>
-</section>
-
-<!-- VIDEO PANELS -->
-<section class="panels-section">
-  <div class="panels-header">
-    <span class="sec-eyebrow fade-up">節日風情</span>
-    <h2 class="sec-title fade-up d1">三重景致</h2>
-  </div>
-
-  <div class="panels-grid">
-    <!-- 1 -->
-    <div class="video-panel fade-up d1">
-      <div class="video-frame" id="frame1">
-        <div class="frame-corner"></div>
-        <div class="video-placeholder" id="ph1">
-          <span class="ph-char">龍<br>舟</span>
-          <span class="ph-label">Dragon Boat</span>
+    <div class="cards-grid">
+      <a class="card school-card" style="grid-column: 1 / -1;"
+         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJ_4lDIkpu5kcRfM-Qv5FBoFE&query=NEOMA+Business+School+Paris"
+         target="_blank" rel="noopener">
+        <div class="card-top">
+          <div class="card-name">NEOMA Business School</div>
+          <div class="card-icon" style="background: rgba(233,30,140,0.15);">🏛</div>
         </div>
-      </div>
-      <div class="panel-caption">
-        <span class="panel-num">01 &nbsp;/&nbsp; 03</span>
-        <span class="panel-title">龍舟競渡</span>
-        <span class="panel-sub">鼓聲震天，槳影如飛</span>
-      </div>
-      <label class="upload-label" for="vid1">
-        ＋ &nbsp;上傳影片（1179 × 2556）
-        <input type="file" id="vid1" accept="video/*"
-               onchange="loadVideo(this,'frame1','ph1')">
-      </label>
-    </div>
-    <!-- 2 -->
-    <div class="video-panel fade-up d2">
-      <div class="video-frame" id="frame2">
-        <div class="frame-corner"></div>
-        <div class="video-placeholder" id="ph2">
-          <span class="ph-char">粽<br>香</span>
-          <span class="ph-label">Zongzi Making</span>
+        <div class="card-address">6 Rue Vandrezanne, 75013 Paris</div>
+        <div class="card-tags">
+          <span class="tag">週一至五 07:30–21:00</span>
+          <span class="tag">週六 07:30–18:30</span>
+          <span class="tag">評分 4.2 ★</span>
         </div>
-      </div>
-      <div class="panel-caption">
-        <span class="panel-num">02 &nbsp;/&nbsp; 03</span>
-        <span class="panel-title">粽香四溢</span>
-        <span class="panel-sub">竹葉翠綠，糯米飄香</span>
-      </div>
-      <label class="upload-label" for="vid2">
-        ＋ &nbsp;上傳影片（1179 × 2556）
-        <input type="file" id="vid2" accept="video/*"
-               onchange="loadVideo(this,'frame2','ph2')">
-      </label>
-    </div>
-    <!-- 3 -->
-    <div class="video-panel fade-up d3">
-      <div class="video-frame" id="frame3">
-        <div class="frame-corner"></div>
-        <div class="video-placeholder" id="ph3">
-          <span class="ph-char">艾<br>草</span>
-          <span class="ph-label">Traditions</span>
+        <div class="card-footer">
+          <span class="card-walk">🚶 BUS 62 [Convention - Lecourbe] · [Moulin des Prés]</span>
+          <span class="card-maps-btn">Google Maps ↗</span>
         </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══ ROUTE A ══ -->
+  <section class="route-section" id="route-a">
+    <div class="route-header">
+      <div class="route-badge" style="background: var(--route-a);">A</div>
+      <div class="route-title-group">
+        <div class="route-title">日常補給 ＋ 藥妝 ＋ ATM</div>
+        <div class="route-meta">簡單食材約 5 分鐘</div>
       </div>
-      <div class="panel-caption">
-        <span class="panel-num">03 &nbsp;/&nbsp; 03</span>
-        <span class="panel-title">艾草辟邪</span>
-        <span class="panel-sub">清香驅瘴，保佑平安</span>
+    </div>
+    <div class="tip-strip">
+      <span class="tip tip-hot">生活必備</span>
+    </div>
+    <div style="height:14px;"></div>
+    <div class="cards-grid">
+      <a class="card" style="--accent: var(--route-a);"
+         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJf3HnZ3xx5kcRJ-p_AzvRlkk&query=G20+Supermarche+Paris"
+         target="_blank" rel="noopener">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-a);border-radius:3px 0 0 3px;opacity:.8;"></div>
+        <div class="card-top">
+          <div class="card-name">G20 超市</div>
+          <div class="card-icon" style="background: rgba(230,57,70,0.12);">🛒</div>
+        </div>
+        <div class="card-address">23-25 Rue Desnouettes, 75015</div>
+        <div class="card-tags">
+          <span class="tag">礦泉水</span><span class="tag">早餐</span><span class="tag">水果</span><span class="tag">冰飲</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-walk">🚶 步行約 3 分鐘</span>
+          <span class="card-maps-btn">Maps ↗</span>
+        </div>
+      </a>
+
+      <a class="card"
+         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJXczmQmtw5kcRPDeDQww2PP4&query=Pharmacie+Desnouettes+Paris"
+         target="_blank" rel="noopener">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-a);border-radius:3px 0 0 3px;opacity:.8;"></div>
+        <div class="card-top">
+          <div class="card-name">Pharmacie Desnouettes</div>
+          <div class="card-icon" style="background: rgba(230,57,70,0.12);">💊</div>
+        </div>
+        <div class="card-address">1 Rue Desnouettes, 75015</div>
+        <div class="card-tags">
+          <span class="tag">防曬乳</span><span class="tag">曬後修護</span><span class="tag">止痛藥</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-walk">🚶 步行約 6 分鐘</span>
+          <span class="card-maps-btn">Maps ↗</span>
+        </div>
+      </a>
+
+      <a class="card"
+         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJ0xvdWZFx5kcRYc6lKnCo7w0&query=LCL+Banque+Paris+Convention"
+         target="_blank" rel="noopener">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-a);border-radius:3px 0 0 3px;opacity:.8;"></div>
+        <div class="card-top">
+          <div class="card-name">LCL 銀行 ATM</div>
+          <div class="card-icon" style="background: rgba(230,57,70,0.12);">🏧</div>
+        </div>
+        <div class="card-address">41 Av. Félix Faure, 75015</div>
+        <div class="card-tags">
+          <span class="tag">提款</span><span class="tag">換零錢</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-walk">🚶 步行約 11 分鐘</span>
+          <span class="card-maps-btn">Maps ↗</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══ ROUTE B ══ -->
+  <section class="route-section" id="route-b">
+    <div class="route-header">
+      <div class="route-badge" style="background: var(--route-b);">B</div>
+      <div class="route-title-group">
+        <div class="route-title">免費冷氣讀書路線</div>
+        <div class="route-meta">步行約 19 分鐘 · 建議 11:00–16:00</div>
       </div>
-      <label class="upload-label" for="vid3">
-        ＋ &nbsp;上傳影片（1179 × 2556）
-        <input type="file" id="vid3" accept="video/*"
-               onchange="loadVideo(this,'frame3','ph3')">
-      </label>
     </div>
-  </div>
-</section>
+    <div class="tip-strip">
+      <span class="tip tip-rec">⭐ 強烈推薦</span>
+    </div>
+    <div style="height:14px;"></div>
+    <div class="cards-grid">
+      <a class="card" style="grid-column: 1 / -1;"
+         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJZ2JVVT9w5kcRScOjDvcZOgg&query=Mediatheque+Marguerite-Yourcenar+Paris"
+         target="_blank" rel="noopener">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-b);border-radius:3px 0 0 3px;opacity:.8;"></div>
+        <div class="card-top">
+          <div class="card-name">Médiathèque Marguerite-Yourcenar</div>
+          <div class="card-icon" style="background: rgba(58,155,213,0.12);">📚</div>
+        </div>
+        <div class="card-address">41 Rue d'Alleray, 75015 Paris</div>
+        <div class="card-tags">
+          <span class="tag">✅ 免費</span>
+          <span class="tag">❄️ 冷氣</span>
+          <span class="tag">📶 Wi-Fi</span>
+          <span class="tag">💺 可久坐</span>
+          <span class="tag">評分 4.2 ★</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-walk">🚶 步行約 19 分鐘 · 建議停留 11:00–16:00</span>
+          <span class="card-maps-btn">Maps ↗</span>
+        </div>
+      </a>
+    </div>
+  </section>
 
-<!-- TRADITIONS -->
-<section class="traditions-section">
-  <div class="traditions-header">
-    <span class="sec-eyebrow fade-up">傳統習俗</span>
-    <h2 class="sec-title fade-up d1">端午四事</h2>
-  </div>
-  <div class="traditions-list">
-    <div class="trad-item fade-up d1">
-      <span class="trad-num">01</span>
-      <span class="trad-icon">🐉</span>
-      <span class="trad-name">划龍舟</span>
-      <p class="trad-text">楚人競相划船打撈屈原，龍舟競渡由此而生，象徵團結與勇氣。</p>
+  <!-- ══ ROUTE C ══ -->
+  <section class="route-section" id="route-c">
+    <div class="route-header">
+      <div class="route-badge" style="background: var(--route-c);">C</div>
+      <div class="route-title-group">
+        <div class="route-title">熱浪專用避難路線</div>
+        <div class="route-meta">35°C 以上最佳選擇</div>
+      </div>
     </div>
-    <div class="trad-item fade-up d2">
-      <span class="trad-num">02</span>
-      <span class="trad-icon">🎋</span>
-      <span class="trad-name">包粽子</span>
-      <p class="trad-text">竹葉包裹糯米投入江中祭屈原，後演變為家戶相互贈食的美好習俗。</p>
+    <div class="tip-strip">
+      <span class="tip tip-hot">🌡 高溫備案</span>
     </div>
-    <div class="trad-item fade-up d3">
-      <span class="trad-num">03</span>
-      <span class="trad-icon">🌿</span>
-      <span class="trad-name">掛艾草</span>
-      <p class="trad-text">門口懸掛艾草與菖蒲，取其芳香辟邪之效，驅蚊蟲、護家宅。</p>
+    <div style="height:14px;"></div>
+    <div class="cards-grid">
+      <a class="card" style="grid-column: 1 / -1;"
+         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJAbQV5AVw5kcR3as-MQ8GJCI&query=Centre+Commercial+Beaugrenelle+Paris"
+         target="_blank" rel="noopener">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-c);border-radius:3px 0 0 3px;opacity:.8;"></div>
+        <div class="card-top">
+          <div class="card-name">Centre Commercial Beaugrenelle</div>
+          <div class="card-icon" style="background: rgba(244,163,41,0.12);">🏬</div>
+        </div>
+        <div class="card-address">12 Rue Linois, 75015 Paris</div>
+        <div class="card-tags">
+          <span class="tag">✅ 強力冷氣</span>
+          <span class="tag">💺 免費座位</span>
+          <span class="tag">🍽 餐廳</span>
+          <span class="tag">🚻 廁所</span>
+        </div>
+        <div style="font-size:12px; color: var(--text-muted); padding: 4px 0;">
+          商場內推薦：FNAC（書店）· Monoprix（超市）· Starbucks · McDonald's
+        </div>
+        <div class="card-footer">
+          <span class="card-walk">🚶 步行約 31 分鐘 · 每日 10:00–20:00</span>
+          <span class="card-maps-btn">Maps ↗</span>
+        </div>
+      </a>
     </div>
-    <div class="trad-item fade-up d4">
-      <span class="trad-num">04</span>
-      <span class="trad-icon">🥚</span>
-      <span class="trad-name">立雞蛋</span>
-      <p class="trad-text">端午正午天地之氣最旺，此時立蛋最易成功，象徵好運連連。</p>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- BLESSING -->
-<section class="blessing-section">
-  <span class="blessing-ghost">節</span>
-  <span class="blessing-eyebrow fade-up">Blessings · 祝福語</span>
-  <h2 class="blessing-title fade-up d1">願您端午安康</h2>
-  <div class="blessing-row fade-up d2">
-    <span class="blessing-chip">粽情粽意，端午安康</span>
-    <span class="blessing-chip">龍舟競渡，旗開得勝</span>
-    <span class="blessing-chip">萬事如意，闔家平安</span>
-    <span class="blessing-chip">艾香飄飄，健康常在</span>
-    <span class="blessing-chip">五月端陽，喜氣洋洋</span>
-    <span class="blessing-chip">屈原精神，薪火相傳</span>
-    <span class="blessing-chip">粽葉飄香，情意綿長</span>
-    <span class="blessing-chip">鑼鼓喧天，吉星高照</span>
-  </div>
-</section>
+  <!-- ══ ROUTE D ══ -->
+  <section class="route-section" id="route-d">
+    <div class="route-header">
+      <div class="route-badge" style="background: var(--route-d);">D</div>
+      <div class="route-title-group">
+        <div class="route-title">亞洲補給路線</div>
+        <div class="route-meta">步行約 24 分鐘 </div>
+      </div>
+    </div>
+    <div style="height:14px;"></div>
+    <div class="cards-grid">
+      <a class="card" style="grid-column: 1 / -1;"
+         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJdb0SOUZw5kcRlr-ugIp0fZI&query=Tang+Freres+Paris"
+         target="_blank" rel="noopener">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-d);border-radius:3px 0 0 3px;opacity:.8;"></div>
+        <div class="card-top">
+          <div class="card-name">Tang Frères 亞洲超市</div>
+          <div class="card-icon" style="background: rgba(168,85,247,0.12);">🍜</div>
+        </div>
+        <div class="card-address">41 Rue Labrouste, 75015 Paris</div>
+        <div class="card-tags">
+          <span class="tag">泡麵</span>
+          <span class="tag">白米</span>
+          <span class="tag">亞洲零食</span>
+          <span class="tag">醬油</span>
+          <span class="tag">冷凍食品</span>
+          <span class="tag">評分 4.2 ★</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-walk">🚶 步行約 24 分鐘 · 週一至六 10:00–20:00</span>
+          <span class="card-maps-btn">Maps ↗</span>
+        </div>
+      </a>
+    </div>
+  </section>
 
-<!-- FOOTER -->
+  <!-- ══ ROUTE E ══ -->
+  <section class="route-section" id="route-e">
+    <div class="route-header">
+      <div class="route-badge" style="background: var(--route-e);">E</div>
+      <div class="route-title-group">
+        <div class="route-title">咖啡館工作路線</div>
+        <div class="route-meta">三間各有特色 · 最近 30 秒可抵達</div>
+      </div>
+    </div>
+    <div style="height:14px;"></div>
+    <div class="cards-grid">
+
+      <a class="card"
+         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJ-zROBG1w5kcReXLB_DMHZxc&query=Le+Petit+Hameau+Paris"
+         target="_blank" rel="noopener">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-e);border-radius:3px 0 0 3px;opacity:.8;"></div>
+        <div class="card-top">
+          <div class="card-name">Le Petit Hameau</div>
+          <div class="card-icon" style="background: rgba(34,197,94,0.12);">☕</div>
+        </div>
+        <div class="card-address">12 Rue du Hameau, 75015</div>
+        <div class="card-tags">
+          <span class="tag" style="background: rgba(34,197,94,0.15); color: #22c55e;">最近</span>
+          <span class="tag">評分 4.7 ★</span>
+          <span class="tag">週一至五 07:00</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-walk">🚶 約 30 秒 · 沒冷氣</span>
+          <span class="card-maps-btn">Maps ↗</span>
+        </div>
+      </a>
+
+      <a class="card"
+         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJ24O46WBx5kcRD4WQrPvlGE0&query=The+Coffee+Vaugirard+Paris"
+         target="_blank" rel="noopener">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-e);border-radius:3px 0 0 3px;opacity:.8;"></div>
+        <div class="card-top">
+          <div class="card-name">The Coffee</div>
+          <div class="card-icon" style="background: rgba(34,197,94,0.12);">☕</div>
+        </div>
+        <div class="card-address">309 Rue de Vaugirard, 75015</div>
+        <div class="card-tags">
+          <span class="tag" style="background: rgba(58,155,213,0.12); color: #3a9bd5;">安靜工作</span>
+          <span class="tag">評分 4.7 ★</span>
+          <span class="tag">08:30–19:00</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-walk">🚶 約 14 分鐘 · 不知道有沒有冷氣</span>
+          <span class="card-maps-btn">Maps ↗</span>
+        </div>
+      </a>
+
+      <a class="card"
+         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJWbNz6Vxx5kcRVcPDpvpXpwc&query=ONOUL+Coffee+Shop+Paris"
+         target="_blank" rel="noopener">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-e);border-radius:3px 0 0 3px;opacity:.8;"></div>
+        <div class="card-top">
+          <div class="card-name">ONOUL Coffee Shop</div>
+          <div class="card-icon" style="background: rgba(34,197,94,0.12);">☕</div>
+        </div>
+        <div class="card-address">8 Rue Gramme, 75015</div>
+        <div class="card-tags">
+          <span class="tag" style="background: rgba(168,85,247,0.12); color: #a855f7;">韓系風格</span>
+          <span class="tag">評分 4.8 ★</span>
+          <span class="tag">09:00–18:30</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-walk">🚶 約 21 分鐘 · 不知道有沒有冷氣</span>
+          <span class="card-maps-btn">Maps ↗</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+
 <footer class="footer">
-  <span class="footer-left">端午佳節 &nbsp;·&nbsp; Dragon Boat Festival &nbsp;·&nbsp; 農曆五月初五</span>
-  <div class="footer-rouge"></div>
+  巴黎 15 區生活手冊 · Convention 站周邊 · 點擊任意地點開啟 Google Maps
 </footer>
 
 <script>
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
-}, { threshold: 0.12 });
-document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+  // Highlight active nav tab on scroll
+  const sections = document.querySelectorAll('.route-section');
+  const tabs = document.querySelectorAll('.nav-tab');
 
-function loadVideo(input, frameId, phId) {
-  const file = input.files[0];
-  if (!file) return;
-  const url = URL.createObjectURL(file);
-  const frame = document.getElementById(frameId);
-  const ph    = document.getElementById(phId);
-  const old   = frame.querySelector('video');
-  if (old) old.remove();
-  const v = document.createElement('video');
-  v.className = 'panel-video';
-  v.src = url;
-  v.autoplay = v.loop = v.muted = v.playsInline = true;
-  v.controls = false;
-  ph.style.opacity = '0';
-  ph.style.pointerEvents = 'none';
-  frame.appendChild(v);
-  v.play().catch(() => {});
-}
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        tabs.forEach(tab => {
+          tab.classList.toggle('active', tab.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { threshold: 0.4, rootMargin: '-60px 0px -40% 0px' });
+
+  sections.forEach(s => observer.observe(s));
 </script>
+
 </body>
 </html>
