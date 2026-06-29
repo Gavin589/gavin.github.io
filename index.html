@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>巴黎生活圈地圖 · 15e</title>
+<title>巴黎第15區 · 生活總覽</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
@@ -27,6 +27,12 @@
     --route-e: #22c55e;
     --route-school: #e91e8c;
 
+    --accent: #4d9cf0;
+    --success-bg: #172404;
+    --success-text: #97c459;
+    --danger-bg: #2a0e0e;
+    --danger-text: #f09595;
+
     --radius: 12px;
     --radius-sm: 8px;
     --shadow: 0 4px 24px rgba(0,0,0,0.35);
@@ -44,7 +50,6 @@
     min-height: 100vh;
   }
 
-  /* ── Grid background ── */
   body::before {
     content: '';
     position: fixed;
@@ -64,7 +69,6 @@
     padding: 56px 24px 40px;
     text-align: center;
     border-bottom: 1px solid var(--navy-border);
-    background: linear-gradient(180deg, rgba(13,27,42,0) 0%, rgba(22,32,50,0.6) 100%);
   }
 
   .hero-eyebrow {
@@ -92,15 +96,12 @@
     font-family: 'Playfair Display', serif;
     font-size: clamp(2rem, 6vw, 3.2rem);
     font-weight: 700;
-    letter-spacing: -0.01em;
     color: var(--text);
     line-height: 1.15;
     margin-bottom: 10px;
   }
 
-  .hero h1 span {
-    color: var(--gold);
-  }
+  .hero h1 span { color: var(--gold); }
 
   .hero-sub {
     font-size: 13px;
@@ -108,7 +109,6 @@
     margin-bottom: 28px;
   }
 
-  /* Home pin */
   .home-pin {
     display: inline-flex;
     align-items: center;
@@ -123,7 +123,6 @@
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s;
-    position: relative;
   }
 
   .home-pin:hover {
@@ -134,11 +133,11 @@
   }
 
   .pin-dot {
-    width: 10px;
-    height: 10px;
+    width: 10px; height: 10px;
     background: var(--gold);
     border-radius: 50%;
     position: relative;
+    flex-shrink: 0;
   }
 
   .pin-dot::after {
@@ -155,12 +154,226 @@
     50% { opacity: 0; transform: scale(2); }
   }
 
+  /* ── Weather section ── */
+  .weather-section {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 36px 16px 8px;
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--navy-border);
+  }
+
+  .wx-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .wx-title {
+    font-size: 17px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+  }
+
+  .wx-title svg { width: 17px; height: 17px; stroke: var(--text-dim); fill: none; flex-shrink: 0; }
+  .wx-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .clock { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+
+  .wx-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+
+  .badge {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: var(--radius-sm);
+    background: var(--success-bg);
+    color: var(--success-text);
+    font-weight: 500;
+  }
+
+  .refresh-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-dim);
+    cursor: pointer;
+    border: 1px solid var(--navy-border);
+    border-radius: var(--radius-sm);
+    padding: 5px 11px;
+    background: transparent;
+    transition: background .15s;
+    font-family: inherit;
+  }
+
+  .refresh-btn:hover { background: var(--navy-card); }
+  .refresh-btn:active { transform: scale(0.97); }
+
+  .refresh-btn svg {
+    width: 13px; height: 13px;
+    stroke: currentColor; fill: none;
+  }
+
+  .refresh-btn.spinning svg { animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .wx-error {
+    background: var(--danger-bg);
+    color: var(--danger-text);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    font-size: 13px;
+    margin-bottom: 1rem;
+    display: none;
+    border: 1px solid rgba(243,95,95,0.15);
+  }
+
+  .current-card {
+    background: var(--navy-card);
+    border: 1px solid var(--navy-border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .cur-left { display: flex; align-items: center; gap: 14px; }
+  .cur-icon { font-size: 50px; line-height: 1; }
+  .cur-temp { font-size: 34px; font-weight: 600; line-height: 1; color: var(--text); }
+  .cur-cond { font-size: 13px; color: var(--text-dim); margin-top: 5px; }
+
+  .cur-right {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .stat-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--navy-border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+  }
+
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-bottom: 3px; }
+  .stat-val { font-size: 15px; font-weight: 500; color: var(--text); }
+
+  .days-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 8px;
+    margin-bottom: 0.5rem;
+  }
+
+  .day-card {
+    background: var(--navy-card);
+    border: 1px solid var(--navy-border);
+    border-radius: var(--radius);
+    padding: .85rem .5rem;
+    text-align: center;
+    transition: border-color .15s;
+  }
+
+  .day-card:hover { border-color: rgba(201,168,76,0.3); }
+
+  .day-name {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 7px;
+  }
+
+  .day-icon { font-size: 26px; margin-bottom: 7px; line-height: 1; }
+  .day-high { font-size: 17px; font-weight: 600; color: var(--text); }
+  .day-low { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .day-rain {
+    font-size: 12px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+  }
+
+  .day-rain svg { width: 11px; height: 11px; stroke: currentColor; fill: none; flex-shrink: 0; }
+  .day-rain.wet { color: var(--accent); }
+  .day-rain.dry { color: var(--text-muted); }
+
+  .progress-bar {
+    height: 3px;
+    border-radius: 2px;
+    background: var(--navy-border);
+    margin-top: 6px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+    transition: width .4s ease;
+  }
+
+  .wx-footer {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding-bottom: 8px;
+  }
+
+  .wx-footer a { color: var(--gold); text-decoration: none; }
+
+  /* ── Divider ── */
+  .section-divider {
+    position: relative;
+    z-index: 1;
+    border: none;
+    border-top: 1px solid var(--navy-border);
+    margin: 0;
+  }
+
   /* ── Nav tabs ── */
   .nav-wrap {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(13,27,42,0.92);
+    background: rgba(13,27,42,0.94);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--navy-border);
     padding: 0 16px;
@@ -194,12 +407,10 @@
   }
 
   .nav-tab:hover { color: var(--text); }
-
   .nav-tab.active { color: var(--text); }
 
   .tab-dot {
-    width: 8px;
-    height: 8px;
+    width: 8px; height: 8px;
     border-radius: 50%;
     flex-shrink: 0;
   }
@@ -227,8 +438,7 @@
   }
 
   .route-badge {
-    width: 44px;
-    height: 44px;
+    width: 44px; height: 44px;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -237,7 +447,6 @@
     font-weight: 700;
     color: white;
     flex-shrink: 0;
-    letter-spacing: 0;
   }
 
   .route-title-group { flex: 1; }
@@ -249,12 +458,9 @@
     margin-bottom: 3px;
   }
 
-  .route-meta {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
+  .route-meta { font-size: 12px; color: var(--text-muted); }
 
-  /* ── Cards grid ── */
+  /* ── Cards ── */
   .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -280,9 +486,7 @@
   .card::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
+    left: 0; top: 0; bottom: 0;
     width: 3px;
     border-radius: 3px 0 0 3px;
     transition: opacity 0.2s;
@@ -312,8 +516,7 @@
   }
 
   .card-icon {
-    width: 32px;
-    height: 32px;
+    width: 32px; height: 32px;
     border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
@@ -323,17 +526,9 @@
     opacity: 0.9;
   }
 
-  .card-address {
-    font-size: 11.5px;
-    color: var(--text-muted);
-    line-height: 1.4;
-  }
+  .card-address { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
 
-  .card-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
+  .card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
 
   .tag {
     font-size: 10.5px;
@@ -353,28 +548,18 @@
     border-top: 1px solid rgba(255,255,255,0.05);
   }
 
-  .card-walk {
-    font-size: 11px;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
+  .card-walk { font-size: 11px; color: var(--text-muted); }
 
   .card-maps-btn {
     font-size: 11px;
     font-weight: 600;
     color: var(--gold);
-    display: flex;
-    align-items: center;
-    gap: 4px;
     opacity: 0.8;
     transition: opacity 0.2s;
   }
 
   .card:hover .card-maps-btn { opacity: 1; }
 
-  /* ── School card (full width) ── */
   .school-card {
     background: linear-gradient(135deg, rgba(233,30,140,0.12), rgba(13,27,42,0.8));
     border-color: rgba(233,30,140,0.25);
@@ -382,28 +567,7 @@
 
   .school-card::before { background: var(--route-school); }
 
-  /* ── Walk connector ── */
-  .walk-connector {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 0 6px 6px;
-  }
-
-  .walk-line {
-    width: 1px;
-    height: 28px;
-    background: linear-gradient(to bottom, transparent, var(--navy-border), transparent);
-    margin-left: 21px;
-  }
-
-  /* ── Tip badges ── */
-  .tip-strip {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 8px;
-  }
+  .tip-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 
   .tip {
     font-size: 11px;
@@ -413,17 +577,8 @@
     letter-spacing: 0.03em;
   }
 
-  .tip-hot {
-    background: rgba(244,163,41,0.15);
-    color: #f4a329;
-    border: 1px solid rgba(244,163,41,0.25);
-  }
-
-  .tip-rec {
-    background: rgba(34,197,94,0.12);
-    color: #22c55e;
-    border: 1px solid rgba(34,197,94,0.2);
-  }
+  .tip-hot { background: rgba(244,163,41,0.15); color: #f4a329; border: 1px solid rgba(244,163,41,0.25); }
+  .tip-rec { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
 
   /* ── Footer ── */
   .footer {
@@ -444,6 +599,9 @@
     .main { gap: 36px; padding-top: 28px; }
     .route-header { gap: 10px; }
     .route-badge { width: 38px; height: 38px; font-size: 13px; }
+    .cur-right { min-width: unset; width: 100%; }
+    .current-card { flex-direction: column; align-items: flex-start; }
+    .days-grid { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
   }
 </style>
 </head>
@@ -456,10 +614,83 @@
   <p class="hero-sub">Convention 站周邊日常路線 × NEOMA 上學路</p>
   <a class="home-pin" href="https://www.google.com/maps/search/?api=1&query=13+Rue+du+Hameau,+75015+Paris" target="_blank" rel="noopener">
     <span class="pin-dot"></span>
-    住處：13 Rue du Hameau, 75015 Paris
+    La Petite Auberge 法國蝸牛：13 Rue du Hameau, 75015 Paris
     <span style="color:var(--text-muted); font-size:11px;">↗</span>
   </a>
 </header>
+
+<!-- ══ WEATHER ══ -->
+<section class="weather-section">
+  <div class="section-label">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1M4.22 4.22l.71.71m12.73 12.73.71.71M3 12H2m20 0h-1M4.22 19.78l.71-.71M18.36 5.64l.71-.71M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/></svg>
+    即時天氣
+  </div>
+
+  <div class="wx-header">
+    <div>
+      <div class="wx-title">
+        <svg viewBox="0 0 24 24" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+        巴黎第15區
+      </div>
+      <div class="clock" id="clock">--</div>
+      <div class="wx-sub">法國巴黎 · 五天天氣預報</div>
+    </div>
+    <div class="wx-meta">
+      <span class="badge">即時</span>
+      <button class="refresh-btn" id="refresh-btn" onclick="fetchWeather()" aria-label="重新整理天氣">
+        <svg viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M4.55 9a8 8 0 0 1 14.9-.9M19.45 15a8 8 0 0 1-14.9.9"/></svg>
+        <span id="countdown">載入中...</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="wx-error" id="error-msg">
+    ⚠️ 無法取得即時資料，請確認網路連線後重試。
+  </div>
+
+  <div class="current-card">
+    <div class="cur-left">
+      <div class="cur-icon" id="cur-icon">⏳</div>
+      <div>
+        <div class="cur-temp" id="cur-temp">--</div>
+        <div class="cur-cond" id="cur-cond">載入中...</div>
+      </div>
+    </div>
+    <div class="cur-right">
+      <div class="stat-box">
+        <div class="stat-label">今日最高</div>
+        <div class="stat-val" id="stat-high">--</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">今日最低</div>
+        <div class="stat-val" id="stat-low">--</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">相對濕度</div>
+        <div class="stat-val" id="stat-humid">--</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">風速</div>
+        <div class="stat-val" id="stat-wind">--</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="days-grid" id="days-grid">
+    <div class="day-card" style="opacity:.3"><div class="day-name">---</div><div class="day-icon">⏳</div><div class="day-high">--</div></div>
+    <div class="day-card" style="opacity:.3"><div class="day-name">---</div><div class="day-icon">⏳</div><div class="day-high">--</div></div>
+    <div class="day-card" style="opacity:.3"><div class="day-name">---</div><div class="day-icon">⏳</div><div class="day-high">--</div></div>
+    <div class="day-card" style="opacity:.3"><div class="day-name">---</div><div class="day-icon">⏳</div><div class="day-high">--</div></div>
+    <div class="day-card" style="opacity:.3"><div class="day-name">---</div><div class="day-icon">⏳</div><div class="day-high">--</div></div>
+  </div>
+
+  <div class="wx-footer">
+    <span>資料來源：<a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · WMO 標準代碼</span>
+    <span id="last-updated">尚未更新</span>
+  </div>
+</section>
+
+<hr class="section-divider">
 
 <!-- Sticky nav -->
 <nav class="nav-wrap">
@@ -532,7 +763,7 @@
     </div>
     <div style="height:14px;"></div>
     <div class="cards-grid">
-      <a class="card" style="--accent: var(--route-a);"
+      <a class="card"
          href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJf3HnZ3xx5kcRJ-p_AzvRlkk&query=G20+Supermarche+Paris"
          target="_blank" rel="noopener">
         <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-a);border-radius:3px 0 0 3px;opacity:.8;"></div>
@@ -569,7 +800,7 @@
       </a>
 
       <a class="card"
-         href="https://www.google.com/maps/search/LCL+Banque+et+assurance,+370+Rue+de+Vaugirard,+75015+Paris,+%E6%B3%95%E5%9C%8B/@48.8340558,2.2877094,17.83z?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D"
+         href="https://www.google.com/maps/place/LCL+Banque+et+assurance/@48.8340558,2.2877094,17z/data=!4m10!1m2!2m1!1sLCL+Banque+et+assurance,+370+Rue+de+Vaugirard,+75015+Paris,+%E6%B3%95%E5%9C%8B!3m6!1s0x47e6706c5b7c62db:0xb5f07c38e3f2fb6c!8m2!3d48.8340525!4d2.2901764!15sCkJMQ0wgQmFucXVlIGV0IGFzc3VyYW5jZSwgMzcwIFJ1ZSBkZSBWYXVnaXJhcmQsIDc1MDE1IFBhcmlzLCDms5XlnIsiA4gBAZIBBGJhbmvgAQA!16s%2Fg%2F1vrq8z1t?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D"
          target="_blank" rel="noopener">
         <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-a);border-radius:3px 0 0 3px;opacity:.8;"></div>
         <div class="card-top">
@@ -672,7 +903,7 @@
       <div class="route-badge" style="background: var(--route-d);">D</div>
       <div class="route-title-group">
         <div class="route-title">亞洲補給路線</div>
-        <div class="route-meta">步行約 24 分鐘 </div>
+        <div class="route-meta">步行約 24 分鐘</div>
       </div>
     </div>
     <div style="height:14px;"></div>
@@ -784,10 +1015,112 @@
 </footer>
 
 <script>
-  // Highlight active nav tab on scroll
+  const LAT = 48.8422, LON = 2.2944;
+  const REFRESH_SEC = 600;
+  const DAYS_ZH = ['週日','週一','週二','週三','週四','週五','週六'];
+
+  const WMO = {
+    0:['☀️','晴朗'],1:['🌤️','大致晴朗'],2:['⛅','局部多雲'],3:['☁️','陰天'],
+    45:['🌫️','霧'],48:['🌫️','霧凇'],
+    51:['🌦️','細毛雨'],53:['🌦️','中毛雨'],55:['🌧️','密毛雨'],
+    61:['🌧️','小雨'],63:['🌧️','中雨'],65:['🌧️','大雨'],
+    71:['🌨️','小雪'],73:['🌨️','中雪'],75:['❄️','大雪'],77:['🌨️','雪粒'],
+    80:['🌦️','陣雨'],81:['🌧️','中陣雨'],82:['⛈️','強陣雨'],
+    85:['🌨️','陣雪'],86:['❄️','強陣雪'],
+    95:['⛈️','雷雨'],96:['⛈️','雹雷雨'],99:['⛈️','強雹雷雨']
+  };
+
+  function getIcon(code){ return (WMO[code]||['🌡️','未知'])[0]; }
+  function getCond(code){ return (WMO[code]||['🌡️','未知'])[1]; }
+
+  let countdown = REFRESH_SEC, timer;
+
+  function updateClock(){
+    const now = new Date();
+    const opts = { timeZone:'Europe/Paris', year:'numeric', month:'long', day:'numeric', weekday:'long', hour:'2-digit', minute:'2-digit', second:'2-digit' };
+    document.getElementById('clock').textContent = now.toLocaleString('zh-TW', opts) + '（巴黎時間）';
+  }
+
+  async function fetchWeather(){
+    const btn = document.getElementById('refresh-btn');
+    btn.classList.add('spinning');
+    document.getElementById('error-msg').style.display = 'none';
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}` +
+        `&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m` +
+        `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
+        `&timezone=Europe%2FParis&forecast_days=5&temperature_unit=celsius&wind_speed_unit=kmh`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const d = await res.json();
+      renderCurrent(d.current, d.daily);
+      renderDays(d.daily);
+      document.getElementById('last-updated').textContent =
+        '最後更新：' + new Date().toLocaleTimeString('zh-TW', { timeZone:'Europe/Paris', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+      countdown = REFRESH_SEC;
+    } catch(e) {
+      document.getElementById('error-msg').style.display = 'block';
+    }
+    btn.classList.remove('spinning');
+  }
+
+  function renderCurrent(c, daily){
+    document.getElementById('cur-icon').textContent = getIcon(c.weather_code);
+    document.getElementById('cur-temp').textContent = Math.round(c.temperature_2m) + '°C';
+    document.getElementById('cur-cond').textContent = getCond(c.weather_code);
+    document.getElementById('stat-high').textContent = Math.round(daily.temperature_2m_max[0]) + '°C';
+    document.getElementById('stat-low').textContent = Math.round(daily.temperature_2m_min[0]) + '°C';
+    document.getElementById('stat-humid').textContent = Math.round(c.relative_humidity_2m) + '%';
+    document.getElementById('stat-wind').textContent = Math.round(c.wind_speed_10m) + ' km/h';
+  }
+
+  function renderDays(d){
+    const dropIcon = `<svg viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2C12 2 5 10 5 15a7 7 0 0 0 14 0C19 10 12 2 12 2z"/></svg>`;
+    const dropOffIcon = `<svg viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2 2l20 20M12 2S7.5 8 5.5 13M19 15a7 7 0 0 1-13.17 3.17"/></svg>`;
+    const grid = document.getElementById('days-grid');
+    grid.innerHTML = '';
+    for(let i = 0; i < 5; i++){
+      const date = new Date(d.time[i] + 'T12:00:00');
+      const dayName = i === 0 ? '今天' : i === 1 ? '明天' : DAYS_ZH[date.getDay()];
+      const hi = Math.round(d.temperature_2m_max[i]);
+      const lo = Math.round(d.temperature_2m_min[i]);
+      const rp = Math.round(d.precipitation_probability_max[i]);
+      const icon = getIcon(d.weather_code[i]);
+      const wetClass = rp >= 20 ? 'wet' : 'dry';
+      const rainSvg = rp >= 20 ? dropIcon : dropOffIcon;
+      const card = document.createElement('div');
+      card.className = 'day-card';
+      card.innerHTML = `
+        <div class="day-name">${dayName}</div>
+        <div class="day-icon">${icon}</div>
+        <div class="day-high">${hi}°C</div>
+        <div class="day-low">${lo}°C</div>
+        <div class="day-rain ${wetClass}">${rainSvg}${rp}%</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${rp}%"></div></div>
+      `;
+      grid.appendChild(card);
+    }
+  }
+
+  function startCountdown(){
+    clearInterval(timer);
+    timer = setInterval(() => {
+      countdown--;
+      const m = Math.floor(countdown / 60);
+      const s = countdown % 60;
+      if(countdown > 0){
+        document.getElementById('countdown').textContent = `${m}:${String(s).padStart(2,'0')} 後更新`;
+      } else {
+        document.getElementById('countdown').textContent = '更新中...';
+        countdown = REFRESH_SEC;
+        fetchWeather();
+      }
+    }, 1000);
+  }
+
+  // Nav scroll highlight
   const sections = document.querySelectorAll('.route-section');
   const tabs = document.querySelectorAll('.nav-tab');
-
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -798,9 +1131,12 @@
       }
     });
   }, { threshold: 0.4, rootMargin: '-60px 0px -40% 0px' });
-
   sections.forEach(s => observer.observe(s));
-</script>
 
+  updateClock();
+  setInterval(updateClock, 1000);
+  fetchWeather();
+  startCountdown();
+</script>
 </body>
 </html>
