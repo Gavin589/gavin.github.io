@@ -315,6 +315,14 @@
     margin-bottom: 7px;
   }
 
+  .day-date {
+    font-size: 10px;
+    color: var(--text-muted);
+    opacity: .7;
+    margin-top: -4px;
+    margin-bottom: 7px;
+  }
+
   .day-icon { font-size: 26px; margin-bottom: 7px; line-height: 1; }
   .day-high { font-size: 17px; font-weight: 600; color: var(--text); }
   .day-low { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
@@ -698,6 +706,9 @@
     <a class="nav-tab" href="#school" style="border-bottom-color: var(--route-school);">
       <span class="tab-dot" style="background:var(--route-school);"></span>學校
     </a>
+    <a class="nav-tab" href="#office" style="border-bottom-color: var(--route-school);">
+      <span class="tab-dot" style="background:var(--route-school);"></span>辦事處
+    </a>
     <a class="nav-tab" href="#route-a" style="border-bottom-color: var(--route-a);">
       <span class="tab-dot" style="background:var(--route-a);"></span>路線 A
     </a>
@@ -743,6 +754,38 @@
         </div>
         <div class="card-footer">
           <span class="card-walk">🚶 BUS 62 [Convention - Lecourbe] · [Moulin des Prés]</span>
+          <span class="card-maps-btn">Google Maps ↗</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══ TAIPEI OFFICE ══ -->
+  <section class="route-section" id="office">
+    <div class="route-header">
+      <div class="route-badge" style="background: var(--route-school);">🇹🇼</div>
+      <div class="route-title-group">
+        <div class="route-title">駐法國台北代表處</div>
+        <div class="route-meta">領務組（護照／簽證／文件證明）· 75007 Paris</div>
+      </div>
+    </div>
+    <div class="cards-grid">
+      <a class="card school-card" style="grid-column: 1 / -1;"
+         href="https://www.google.com/maps/search/?api=1&query=78+rue+de+l%27Universit%C3%A9%2C+75007+Paris"
+         target="_blank" rel="noopener">
+        <div class="card-top">
+          <div class="card-name">駐法國台北代表處 Bureau de Représentation de Taipei en France</div>
+          <div class="card-icon" style="background: rgba(233,30,140,0.15);">🏛</div>
+        </div>
+        <div class="card-address">78 rue de l'Université, 75007 Paris</div>
+        <div class="card-tags">
+          <span class="tag">急難救助 +33 6 8007 4994 (行動電話)</span>
+          <span class="tag">急難救助 0680074994 (法國境內直撥)</span>
+          <span class="tag">旅外國人急難救助全球免付費專線(24小時) 	法國  00-800-0885-0885 (當地申請之行動電話/市內電話可免費撥打)</span>
+          <span class="tag">週一至五 09:30–12:30 / 13:30–16:00</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-walk">🚶 護照、簽證、文件證明送件取件皆不需預約</span>
           <span class="card-maps-btn">Google Maps ↗</span>
         </div>
       </a>
@@ -1082,6 +1125,7 @@
     for(let i = 0; i < 5; i++){
       const date = new Date(d.time[i] + 'T12:00:00');
       const dayName = i === 0 ? '今天' : i === 1 ? '明天' : DAYS_ZH[date.getDay()];
+      const dateLabel = `${date.getMonth() + 1}/${date.getDate()}`;
       const hi = Math.round(d.temperature_2m_max[i]);
       const lo = Math.round(d.temperature_2m_min[i]);
       const rp = Math.round(d.precipitation_probability_max[i]);
@@ -1092,6 +1136,7 @@
       card.className = 'day-card';
       card.innerHTML = `
         <div class="day-name">${dayName}</div>
+        <div class="day-date">${dateLabel}</div>
         <div class="day-icon">${icon}</div>
         <div class="day-high">${hi}°C</div>
         <div class="day-low">${lo}°C</div>
