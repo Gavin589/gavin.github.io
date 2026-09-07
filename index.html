@@ -1,1187 +1,587 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>巴黎第15區 · 生活總覽</title>
+<title>康寧醫療器材｜居家照護用品目錄</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --navy: #0d1b2a;
-    --navy-mid: #162032;
-    --navy-card: #1c2b3a;
-    --navy-border: #243447;
-    --gold: #c9a84c;
-    --gold-light: #e8c96b;
-    --text: #e8edf2;
-    --text-dim: #8ea4ba;
-    --text-muted: #5c7a94;
-
-    --route-a: #e63946;
-    --route-b: #3a9bd5;
-    --route-c: #f4a329;
-    --route-d: #a855f7;
-    --route-e: #22c55e;
-    --route-school: #e91e8c;
-
-    --accent: #4d9cf0;
-    --success-bg: #172404;
-    --success-text: #97c459;
-    --danger-bg: #2a0e0e;
-    --danger-text: #f09595;
-
-    --radius: 12px;
-    --radius-sm: 8px;
-    --shadow: 0 4px 24px rgba(0,0,0,0.35);
-    --shadow-hover: 0 8px 32px rgba(0,0,0,0.5);
+  :root{
+    --bg:#F5F6F0;
+    --surface:#FFFFFF;
+    --ink:#1F332F;
+    --ink-soft:#54655F;
+    --line:#DCE1D7;
+    --primary:#2F5D53;
+    --primary-deep:#1F3F38;
+    --accent:#C6863D;
+    --tag-bg:#EAF0E7;
+    --icon-bg:#EDF2E9;
+    --max:1120px;
   }
 
-  html { scroll-behavior: smooth; }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Noto Sans TC", sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:"Noto Serif TC", serif;
+    margin:0;
+    color:var(--primary-deep);
+  }
+  a{color:inherit;}
+  img,svg{display:block;}
 
-  body {
-    background: var(--navy);
-    color: var(--text);
-    font-family: 'DM Sans', 'Noto Sans TC', sans-serif;
-    font-size: 15px;
-    line-height: 1.6;
-    min-height: 100vh;
+  .wrap{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 28px;
   }
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
+  /* ---------- Header ---------- */
+  header{
+    border-bottom:1px solid var(--line);
+    background:var(--bg);
+    position:sticky;
+    top:0;
+    z-index:20;
+  }
+  .header-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 28px;
+    max-width:var(--max);
+    margin:0 auto;
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .brand-mark{
+    width:34px;
+    height:34px;
+    border:1.5px solid var(--primary);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .brand-mark svg{width:16px;height:16px;}
+  .brand-name{
+    font-size:1.15rem;
+    font-weight:600;
+    letter-spacing:.03em;
+  }
+  .brand-sub{
+    font-size:.78rem;
+    color:var(--ink-soft);
+    display:none;
+  }
+  nav{
+    display:flex;
+    gap:28px;
+    font-size:.92rem;
+  }
+  nav a{
+    text-decoration:none;
+    color:var(--ink-soft);
+    border-bottom:1px solid transparent;
+    padding-bottom:2px;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  nav a:hover{
+    color:var(--primary-deep);
+    border-color:var(--primary);
   }
 
-  /* ── Hero ── */
-  .hero {
-    position: relative;
-    z-index: 1;
-    padding: 56px 24px 40px;
-    text-align: center;
-    border-bottom: 1px solid var(--navy-border);
+  /* ---------- Intro ---------- */
+  .intro{
+    padding:64px 0 48px;
+  }
+  .intro-inner{
+    max-width:640px;
+  }
+  .intro-label{
+    font-size:.85rem;
+    color:var(--accent);
+    font-weight:600;
+    margin-bottom:14px;
+  }
+  .intro h1{
+    font-size:2.1rem;
+    line-height:1.5;
+    font-weight:600;
+    margin-bottom:18px;
+  }
+  .intro p{
+    color:var(--ink-soft);
+    font-size:.98rem;
+    max-width:34em;
   }
 
-  .hero-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 16px;
+  /* ---------- Product grid ---------- */
+  .catalog{
+    padding:8px 0 72px;
+  }
+  .catalog-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    border-bottom:1px solid var(--line);
+    padding-bottom:16px;
+    margin-bottom:32px;
+  }
+  .catalog-head h2{
+    font-size:1.4rem;
+    font-weight:600;
+  }
+  .catalog-count{
+    font-size:.85rem;
+    color:var(--ink-soft);
   }
 
-  .hero-eyebrow::before, .hero-eyebrow::after {
-    content: '';
-    display: block;
-    width: 32px;
-    height: 1px;
-    background: var(--gold);
-    opacity: 0.5;
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:24px;
   }
 
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 6vw, 3.2rem);
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.15;
-    margin-bottom: 10px;
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:6px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .card:hover{
+    border-color:var(--primary);
+    transform:translateY(-2px);
   }
 
-  .hero h1 span { color: var(--gold); }
-
-  .hero-sub {
-    font-size: 13px;
-    color: var(--text-dim);
-    margin-bottom: 28px;
+  .card-photo{
+    position:relative;
+    background:var(--icon-bg);
+    aspect-ratio:4/3;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .card-photo svg{
+    width:56%;
+    height:56%;
+    stroke:var(--primary);
+    fill:none;
+    stroke-width:1.6;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+  }
+  .model-tag{
+    position:absolute;
+    top:12px;
+    left:12px;
+    background:var(--accent);
+    color:#fff;
+    font-size:.72rem;
+    font-weight:600;
+    letter-spacing:.02em;
+    padding:3px 9px;
+    border-radius:3px;
   }
 
-  .home-pin {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--navy-card);
-    border: 1px solid var(--navy-border);
-    border-radius: 100px;
-    padding: 10px 20px;
-    text-decoration: none;
-    color: var(--text);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
+  .card-body{
+    padding:18px 20px 20px;
+    display:flex;
+    flex-direction:column;
+    flex:1;
+    gap:10px;
+  }
+  .card-body h3{
+    font-size:1.05rem;
+    font-weight:600;
+    line-height:1.5;
+  }
+  .card-usage{
+    font-size:.86rem;
+    color:var(--ink-soft);
+    flex:1;
+  }
+  .card-foot{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding-top:8px;
+    border-top:1px solid var(--line);
+  }
+  .price{
+    font-size:1.05rem;
+    font-weight:700;
+    color:var(--primary-deep);
+  }
+  .price span{
+    font-size:.72rem;
+    font-weight:500;
+    color:var(--ink-soft);
+    margin-right:2px;
+  }
+  .inquire{
+    font-size:.82rem;
+    font-weight:600;
+    color:var(--primary);
+    text-decoration:none;
+    border-bottom:1px solid var(--primary);
+    padding-bottom:1px;
+  }
+  .inquire:hover{
+    color:var(--primary-deep);
+    border-color:var(--primary-deep);
   }
 
-  .home-pin:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-    transform: translateY(-1px);
-    box-shadow: 0 0 20px rgba(201,168,76,0.15);
+  /* ---------- Contact / Purchase ---------- */
+  #contact{
+    background:var(--primary-deep);
+    color:#EFF3EF;
+    padding:64px 0 48px;
+  }
+  #contact .wrap{
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:48px;
+  }
+  #contact h2{
+    color:#fff;
+    font-size:1.5rem;
+    margin-bottom:14px;
+  }
+  #contact .contact-intro{
+    color:#C9D6CE;
+    font-size:.92rem;
+    max-width:30em;
+  }
+  .contact-list{
+    list-style:none;
+    padding:0;
+    margin:28px 0 0;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .contact-list li{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    font-size:.92rem;
+  }
+  .contact-list .k{
+    color:#9FB6A6;
+    min-width:5.2em;
+    flex-shrink:0;
+  }
+  .contact-list .v{
+    color:#fff;
+  }
+  .contact-list a.v{
+    text-decoration:none;
+    border-bottom:1px solid rgba(255,255,255,.35);
+  }
+  .contact-list a.v:hover{
+    border-color:#fff;
   }
 
-  .pin-dot {
-    width: 10px; height: 10px;
-    background: var(--gold);
-    border-radius: 50%;
-    position: relative;
-    flex-shrink: 0;
+  .contact-note{
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:6px;
+    padding:22px 24px;
+    font-size:.86rem;
+    color:#D3DED7;
+    align-self:start;
+  }
+  .contact-note h3{
+    color:#fff;
+    font-size:.95rem;
+    margin-bottom:10px;
+  }
+  .contact-note ul{
+    margin:0;
+    padding-left:1.1em;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
   }
 
-  .pin-dot::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 1.5px solid var(--gold);
-    animation: pulse 2s ease-in-out infinite;
+  footer{
+    background:var(--primary-deep);
+    border-top:1px solid rgba(255,255,255,.12);
+    padding:18px 0;
+  }
+  footer .wrap{
+    display:block;
+  }
+  footer p{
+    margin:0;
+    font-size:.78rem;
+    color:#9FB6A6;
   }
 
-  @keyframes pulse {
-    0%, 100% { opacity: 0.6; transform: scale(1); }
-    50% { opacity: 0; transform: scale(2); }
+  /* ---------- Responsive ---------- */
+  @media (min-width:560px){
+    .brand-sub{display:block;}
   }
 
-  /* ── Weather section ── */
-  .weather-section {
-    position: relative;
-    z-index: 1;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 36px 16px 8px;
+  @media (max-width:900px){
+    .grid{grid-template-columns:repeat(2,1fr);}
+    #contact .wrap{grid-template-columns:1fr;}
   }
 
-  .section-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 20px;
+  @media (max-width:600px){
+    .wrap{padding:0 20px;}
+    .header-inner{padding:16px 20px;flex-wrap:wrap; gap:10px;}
+    nav{gap:18px; font-size:.86rem;}
+    .intro{padding:44px 0 32px;}
+    .intro h1{font-size:1.6rem;}
+    .grid{grid-template-columns:1fr; gap:18px;}
+    #contact{padding:48px 0 36px;}
   }
 
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--navy-border);
+  @media (prefers-reduced-motion: reduce){
+    .card{transition:none;}
   }
 
-  .wx-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .wx-title {
-    font-size: 17px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text);
-  }
-
-  .wx-title svg { width: 17px; height: 17px; stroke: var(--text-dim); fill: none; flex-shrink: 0; }
-  .wx-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
-  .clock { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
-
-  .wx-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-
-  .badge {
-    font-size: 11px;
-    padding: 3px 9px;
-    border-radius: var(--radius-sm);
-    background: var(--success-bg);
-    color: var(--success-text);
-    font-weight: 500;
-  }
-
-  .refresh-btn {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    color: var(--text-dim);
-    cursor: pointer;
-    border: 1px solid var(--navy-border);
-    border-radius: var(--radius-sm);
-    padding: 5px 11px;
-    background: transparent;
-    transition: background .15s;
-    font-family: inherit;
-  }
-
-  .refresh-btn:hover { background: var(--navy-card); }
-  .refresh-btn:active { transform: scale(0.97); }
-
-  .refresh-btn svg {
-    width: 13px; height: 13px;
-    stroke: currentColor; fill: none;
-  }
-
-  .refresh-btn.spinning svg { animation: spin .7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .wx-error {
-    background: var(--danger-bg);
-    color: var(--danger-text);
-    border-radius: var(--radius-sm);
-    padding: 8px 12px;
-    font-size: 13px;
-    margin-bottom: 1rem;
-    display: none;
-    border: 1px solid rgba(243,95,95,0.15);
-  }
-
-  .current-card {
-    background: var(--navy-card);
-    border: 1px solid var(--navy-border);
-    border-radius: var(--radius);
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-
-  .cur-left { display: flex; align-items: center; gap: 14px; }
-  .cur-icon { font-size: 50px; line-height: 1; }
-  .cur-temp { font-size: 34px; font-weight: 600; line-height: 1; color: var(--text); }
-  .cur-cond { font-size: 13px; color: var(--text-dim); margin-top: 5px; }
-
-  .cur-right {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    flex: 1;
-    min-width: 200px;
-  }
-
-  .stat-box {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--navy-border);
-    border-radius: var(--radius-sm);
-    padding: 8px 12px;
-  }
-
-  .stat-label { font-size: 11px; color: var(--text-muted); margin-bottom: 3px; }
-  .stat-val { font-size: 15px; font-weight: 500; color: var(--text); }
-
-  .days-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    gap: 8px;
-    margin-bottom: 0.5rem;
-  }
-
-  .day-card {
-    background: var(--navy-card);
-    border: 1px solid var(--navy-border);
-    border-radius: var(--radius);
-    padding: .85rem .5rem;
-    text-align: center;
-    transition: border-color .15s;
-  }
-
-  .day-card:hover { border-color: rgba(201,168,76,0.3); }
-
-  .day-name {
-    font-size: 11px;
-    color: var(--text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-    margin-bottom: 7px;
-  }
-
-  .day-date {
-    font-size: 10px;
-    color: var(--text-muted);
-    opacity: .7;
-    margin-top: -4px;
-    margin-bottom: 7px;
-  }
-
-  .day-icon { font-size: 26px; margin-bottom: 7px; line-height: 1; }
-  .day-high { font-size: 17px; font-weight: 600; color: var(--text); }
-  .day-low { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
-  .day-rain {
-    font-size: 12px;
-    margin-top: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-  }
-
-  .day-rain svg { width: 11px; height: 11px; stroke: currentColor; fill: none; flex-shrink: 0; }
-  .day-rain.wet { color: var(--accent); }
-  .day-rain.dry { color: var(--text-muted); }
-
-  .progress-bar {
-    height: 3px;
-    border-radius: 2px;
-    background: var(--navy-border);
-    margin-top: 6px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    border-radius: 2px;
-    background: var(--accent);
-    transition: width .4s ease;
-  }
-
-  .wx-footer {
-    font-size: 11px;
-    color: var(--text-muted);
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 4px;
-    padding-bottom: 8px;
-  }
-
-  .wx-footer a { color: var(--gold); text-decoration: none; }
-
-  /* ── Divider ── */
-  .section-divider {
-    position: relative;
-    z-index: 1;
-    border: none;
-    border-top: 1px solid var(--navy-border);
-    margin: 0;
-  }
-
-  /* ── Nav tabs ── */
-  .nav-wrap {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(13,27,42,0.94);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--navy-border);
-    padding: 0 16px;
-  }
-
-  .nav-tabs {
-    display: flex;
-    gap: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .nav-tabs::-webkit-scrollbar { display: none; }
-
-  .nav-tab {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 14px 16px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    color: var(--text-muted);
-    text-decoration: none;
-    white-space: nowrap;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-    cursor: pointer;
-  }
-
-  .nav-tab:hover { color: var(--text); }
-  .nav-tab.active { color: var(--text); }
-
-  .tab-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  /* ── Main layout ── */
-  .main {
-    position: relative;
-    z-index: 1;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 16px 80px;
-    display: flex;
-    flex-direction: column;
-    gap: 48px;
-  }
-
-  /* ── Route section ── */
-  .route-section { scroll-margin-top: 54px; }
-
-  .route-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    margin-bottom: 20px;
-  }
-
-  .route-badge {
-    width: 44px; height: 44px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    font-weight: 700;
-    color: white;
-    flex-shrink: 0;
-  }
-
-  .route-title-group { flex: 1; }
-
-  .route-title {
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 3px;
-  }
-
-  .route-meta { font-size: 12px; color: var(--text-muted); }
-
-  /* ── Cards ── */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 12px;
-  }
-
-  .card {
-    background: var(--navy-card);
-    border: 1px solid var(--navy-border);
-    border-radius: var(--radius);
-    padding: 18px;
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    transition: all 0.22s ease;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    border-radius: 3px 0 0 3px;
-    transition: opacity 0.2s;
-    opacity: 0.7;
-  }
-
-  .card:hover {
-    border-color: rgba(255,255,255,0.1);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
-  }
-
-  .card:hover::before { opacity: 1; }
-
-  .card-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
-  .card-name {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.3;
-  }
-
-  .card-icon {
-    width: 32px; height: 32px;
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    flex-shrink: 0;
-    opacity: 0.9;
-  }
-
-  .card-address { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
-
-  .card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-
-  .tag {
-    font-size: 10.5px;
-    padding: 3px 8px;
-    border-radius: 100px;
-    background: rgba(255,255,255,0.06);
-    color: var(--text-dim);
-    font-weight: 500;
-  }
-
-  .card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 2px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,0.05);
-  }
-
-  .card-walk { font-size: 11px; color: var(--text-muted); }
-
-  .card-maps-btn {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--gold);
-    opacity: 0.8;
-    transition: opacity 0.2s;
-  }
-
-  .card:hover .card-maps-btn { opacity: 1; }
-
-  .school-card {
-    background: linear-gradient(135deg, rgba(233,30,140,0.12), rgba(13,27,42,0.8));
-    border-color: rgba(233,30,140,0.25);
-  }
-
-  .school-card::before { background: var(--route-school); }
-
-  .tip-strip { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-
-  .tip {
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 100px;
-    letter-spacing: 0.03em;
-  }
-
-  .tip-hot { background: rgba(244,163,41,0.15); color: #f4a329; border: 1px solid rgba(244,163,41,0.25); }
-  .tip-rec { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.2); }
-
-  /* ── Footer ── */
-  .footer {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: 28px 16px;
-    border-top: 1px solid var(--navy-border);
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-
-  /* ── RWD ── */
-  @media (max-width: 600px) {
-    .hero { padding: 40px 16px 32px; }
-    .cards-grid { grid-template-columns: 1fr; }
-    .nav-tab { padding: 12px 12px; font-size: 11px; }
-    .main { gap: 36px; padding-top: 28px; }
-    .route-header { gap: 10px; }
-    .route-badge { width: 38px; height: 38px; font-size: 13px; }
-    .cur-right { min-width: unset; width: 100%; }
-    .current-card { flex-direction: column; align-items: flex-start; }
-    .days-grid { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
+  :focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
   }
 </style>
 </head>
 <body>
 
-<!-- Hero -->
-<header class="hero">
-  <div class="hero-eyebrow">Paris 15e · Convention</div>
-  <h1>我的巴黎<span>生活圈</span></h1>
-  <p class="hero-sub">Convention 站周邊日常路線 × NEOMA 上學路</p>
-  <a class="home-pin" href="https://www.google.com/maps/search/?api=1&query=13+Rue+du+Hameau,+75015+Paris" target="_blank" rel="noopener">
-    <span class="pin-dot"></span>
-    La Petite Auberge 法國蝸牛：13 Rue du Hameau, 75015 Paris
-    <span style="color:var(--text-muted); font-size:11px;">↗</span>
-  </a>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M12 4v16M4 12h16"/></svg>
+      </span>
+      <span class="brand-name">康寧醫療器材</span>
+      <span class="brand-sub">居家照護用品專門店</span>
+    </div>
+    <nav>
+      <a href="#catalog">產品目錄</a>
+      <a href="#contact">購買方式</a>
+    </nav>
+  </div>
 </header>
 
-<!-- ══ WEATHER ══ -->
-<section class="weather-section">
-  <div class="section-label">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1M4.22 4.22l.71.71m12.73 12.73.71.71M3 12H2m20 0h-1M4.22 19.78l.71-.71M18.36 5.64l.71-.71M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/></svg>
-    即時天氣
-  </div>
-
-  <div class="wx-header">
-    <div>
-      <div class="wx-title">
-        <svg viewBox="0 0 24 24" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
-        巴黎第15區
-      </div>
-      <div class="clock" id="clock">--</div>
-      <div class="wx-sub">法國巴黎 · 五天天氣預報</div>
+<section class="intro">
+  <div class="wrap">
+    <div class="intro-inner">
+      <p class="intro-label">居家照護 · 精選器材</p>
+      <h1>把合適的照護器材，帶回熟悉的家中。</h1>
+      <p>我們挑選經衛福部認證、操作簡單的醫療與照護用品，涵蓋日常監測、行動輔具與消耗性用品，協助家人自在照顧自己與長輩。</p>
     </div>
-    <div class="wx-meta">
-      <span class="badge">即時</span>
-      <button class="refresh-btn" id="refresh-btn" onclick="fetchWeather()" aria-label="重新整理天氣">
-        <svg viewBox="0 0 24 24" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M4.55 9a8 8 0 0 1 14.9-.9M19.45 15a8 8 0 0 1-14.9.9"/></svg>
-        <span id="countdown">載入中...</span>
-      </button>
-    </div>
-  </div>
-
-  <div class="wx-error" id="error-msg">
-    ⚠️ 無法取得即時資料，請確認網路連線後重試。
-  </div>
-
-  <div class="current-card">
-    <div class="cur-left">
-      <div class="cur-icon" id="cur-icon">⏳</div>
-      <div>
-        <div class="cur-temp" id="cur-temp">--</div>
-        <div class="cur-cond" id="cur-cond">載入中...</div>
-      </div>
-    </div>
-    <div class="cur-right">
-      <div class="stat-box">
-        <div class="stat-label">今日最高</div>
-        <div class="stat-val" id="stat-high">--</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-label">今日最低</div>
-        <div class="stat-val" id="stat-low">--</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-label">相對濕度</div>
-        <div class="stat-val" id="stat-humid">--</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-label">風速</div>
-        <div class="stat-val" id="stat-wind">--</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="days-grid" id="days-grid">
-    <div class="day-card" style="opacity:.3"><div class="day-name">---</div><div class="day-icon">⏳</div><div class="day-high">--</div></div>
-    <div class="day-card" style="opacity:.3"><div class="day-name">---</div><div class="day-icon">⏳</div><div class="day-high">--</div></div>
-    <div class="day-card" style="opacity:.3"><div class="day-name">---</div><div class="day-icon">⏳</div><div class="day-high">--</div></div>
-    <div class="day-card" style="opacity:.3"><div class="day-name">---</div><div class="day-icon">⏳</div><div class="day-high">--</div></div>
-    <div class="day-card" style="opacity:.3"><div class="day-name">---</div><div class="day-icon">⏳</div><div class="day-high">--</div></div>
-  </div>
-
-  <div class="wx-footer">
-    <span>資料來源：<a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a> · WMO 標準代碼</span>
-    <span id="last-updated">尚未更新</span>
   </div>
 </section>
 
-<hr class="section-divider">
+<section class="catalog" id="catalog">
+  <div class="wrap">
+    <div class="catalog-head">
+      <h2>產品目錄</h2>
+      <span class="catalog-count">共 9 項商品</span>
+    </div>
 
-<!-- Sticky nav -->
-<nav class="nav-wrap">
-  <div class="nav-tabs">
-    <a class="nav-tab" href="#school" style="border-bottom-color: var(--route-school);">
-      <span class="tab-dot" style="background:var(--route-school);"></span>學校
-    </a>
-    <a class="nav-tab" href="#office" style="border-bottom-color: var(--route-school);">
-      <span class="tab-dot" style="background:var(--route-school);"></span>辦事處
-    </a>
-    <a class="nav-tab" href="#route-a" style="border-bottom-color: var(--route-a);">
-      <span class="tab-dot" style="background:var(--route-a);"></span>路線 A
-    </a>
-    <a class="nav-tab" href="#route-b" style="border-bottom-color: var(--route-b);">
-      <span class="tab-dot" style="background:var(--route-b);"></span>路線 B
-    </a>
-    <a class="nav-tab" href="#route-c" style="border-bottom-color: var(--route-c);">
-      <span class="tab-dot" style="background:var(--route-c);"></span>路線 C
-    </a>
-    <a class="nav-tab" href="#route-d" style="border-bottom-color: var(--route-d);">
-      <span class="tab-dot" style="background:var(--route-d);"></span>路線 D
-    </a>
-    <a class="nav-tab" href="#route-e" style="border-bottom-color: var(--route-e);">
-      <span class="tab-dot" style="background:var(--route-e);"></span>路線 E
-    </a>
+    <div class="grid">
+
+      <!-- 1 血壓計 -->
+      <article class="card">
+        <div class="card-photo">
+          <span class="model-tag">BP-203</span>
+          <img src="001.jpg" alt="手臂式電子血壓計">
+        </div>
+        <div class="card-body">
+          <h3>手臂式電子血壓計</h3>
+          <p class="card-usage">上臂加壓自動量測，同步顯示血壓與脈搏，數值可儲存 60 筆，適合每日居家監測。</p>
+          <div class="card-foot">
+            <span class="price"><span>NT$</span>1,280</span>
+            <a class="inquire" href="#contact">洽詢購買</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2 血氧機 -->
+      <article class="card">
+        <div class="card-photo">
+          <span class="model-tag">OX-11</span>
+          <svg viewBox="0 0 64 64"><rect x="20" y="14" width="16" height="30" rx="6"/><path d="M28 44c0 4 2 6 4 6s4-2 4-6"/><path d="M14 30c4-6 4-6 8 0" transform="translate(6,0)"/></svg>
+        </div>
+        <div class="card-body">
+          <h3>手指式血氧機</h3>
+          <p class="card-usage">夾指式設計，5 秒內顯示血氧濃度與脈搏，體積輕巧，方便隨身攜帶或旅行使用。</p>
+          <div class="card-foot">
+            <span class="price"><span>NT$</span>680</span>
+            <a class="inquire" href="#contact">洽詢購買</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3 血糖機 -->
+      <article class="card">
+        <div class="card-photo">
+          <span class="model-tag">GL-450</span>
+          <svg viewBox="0 0 64 64"><rect x="14" y="12" width="24" height="38" rx="3"/><rect x="19" y="18" width="14" height="8"/><circle cx="22" cy="34" r="1.6"/><circle cx="30" cy="34" r="1.6"/><circle cx="22" cy="40" r="1.6"/><circle cx="30" cy="40" r="1.6"/><path d="M42 22l4 6-4 6"/></svg>
+        </div>
+        <div class="card-body">
+          <h3>血糖機套組</h3>
+          <p class="card-usage">內含採血筆與 50 片試紙，操作三步驟即可完成量測，適合糖尿病居家自我監控。</p>
+          <div class="card-foot">
+            <span class="price"><span>NT$</span>950</span>
+            <a class="inquire" href="#contact">洽詢購買</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 4 助行器 -->
+      <article class="card">
+        <div class="card-photo">
+          <span class="model-tag">WK-330</span>
+          <svg viewBox="0 0 64 64"><path d="M18 14v30M46 14v30"/><path d="M18 24h28"/><path d="M14 44l4 6M50 44l-4 6"/></svg>
+        </div>
+        <div class="card-body">
+          <h3>鋁合金四腳助行器</h3>
+          <p class="card-usage">高度七段可調，四腳止滑加寬設計,提供術後恢復或行走不穩者穩定的支撐。</p>
+          <div class="card-foot">
+            <span class="price"><span>NT$</span>1,650</span>
+            <a class="inquire" href="#contact">洽詢購買</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 5 輪椅 -->
+      <article class="card">
+        <div class="card-photo">
+          <span class="model-tag">WC-820</span>
+          <svg viewBox="0 0 64 64"><circle cx="24" cy="42" r="10"/><circle cx="48" cy="46" r="5"/><path d="M24 32v-8h14l6 18h-6"/><path d="M24 22h6"/></svg>
+        </div>
+        <div class="card-body">
+          <h3>輕量可折疊手動輪椅</h3>
+          <p class="card-usage">鋁合金車架，一鍵折疊便於收納與上車，附腳踏板與煞車鎖定裝置，操作省力。</p>
+          <div class="card-foot">
+            <span class="price"><span>NT$</span>5,200</span>
+            <a class="inquire" href="#contact">洽詢購買</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 6 護理墊 -->
+      <article class="card">
+        <div class="card-photo">
+          <span class="model-tag">PD-100</span>
+          <svg viewBox="0 0 64 64"><rect x="14" y="18" width="36" height="10" rx="2"/><rect x="14" y="30" width="36" height="10" rx="2"/><rect x="14" y="42" width="36" height="6" rx="2"/></svg>
+        </div>
+        <div class="card-body">
+          <h3>看護用防漏護理墊（10入）</h3>
+          <p class="card-usage">高分子吸收層搭配防水底膜，快速吸收不回滲，適合臥床照護日常鋪墊使用。</p>
+          <div class="card-foot">
+            <span class="price"><span>NT$</span>320</span>
+            <a class="inquire" href="#contact">洽詢購買</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 7 拐杖 -->
+      <article class="card">
+        <div class="card-photo">
+          <span class="model-tag">CN-05</span>
+          <svg viewBox="0 0 64 64"><path d="M28 12h10a4 4 0 0 1 0 8h-6v28"/><path d="M26 50h10"/></svg>
+        </div>
+        <div class="card-body">
+          <h3>可調式單點拐杖</h3>
+          <p class="card-usage">握把高度七段調整，止滑腳墊加大接觸面積，日常外出行走更加穩定安心。</p>
+          <div class="card-foot">
+            <span class="price"><span>NT$</span>450</span>
+            <a class="inquire" href="#contact">洽詢購買</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 8 口罩 -->
+      <article class="card">
+        <div class="card-photo">
+          <span class="model-tag">MK-50</span>
+          <svg viewBox="0 0 64 64"><path d="M12 26c8-8 32-8 40 0v10c-8 8-32 8-40 0z"/><path d="M12 30h40M12 34h40"/></svg>
+        </div>
+        <div class="card-body">
+          <h3>醫用平面口罩（50入）</h3>
+          <p class="card-usage">三層不織布結構，符合國家 CNS 醫用規範，透氣舒適，適合長時間配戴。</p>
+          <div class="card-foot">
+            <span class="price"><span>NT$</span>150</span>
+            <a class="inquire" href="#contact">洽詢購買</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- 9 代步車 -->
+      <article class="card">
+        <div class="card-photo">
+          <span class="model-tag">SC-700</span>
+          <svg viewBox="0 0 64 64"><circle cx="18" cy="46" r="6"/><circle cx="46" cy="46" r="6"/><path d="M18 46h10l6-16h12"/><path d="M28 30h8M40 22v8"/></svg>
+        </div>
+        <div class="card-body">
+          <h3>四輪電動代步車</h3>
+          <p class="card-usage">單次充電續航約 25 公里，操作介面簡單直覺，適合中長距離的日常代步需求。</p>
+          <div class="card-foot">
+            <span class="price"><span>NT$</span>18,500</span>
+            <a class="inquire" href="#contact">洽詢購買</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
   </div>
-</nav>
+</section>
 
-<main class="main">
+<section id="contact">
+  <div class="wrap">
+    <div>
+      <h2>購買方式與聯絡資訊</h2>
+      <p class="contact-intro">看到喜歡的商品嗎？歡迎透過以下任一方式與我們聯絡，我們會協助確認庫存、用法與到貨時間。</p>
 
-  <!-- ══ SCHOOL ══ -->
-  <section class="route-section" id="school">
-    <div class="route-header">
-      <div class="route-badge" style="background: var(--route-school);">🎓</div>
-      <div class="route-title-group">
-        <div class="route-title">NEOMA Business School</div>
-        <div class="route-meta">上學路線 · 75013 Paris · BUS約 40 分 / 地鐵約 35 分</div>
-      </div>
+      <ul class="contact-list">
+        <li><span class="k">電話</span><a class="v" href="tel:+886223456789">(02) 2345-6789</a></li>
+        <li><span class="k">LINE</span><span class="v">@kanglingmed</span></li>
+        <li><span class="k">Email</span><a class="v" href="mailto:service@kangling-med.tw">service@kangling-med.tw</a></li>
+        <li><span class="k">門市地址</span><span class="v">台北市大安區和平東路二段 88 號 1 樓</span></li>
+        <li><span class="k">營業時間</span><span class="v">週一至週六 09:30–19:00（週日公休）</span></li>
+      </ul>
     </div>
-    <div class="cards-grid">
-      <a class="card school-card" style="grid-column: 1 / -1;"
-         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJ_4lDIkpu5kcRfM-Qv5FBoFE&query=NEOMA+Business+School+Paris"
-         target="_blank" rel="noopener">
-        <div class="card-top">
-          <div class="card-name">NEOMA Business School</div>
-          <div class="card-icon" style="background: rgba(233,30,140,0.15);">🏛</div>
-        </div>
-        <div class="card-address">6 Rue Vandrezanne, 75013 Paris</div>
-        <div class="card-tags">
-          <span class="tag">週一至五 07:30–21:00</span>
-          <span class="tag">週六 07:30–18:30</span>
-          <span class="tag">評分 4.2 ★</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-walk">🚶 BUS 62 [Convention - Lecourbe] · [Moulin des Prés]</span>
-          <span class="card-maps-btn">Google Maps ↗</span>
-        </div>
-      </a>
-    </div>
-  </section>
 
-  <!-- ══ TAIPEI OFFICE ══ -->
-  <section class="route-section" id="office">
-    <div class="route-header">
-      <div class="route-badge" style="background: var(--route-school);">🇹🇼</div>
-      <div class="route-title-group">
-        <div class="route-title">駐法國台北代表處</div>
-        <div class="route-meta">領務組（護照／簽證／文件證明）· 75007 Paris</div>
-      </div>
+    <div class="contact-note">
+      <h3>訂購小提醒</h3>
+      <ul>
+        <li>下單前建議先來電或加 LINE 確認即時庫存</li>
+        <li>台灣本島滿 NT$1,000 免運，其餘依商品體積計算運費</li>
+        <li>輪椅、代步車等大型器材提供到府安裝與教學服務</li>
+        <li>可提供收據或雲端發票，需要者請於下單時告知</li>
+      </ul>
     </div>
-    <div class="cards-grid">
-      <a class="card school-card" style="grid-column: 1 / -1;"
-         href="https://www.google.com/maps/search/?api=1&query=78+rue+de+l%27Universit%C3%A9%2C+75007+Paris"
-         target="_blank" rel="noopener">
-        <div class="card-top">
-          <div class="card-name">駐法國台北代表處 Bureau de Représentation de Taipei en France</div>
-          <div class="card-icon" style="background: rgba(233,30,140,0.15);">🏛</div>
-        </div>
-        <div class="card-address">78 rue de l'Université, 75007 Paris</div>
-        <div class="card-tags">
-          <span class="tag">急難救助 +33 6 8007 4994 (行動電話)</span>
-          <span class="tag">急難救助 0680074994 (法國境內直撥)</span>
-          <span class="tag">旅外國人急難救助全球免付費專線(24小時) 	法國  00-800-0885-0885 (當地申請之行動電話/市內電話可免費撥打)</span>
-          <span class="tag">週一至五 09:30–12:30 / 13:30–16:00</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-walk">🚶 護照、簽證、文件證明送件取件皆不需預約</span>
-          <span class="card-maps-btn">Google Maps ↗</span>
-        </div>
-      </a>
-    </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ══ ROUTE A ══ -->
-  <section class="route-section" id="route-a">
-    <div class="route-header">
-      <div class="route-badge" style="background: var(--route-a);">A</div>
-      <div class="route-title-group">
-        <div class="route-title">日常補給 ＋ 藥妝 ＋ ATM</div>
-        <div class="route-meta">簡單食材約 5 分鐘</div>
-      </div>
-    </div>
-    <div class="tip-strip">
-      <span class="tip tip-hot">生活必備</span>
-    </div>
-    <div style="height:14px;"></div>
-    <div class="cards-grid">
-      <a class="card"
-         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJf3HnZ3xx5kcRJ-p_AzvRlkk&query=G20+Supermarche+Paris"
-         target="_blank" rel="noopener">
-        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-a);border-radius:3px 0 0 3px;opacity:.8;"></div>
-        <div class="card-top">
-          <div class="card-name">G20 超市</div>
-          <div class="card-icon" style="background: rgba(230,57,70,0.12);">🛒</div>
-        </div>
-        <div class="card-address">23-25 Rue Desnouettes, 75015</div>
-        <div class="card-tags">
-          <span class="tag">礦泉水</span><span class="tag">早餐</span><span class="tag">水果</span><span class="tag">冰飲</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-walk">🚶 步行約 3 分鐘</span>
-          <span class="card-maps-btn">Maps ↗</span>
-        </div>
-      </a>
-
-      <a class="card"
-         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJXczmQmtw5kcRPDeDQww2PP4&query=Pharmacie+Desnouettes+Paris"
-         target="_blank" rel="noopener">
-        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-a);border-radius:3px 0 0 3px;opacity:.8;"></div>
-        <div class="card-top">
-          <div class="card-name">Pharmacie Desnouettes</div>
-          <div class="card-icon" style="background: rgba(230,57,70,0.12);">💊</div>
-        </div>
-        <div class="card-address">1 Rue Desnouettes, 75015</div>
-        <div class="card-tags">
-          <span class="tag">防曬乳</span><span class="tag">曬後修護</span><span class="tag">止痛藥</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-walk">🚶 步行約 6 分鐘</span>
-          <span class="card-maps-btn">Maps ↗</span>
-        </div>
-      </a>
-
-      <a class="card"
-         href="https://www.google.com/maps/place/LCL+Banque+et+assurance/@48.8340558,2.2877094,17z/data=!4m10!1m2!2m1!1sLCL+Banque+et+assurance,+370+Rue+de+Vaugirard,+75015+Paris,+%E6%B3%95%E5%9C%8B!3m6!1s0x47e6706c5b7c62db:0xb5f07c38e3f2fb6c!8m2!3d48.8340525!4d2.2901764!15sCkJMQ0wgQmFucXVlIGV0IGFzc3VyYW5jZSwgMzcwIFJ1ZSBkZSBWYXVnaXJhcmQsIDc1MDE1IFBhcmlzLCDms5XlnIsiA4gBAZIBBGJhbmvgAQA!16s%2Fg%2F1vrq8z1t?entry=ttu&g_ep=EgoyMDI2MDYyMy4wIKXMDSoASAFQAw%3D%3D"
-         target="_blank" rel="noopener">
-        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-a);border-radius:3px 0 0 3px;opacity:.8;"></div>
-        <div class="card-top">
-          <div class="card-name">LCL 銀行 ATM</div>
-          <div class="card-icon" style="background: rgba(230,57,70,0.12);">🏧</div>
-        </div>
-        <div class="card-address">370 Rue de Vaugirard, 75015</div>
-        <div class="card-tags">
-          <span class="tag">提款</span><span class="tag">換零錢</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-walk">🚶 步行約 3 分鐘</span>
-          <span class="card-maps-btn">Maps ↗</span>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <!-- ══ ROUTE B ══ -->
-  <section class="route-section" id="route-b">
-    <div class="route-header">
-      <div class="route-badge" style="background: var(--route-b);">B</div>
-      <div class="route-title-group">
-        <div class="route-title">免費冷氣讀書路線</div>
-        <div class="route-meta">步行約 19 分鐘 · 建議 11:00–16:00</div>
-      </div>
-    </div>
-    <div class="tip-strip">
-      <span class="tip tip-rec">⭐ 強烈推薦</span>
-    </div>
-    <div style="height:14px;"></div>
-    <div class="cards-grid">
-      <a class="card" style="grid-column: 1 / -1;"
-         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJZ2JVVT9w5kcRScOjDvcZOgg&query=Mediatheque+Marguerite-Yourcenar+Paris"
-         target="_blank" rel="noopener">
-        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-b);border-radius:3px 0 0 3px;opacity:.8;"></div>
-        <div class="card-top">
-          <div class="card-name">Médiathèque Marguerite-Yourcenar</div>
-          <div class="card-icon" style="background: rgba(58,155,213,0.12);">📚</div>
-        </div>
-        <div class="card-address">41 Rue d'Alleray, 75015 Paris</div>
-        <div class="card-tags">
-          <span class="tag">✅ 免費</span>
-          <span class="tag">❄️ 冷氣</span>
-          <span class="tag">📶 Wi-Fi</span>
-          <span class="tag">💺 可久坐</span>
-          <span class="tag">評分 4.2 ★</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-walk">🚶 步行約 19 分鐘 · 建議停留 11:00–16:00</span>
-          <span class="card-maps-btn">Maps ↗</span>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <!-- ══ ROUTE C ══ -->
-  <section class="route-section" id="route-c">
-    <div class="route-header">
-      <div class="route-badge" style="background: var(--route-c);">C</div>
-      <div class="route-title-group">
-        <div class="route-title">熱浪專用避難路線</div>
-        <div class="route-meta">35°C 以上最佳選擇</div>
-      </div>
-    </div>
-    <div class="tip-strip">
-      <span class="tip tip-hot">🌡 高溫備案</span>
-    </div>
-    <div style="height:14px;"></div>
-    <div class="cards-grid">
-      <a class="card" style="grid-column: 1 / -1;"
-         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJAbQV5AVw5kcR3as-MQ8GJCI&query=Centre+Commercial+Beaugrenelle+Paris"
-         target="_blank" rel="noopener">
-        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-c);border-radius:3px 0 0 3px;opacity:.8;"></div>
-        <div class="card-top">
-          <div class="card-name">Centre Commercial Beaugrenelle</div>
-          <div class="card-icon" style="background: rgba(244,163,41,0.12);">🏬</div>
-        </div>
-        <div class="card-address">12 Rue Linois, 75015 Paris</div>
-        <div class="card-tags">
-          <span class="tag">✅ 強力冷氣</span>
-          <span class="tag">💺 免費座位</span>
-          <span class="tag">🍽 餐廳</span>
-          <span class="tag">🚻 廁所</span>
-        </div>
-        <div style="font-size:12px; color: var(--text-muted); padding: 4px 0;">
-          商場內推薦：FNAC（書店）· Monoprix（超市）· Starbucks · McDonald's
-        </div>
-        <div class="card-footer">
-          <span class="card-walk">🚶 步行約 31 分鐘 · 每日 10:00–20:00</span>
-          <span class="card-maps-btn">Maps ↗</span>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <!-- ══ ROUTE D ══ -->
-  <section class="route-section" id="route-d">
-    <div class="route-header">
-      <div class="route-badge" style="background: var(--route-d);">D</div>
-      <div class="route-title-group">
-        <div class="route-title">亞洲補給路線</div>
-        <div class="route-meta">步行約 24 分鐘</div>
-      </div>
-    </div>
-    <div style="height:14px;"></div>
-    <div class="cards-grid">
-      <a class="card" style="grid-column: 1 / -1;"
-         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJdb0SOUZw5kcRlr-ugIp0fZI&query=Tang+Freres+Paris"
-         target="_blank" rel="noopener">
-        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-d);border-radius:3px 0 0 3px;opacity:.8;"></div>
-        <div class="card-top">
-          <div class="card-name">Tang Frères 亞洲超市</div>
-          <div class="card-icon" style="background: rgba(168,85,247,0.12);">🍜</div>
-        </div>
-        <div class="card-address">41 Rue Labrouste, 75015 Paris</div>
-        <div class="card-tags">
-          <span class="tag">泡麵</span>
-          <span class="tag">白米</span>
-          <span class="tag">亞洲零食</span>
-          <span class="tag">醬油</span>
-          <span class="tag">冷凍食品</span>
-          <span class="tag">評分 4.2 ★</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-walk">🚶 步行約 24 分鐘 · 週一至六 10:00–20:00</span>
-          <span class="card-maps-btn">Maps ↗</span>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <!-- ══ ROUTE E ══ -->
-  <section class="route-section" id="route-e">
-    <div class="route-header">
-      <div class="route-badge" style="background: var(--route-e);">E</div>
-      <div class="route-title-group">
-        <div class="route-title">咖啡館工作路線</div>
-        <div class="route-meta">三間各有特色 · 最近 30 秒可抵達</div>
-      </div>
-    </div>
-    <div style="height:14px;"></div>
-    <div class="cards-grid">
-
-      <a class="card"
-         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJ-zROBG1w5kcReXLB_DMHZxc&query=Le+Petit+Hameau+Paris"
-         target="_blank" rel="noopener">
-        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-e);border-radius:3px 0 0 3px;opacity:.8;"></div>
-        <div class="card-top">
-          <div class="card-name">Le Petit Hameau</div>
-          <div class="card-icon" style="background: rgba(34,197,94,0.12);">☕</div>
-        </div>
-        <div class="card-address">12 Rue du Hameau, 75015</div>
-        <div class="card-tags">
-          <span class="tag" style="background: rgba(34,197,94,0.15); color: #22c55e;">最近</span>
-          <span class="tag">評分 4.7 ★</span>
-          <span class="tag">週一至五 07:00</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-walk">🚶 約 30 秒 · 沒冷氣</span>
-          <span class="card-maps-btn">Maps ↗</span>
-        </div>
-      </a>
-
-      <a class="card"
-         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJ24O46WBx5kcRD4WQrPvlGE0&query=The+Coffee+Vaugirard+Paris"
-         target="_blank" rel="noopener">
-        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-e);border-radius:3px 0 0 3px;opacity:.8;"></div>
-        <div class="card-top">
-          <div class="card-name">The Coffee</div>
-          <div class="card-icon" style="background: rgba(34,197,94,0.12);">☕</div>
-        </div>
-        <div class="card-address">309 Rue de Vaugirard, 75015</div>
-        <div class="card-tags">
-          <span class="tag" style="background: rgba(58,155,213,0.12); color: #3a9bd5;">安靜工作</span>
-          <span class="tag">評分 4.7 ★</span>
-          <span class="tag">08:30–19:00</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-walk">🚶 約 14 分鐘 · 不知道有沒有冷氣</span>
-          <span class="card-maps-btn">Maps ↗</span>
-        </div>
-      </a>
-
-      <a class="card"
-         href="https://www.google.com/maps/search/?api=1&query_place_id=ChIJWbNz6Vxx5kcRVcPDpvpXpwc&query=ONOUL+Coffee+Shop+Paris"
-         target="_blank" rel="noopener">
-        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--route-e);border-radius:3px 0 0 3px;opacity:.8;"></div>
-        <div class="card-top">
-          <div class="card-name">ONOUL Coffee Shop</div>
-          <div class="card-icon" style="background: rgba(34,197,94,0.12);">☕</div>
-        </div>
-        <div class="card-address">8 Rue Gramme, 75015</div>
-        <div class="card-tags">
-          <span class="tag" style="background: rgba(168,85,247,0.12); color: #a855f7;">韓系風格</span>
-          <span class="tag">評分 4.8 ★</span>
-          <span class="tag">09:00–18:30</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-walk">🚶 約 21 分鐘 · 不知道有沒有冷氣</span>
-          <span class="card-maps-btn">Maps ↗</span>
-        </div>
-      </a>
-
-    </div>
-  </section>
-
-</main>
-
-<footer class="footer">
-  巴黎 15 區生活手冊 · Convention 站周邊 · 點擊任意地點開啟 Google Maps
+<footer>
+  <div class="wrap">
+    <p>&copy; 2026 康寧醫療器材. 所有商品資訊與價格如有異動，恕不另行通知。</p>
+  </div>
 </footer>
 
-<script>
-  const LAT = 48.8422, LON = 2.2944;
-  const REFRESH_SEC = 600;
-  const DAYS_ZH = ['週日','週一','週二','週三','週四','週五','週六'];
-
-  const WMO = {
-    0:['☀️','晴朗'],1:['🌤️','大致晴朗'],2:['⛅','局部多雲'],3:['☁️','陰天'],
-    45:['🌫️','霧'],48:['🌫️','霧凇'],
-    51:['🌦️','細毛雨'],53:['🌦️','中毛雨'],55:['🌧️','密毛雨'],
-    61:['🌧️','小雨'],63:['🌧️','中雨'],65:['🌧️','大雨'],
-    71:['🌨️','小雪'],73:['🌨️','中雪'],75:['❄️','大雪'],77:['🌨️','雪粒'],
-    80:['🌦️','陣雨'],81:['🌧️','中陣雨'],82:['⛈️','強陣雨'],
-    85:['🌨️','陣雪'],86:['❄️','強陣雪'],
-    95:['⛈️','雷雨'],96:['⛈️','雹雷雨'],99:['⛈️','強雹雷雨']
-  };
-
-  function getIcon(code){ return (WMO[code]||['🌡️','未知'])[0]; }
-  function getCond(code){ return (WMO[code]||['🌡️','未知'])[1]; }
-
-  let countdown = REFRESH_SEC, timer;
-
-  function updateClock(){
-    const now = new Date();
-    const opts = { timeZone:'Europe/Paris', year:'numeric', month:'long', day:'numeric', weekday:'long', hour:'2-digit', minute:'2-digit', second:'2-digit' };
-    document.getElementById('clock').textContent = now.toLocaleString('zh-TW', opts) + '（巴黎時間）';
-  }
-
-  async function fetchWeather(){
-    const btn = document.getElementById('refresh-btn');
-    btn.classList.add('spinning');
-    document.getElementById('error-msg').style.display = 'none';
-    try {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}` +
-        `&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m` +
-        `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max` +
-        `&timezone=Europe%2FParis&forecast_days=5&temperature_unit=celsius&wind_speed_unit=kmh`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const d = await res.json();
-      renderCurrent(d.current, d.daily);
-      renderDays(d.daily);
-      document.getElementById('last-updated').textContent =
-        '最後更新：' + new Date().toLocaleTimeString('zh-TW', { timeZone:'Europe/Paris', hour:'2-digit', minute:'2-digit', second:'2-digit' });
-      countdown = REFRESH_SEC;
-    } catch(e) {
-      document.getElementById('error-msg').style.display = 'block';
-    }
-    btn.classList.remove('spinning');
-  }
-
-  function renderCurrent(c, daily){
-    document.getElementById('cur-icon').textContent = getIcon(c.weather_code);
-    document.getElementById('cur-temp').textContent = Math.round(c.temperature_2m) + '°C';
-    document.getElementById('cur-cond').textContent = getCond(c.weather_code);
-    document.getElementById('stat-high').textContent = Math.round(daily.temperature_2m_max[0]) + '°C';
-    document.getElementById('stat-low').textContent = Math.round(daily.temperature_2m_min[0]) + '°C';
-    document.getElementById('stat-humid').textContent = Math.round(c.relative_humidity_2m) + '%';
-    document.getElementById('stat-wind').textContent = Math.round(c.wind_speed_10m) + ' km/h';
-  }
-
-  function renderDays(d){
-    const dropIcon = `<svg viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2C12 2 5 10 5 15a7 7 0 0 0 14 0C19 10 12 2 12 2z"/></svg>`;
-    const dropOffIcon = `<svg viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M2 2l20 20M12 2S7.5 8 5.5 13M19 15a7 7 0 0 1-13.17 3.17"/></svg>`;
-    const grid = document.getElementById('days-grid');
-    grid.innerHTML = '';
-    for(let i = 0; i < 5; i++){
-      const date = new Date(d.time[i] + 'T12:00:00');
-      const dayName = i === 0 ? '今天' : i === 1 ? '明天' : DAYS_ZH[date.getDay()];
-      const dateLabel = `${date.getMonth() + 1}/${date.getDate()}`;
-      const hi = Math.round(d.temperature_2m_max[i]);
-      const lo = Math.round(d.temperature_2m_min[i]);
-      const rp = Math.round(d.precipitation_probability_max[i]);
-      const icon = getIcon(d.weather_code[i]);
-      const wetClass = rp >= 20 ? 'wet' : 'dry';
-      const rainSvg = rp >= 20 ? dropIcon : dropOffIcon;
-      const card = document.createElement('div');
-      card.className = 'day-card';
-      card.innerHTML = `
-        <div class="day-name">${dayName}</div>
-        <div class="day-date">${dateLabel}</div>
-        <div class="day-icon">${icon}</div>
-        <div class="day-high">${hi}°C</div>
-        <div class="day-low">${lo}°C</div>
-        <div class="day-rain ${wetClass}">${rainSvg}${rp}%</div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${rp}%"></div></div>
-      `;
-      grid.appendChild(card);
-    }
-  }
-
-  function startCountdown(){
-    clearInterval(timer);
-    timer = setInterval(() => {
-      countdown--;
-      const m = Math.floor(countdown / 60);
-      const s = countdown % 60;
-      if(countdown > 0){
-        document.getElementById('countdown').textContent = `${m}:${String(s).padStart(2,'0')} 後更新`;
-      } else {
-        document.getElementById('countdown').textContent = '更新中...';
-        countdown = REFRESH_SEC;
-        fetchWeather();
-      }
-    }, 1000);
-  }
-
-  // Nav scroll highlight
-  const sections = document.querySelectorAll('.route-section');
-  const tabs = document.querySelectorAll('.nav-tab');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const id = entry.target.id;
-        tabs.forEach(tab => {
-          tab.classList.toggle('active', tab.getAttribute('href') === '#' + id);
-        });
-      }
-    });
-  }, { threshold: 0.4, rootMargin: '-60px 0px -40% 0px' });
-  sections.forEach(s => observer.observe(s));
-
-  updateClock();
-  setInterval(updateClock, 1000);
-  fetchWeather();
-  startCountdown();
-</script>
 </body>
 </html>
